@@ -5,11 +5,15 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  Image,
 } from "react-native";
 
-import Slide, { SLIDE_HEIGHT, BORDER_RADIUS } from "./Slide";
+import Slide, { SLIDE_HEIGHT } from "./Slide";
 import Subslide from "./Subslide";
 import Dot from "./Dot";
+import { theme } from "../../components";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Routes } from "../../components/Navigation";
 
 const { width } = Dimensions.get("window");
 
@@ -20,7 +24,11 @@ const slides = [
     description:
       "Confused about your outfit? Don't worry! Find the best outfit here!",
     color: "#BFEAF5",
-    picture: require("./assets/1.png")
+    picture: {
+      src: require("../assets/1.png"),
+      width: 2513,
+      height: 3583,
+    },
   },
   {
     title: "Playful",
@@ -28,7 +36,11 @@ const slides = [
     description:
       "Hating the clothes in your wardrobe? Explore hundreds of outfit ideas",
     color: "#BEECC4",
-    picture: require("./assets/2.png")
+    picture: {
+      src: require("../assets/2.png"),
+      width: 2791,
+      height: 3744,
+    },
   },
   {
     title: "Excentric",
@@ -36,7 +48,11 @@ const slides = [
     description:
       "Create your individual and unique style and look amazing everyday",
     color: "#FFE4D9",
-    picture: require("./assets/3.png")
+    picture: {
+      src: require("../assets/3.png"),
+      width: 2738,
+      height: 3244,
+    },
   },
   {
     title: "Funky",
@@ -44,18 +60,33 @@ const slides = [
     description:
       "Discover the latest trends in fashion and explore your personality",
     color: "#FFDDDD",
-    picture: require("./assets/4.png")
+    picture: {
+      src: require("../assets/4.png"),
+      width: 1757,
+      height: 2551,
+    },
   },
 ];
+
+export const assets = slides.map((slide) => slide.picture.src)
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
   },
+  underlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    // @ts-ignore: Object is possibly 'undefined'.
+    borderBottomRightRadius: theme.borderRadii.xl,
+    overflow: "hidden",
+  },
   slider: {
     height: SLIDE_HEIGHT,
-    borderBottomRightRadius: BORDER_RADIUS,
+    // @ts-ignore: Object is possibly 'undefined'.
+    borderBottomRightRadius: theme.borderRadii.xl,
   },
   footer: {
     flex: 1,
@@ -63,22 +94,20 @@ const styles = StyleSheet.create({
   footerContent: {
     flex: 1,
     backgroundColor: "white",
-    borderTopLeftRadius: BORDER_RADIUS,
+    // @ts-ignore: Object is possibly 'undefined'.
+    borderTopLeftRadius: theme.borderRadii.xl,
   },
   pagination: {
     ...StyleSheet.absoluteFillObject,
-    height: BORDER_RADIUS,
+    // @ts-ignore: Object is possibly 'undefined'.
+    height: theme.borderRadii.xl,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 });
 
-interface OnBoardingProps {
-  navigation: any;
-}
-
-const OnBoarding = ({ navigation }: OnBoardingProps) => {
+const OnBoarding = ({ navigation }: StackScreenProps<Routes, "OnBoarding">) => {
   // Scrolling Animation
   const scroll = useRef<ScrollView>(null);
   const x = useRef(new Animated.Value(0)).current;
@@ -108,6 +137,35 @@ const OnBoarding = ({ navigation }: OnBoardingProps) => {
       <Animated.View
         style={{ ...styles.slider, backgroundColor: backgroundColorAnimated }}
       >
+        {slides.map((slide, index) => {
+          const opacity = x.interpolate({
+            inputRange: [
+              (index - 0.5) * width,
+              index * width,
+              (index + 0.5) * width,
+            ],
+            outputRange: [0, 1, 0],
+            extrapolate: "clamp",
+          });
+          return (
+            <Animated.View
+              key={`slide-image-${index}`}
+              style={{ ...styles.underlay, opacity }}
+            >
+              <Image
+                source={slide.picture.src}
+                style={{
+                  // @ts-ignore: Object is possibly 'undefined'.
+                  width: width - theme.borderRadii.xl,
+                  height:
+                  // @ts-ignore: Object is possibly 'undefined'.
+                    ((width - theme.borderRadii.xl) * slide.picture.height) /
+                    slide.picture.width,
+                }}
+              />
+            </Animated.View>
+          );
+        })}
         <Animated.ScrollView
           ref={scroll}
           horizontal
@@ -153,10 +211,9 @@ const OnBoarding = ({ navigation }: OnBoardingProps) => {
                 key={index}
                 onPress={() => {
                   if (index === slides.length - 1) {
-                    return navigation.navigate("Welcome")
-                  }
-                  if (scroll.current) {
-                    scroll.current.scrollTo({ x: width * (index + 1) });
+                    return navigation.navigate("Welcome");
+                  } else {
+                    return scroll.current?.scrollTo({ x: width * (index + 1) });
                   }
                 }}
                 last={index === slides.length - 1}

@@ -1,8 +1,8 @@
 import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
-import { Theme } from "./Theme";
+import { Theme, Text } from "./Theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,28 +12,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  label: {
-    fontFamily: "SFProText-Regular",
-    fontSize: 15,
-    textAlign: "center",
-  },
 });
 
 interface ButtonProps {
   label: string;
-  variant: "primary" | "default";
+  variant: "primary" | "default" | "transparent";
   onPress: () => void;
 }
 
 const Button = ({ label, variant, onPress }: ButtonProps) => {
   const theme = useTheme<Theme>();
   const backgroundColor =
-    variant === "primary" ? theme.colors.primary : theme.colors.button;
-  const color = variant === "primary" ? theme.colors.white : theme.colors.title;
+    variant === "primary" 
+      ? theme.colors.primary 
+      : variant === "transparent"
+      ? "transparent"
+      : theme.colors.grey;
+  const color = variant === "primary" ? theme.colors.white : theme.colors.button;
   return (
     <TouchableOpacity {...{ onPress }}>
       <RectButton style={{ ...styles.container, backgroundColor }}>
-        <Text style={{ ...styles.label, color }}>{label}</Text>
+        <Text variant="button" style={{ color }}>{label}</Text>
       </RectButton>
     </TouchableOpacity>
   );
