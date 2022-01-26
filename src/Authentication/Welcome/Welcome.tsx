@@ -1,6 +1,8 @@
 import React from "react";
 import { theme, Text, Box, Button } from "../../components";
 import { Dimensions, Image } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Routes } from "../../components/Navigation";
 
 const { width } = Dimensions.get("window");
 const { colors, borderRadii, spacing } = theme;
@@ -17,7 +19,7 @@ export const assets = [picture.src];
 
 // }
 
-const Welcome = () => {
+const Welcome = ({ navigation }: StackScreenProps<Routes, "Welcome">) => {
   return (
     <Box style={{ backgroundColor: colors.white, flex: 1 }}>
       <Box
@@ -74,7 +76,7 @@ const Welcome = () => {
           <Text variant="body">
             Login to your account below or signup for an amazing experience
           </Text>
-          <Button variant="primary" label="Have an account? Login" />
+          <Button variant="primary" label="Have an account? Login" onPress={() => navigation.navigate("Login")}/>
           <Button label="Join us, it's Free" />
           <Button variant="transparent" label="Forgot password?" />
         </Box>

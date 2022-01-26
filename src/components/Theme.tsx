@@ -21,9 +21,8 @@ import {
 const theme: BaseTheme = createTheme({
   colors: {
     primary: "#2CB9B0",
-    title: "#0C0D34",
+    secondary: "#0C0D34",
     text: "rgba(12, 13, 52, 0.7)",
-    button: "#0C0D34",
     white: "white",
     grey: "rgba(12, 13, 52, 0.05)",
   },
@@ -48,13 +47,13 @@ const theme: BaseTheme = createTheme({
     title1: {
       fontSize: 26,
       fontFamily: "SFProDisplay-Semibold",
-      color: "title",
+      color: "secondary",
     },
     title2: {
       fontSize: 20,
       lineHeight: 26,
       fontFamily: "SFProDisplay-Semibold",
-      color: "title",
+      color: "secondary",
     },
     body: {
       fontSize: 14,
