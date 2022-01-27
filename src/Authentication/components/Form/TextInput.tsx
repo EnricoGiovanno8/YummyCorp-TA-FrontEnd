@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   TextInput as RNTextInput,
@@ -11,32 +11,15 @@ const { borderRadii, colors } = theme;
 
 interface TextInputProps extends RNTextInputProps {
   icon: "mail" | "lock";
-  validator: (input: string) => boolean;
+  touched?: boolean;
+  error?: boolean;
 }
 
 // @ts-ignore: Object is possibly 'undefined'.
 const SIZE = borderRadii.m * 2;
-const Valid = true;
-const Invalid = false;
-const Pristine = null;
-type InputState = typeof Valid | typeof Invalid | typeof Pristine;
 
-const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
-  const [input, setInput] = useState("");
-  const [state, setState] = useState<InputState>(null);
-
-  const validate = () => {
-    const valid = validator(input);
-    setState(valid);
-  };
-
-  const onChangeText = (text: string) => {
-    setInput(text);
-    validate();
-  };
-
-  const reColor: keyof typeof colors =
-    state === Pristine ? "text" : state === Valid ? "primary" : "danger";
+const TextInput = ({ icon, error, touched, ...props }: TextInputProps) => {
+  const reColor = !touched ? "text" : error ? "danger" : "primary";
   const color = colors[reColor];
 
   return (
@@ -56,12 +39,10 @@ const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
         <RNTextInput
           underlineColorAndroid="transparent"
           placeholderTextColor={color}
-          onBlur={validate}
-          {...{ onChangeText }}
           {...props}
         />
       </Box>
-      {(state === Valid || state === Invalid) && (
+      {touched && (
         <Box
           // @ts-ignore: Object is possibly 'undefined'.
           style={{ borderRadius: borderRadii.m }}
@@ -70,9 +51,9 @@ const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
           justifyContent="center"
           height={SIZE}
           width={SIZE}
-          backgroundColor={state === Valid ? "primary" : "danger"}
+          backgroundColor={!error ? "primary" : "danger"}
         >
-          <Icon name={state === Valid ? "check" : "x"} color="white" />
+          <Icon name={!error ? "check" : "x"} color="white" />
         </Box>
       )}
     </Box>

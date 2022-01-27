@@ -5,13 +5,16 @@ import { Box, Text } from "../../../components";
 
 interface CheckboxProps {
   label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
 }
 
-const Checkbox = ({ label }: CheckboxProps) => {
-  const [checked, setChecked] = useState(false);
+const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
   return (
     <RectButton
-      onPress={() => setChecked(!checked)}
+      onPress={() => {
+        onChange(!value)
+      }}
       style={{ justifyContent: "center" }}
     >
       <Box flexDirection="row" alignItems="center">
@@ -25,7 +28,7 @@ const Checkbox = ({ label }: CheckboxProps) => {
           alignItems="center"
           borderWidth={1}
           borderColor="primary"
-          backgroundColor={checked ? "primary" : "white"}
+          backgroundColor={value ? "primary" : "white"}
         >
           <Icon name="check" color="white" />
         </Box>
