@@ -4,10 +4,8 @@ import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
 } from "react-native";
-import { Box, theme } from "../../../components";
+import { Box, useTheme } from "../../../components";
 import { Feather as Icon } from "@expo/vector-icons";
-
-const { borderRadii, colors } = theme;
 
 interface TextInputProps extends RNTextInputProps {
   icon: "mail" | "lock";
@@ -15,10 +13,11 @@ interface TextInputProps extends RNTextInputProps {
   error?: boolean;
 }
 
-// @ts-ignore: Object is possibly 'undefined'.
-const SIZE = borderRadii.m * 2;
-
 const TextInput = ({ icon, error, touched, ...props }: TextInputProps) => {
+  const theme = useTheme();
+  const { borderRadii, colors } = theme;
+  // @ts-ignore: Object is possibly 'undefined'.
+  const SIZE = borderRadii.m * 2;
   const reColor = !touched ? "text" : error ? "danger" : "primary";
   const color = colors[reColor];
 

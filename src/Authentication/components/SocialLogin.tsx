@@ -1,10 +1,6 @@
 import React, { ReactNode } from "react";
 import Svg, { LinearGradient, Path, Stop } from "react-native-svg";
-import { Box, theme } from "../../components";
-
-const { colors, borderRadii, spacing } = theme;
-// @ts-ignore: Object is possibly 'undefined'.
-const SIZE = borderRadii.l * 2;
+import { Box, useTheme } from "../../components";
 
 const Google = () => (
   <Svg viewBox="0 0 48 48" width={30} height={30}>
@@ -100,6 +96,10 @@ interface SocialIconProps {
 }
 
 const SocialIcon = ({ children }: SocialIconProps) => {
+  const theme = useTheme();
+  const { colors, borderRadii, spacing } = theme;
+  // @ts-ignore: Object is possibly 'undefined'.
+  const SIZE = borderRadii.l * 2;
   return (
     <Box
       style={{

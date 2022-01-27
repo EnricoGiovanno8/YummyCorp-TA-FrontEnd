@@ -3,7 +3,9 @@ import {
   createBox,
   createText,
   createTheme,
+  useTheme as useReTheme,
 } from "@shopify/restyle";
+import { ImageStyle, TextStyle, ViewStyle } from "react-native";
 
 // const palette = {
 //   purpleLight: "#8C6FF7",
@@ -18,7 +20,7 @@ import {
 //   white: "#F0F2F3",
 // };
 
-const theme: BaseTheme = createTheme({
+export const theme: BaseTheme = createTheme({
   colors: {
     primary: "#2CB9B0",
     secondary: "#0C0D34",
@@ -26,7 +28,7 @@ const theme: BaseTheme = createTheme({
     white: "white",
     greyButton: "rgba(12, 13, 52, 0.05)",
     grey: "#F4F0EF",
-    danger: "#FF0058"
+    danger: "#FF0058",
   },
   spacing: {
     s: 8,
@@ -80,4 +82,13 @@ const theme: BaseTheme = createTheme({
 export type Theme = typeof theme;
 export const Text = createText<Theme>();
 export const Box = createBox<Theme>();
-export default theme;
+export const useTheme = () => useReTheme<Theme>();
+
+type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
+
+export const makeStyles =
+  <T extends NamedStyles<T>>(styles: (theme: Theme) => T) =>
+  () => {
+    const currentTheme = useTheme();
+    return styles(currentTheme);
+  };

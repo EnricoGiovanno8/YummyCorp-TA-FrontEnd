@@ -11,9 +11,10 @@ import {
 import Slide, { SLIDE_HEIGHT } from "./Slide";
 import Subslide from "./Subslide";
 import Dot from "./Dot";
-import { theme } from "../../components";
+import { makeStyles, useTheme } from "../../components";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../../components/Navigation";
+import { Theme } from "../../components/Theme";
 
 const { width } = Dimensions.get("window");
 
@@ -68,9 +69,9 @@ const slides = [
   },
 ];
 
-export const assets = slides.map((slide) => slide.picture.src)
+export const assets = slides.map((slide) => slide.picture.src);
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     flex: 1,
     backgroundColor: "white",
@@ -105,9 +106,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-});
+}));
 
 const OnBoarding = ({ navigation }: StackScreenProps<Routes, "OnBoarding">) => {
+  const theme = useTheme();
+  const styles = useStyles();
   // Scrolling Animation
   const scroll = useRef<ScrollView>(null);
   const x = useRef(new Animated.Value(0)).current;
@@ -158,7 +161,7 @@ const OnBoarding = ({ navigation }: StackScreenProps<Routes, "OnBoarding">) => {
                   // @ts-ignore: Object is possibly 'undefined'.
                   width: width - theme.borderRadii.xl,
                   height:
-                  // @ts-ignore: Object is possibly 'undefined'.
+                    // @ts-ignore: Object is possibly 'undefined'.
                     ((width - theme.borderRadii.xl) * slide.picture.height) /
                     slide.picture.width,
                 }}
