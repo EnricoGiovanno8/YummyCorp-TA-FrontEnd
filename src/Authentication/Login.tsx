@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
-import { Box, Button, Container, Text } from "../../components";
-import Checkbox from "../components/Form/Checkbox";
-import TextInput from "../components/Form/TextInput";
-import SocialLogin from "../components/SocialLogin";
+import Footer from "./components/Footer";
+import { Box, Button, Container, Text } from "../components";
+import Checkbox from "./components/Form/Checkbox";
+import TextInput from "./components/Form/TextInput";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Routes } from "../components/Navigation";
 
 const { height } = Dimensions.get("screen");
 
@@ -18,13 +20,14 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const Login = () => {
+const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors, touchedFields },
   } = useForm({
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
@@ -35,28 +38,25 @@ const Login = () => {
 
   const onSubmit = (data: any) => console.log(data);
 
+  const password = useRef<typeof TextInput>(null);
+
   const footer = (
-    <>
-      <SocialLogin />
-      <Box alignItems="center">
-        <Button variant="transparent" onPress={() => alert("SIGNUP")}>
-          <Box flexDirection="row" justifyContent="center">
-            <Text variant="button" color="white">
-              Don't have an account?
-            </Text>
-            <Text marginLeft="s" variant="button" color="primary">
-              Sign Up Here
-            </Text>
-          </Box>
-        </Button>
-      </Box>
-    </>
+    <Footer
+      title="Don't have an account?"
+      action="Sign up here"
+      onPress={() => navigation.navigate("SignUp")}
+    />
   );
+
   return (
     <ScrollView>
-      <View style={{ backgroundColor: "red", height: height - 50 }}>
+      <View style={{ backgroundColor: "red", height: height - 56 }}>
         <Container {...{ footer }}>
-          <Box padding="xl">
+          <Box
+            style={{ paddingTop: 55 }}
+            paddingBottom="xl"
+            paddingHorizontal="xl"
+          >
             <Text variant="title1" textAlign="center" marginBottom="l">
               Welcome back
             </Text>
@@ -78,6 +78,11 @@ const Login = () => {
                     value={value}
                     error={errors.email ? true : false}
                     touched={touchedFields.email}
+                    autoCompleteType="email"
+                    autoCapitalize="none"
+                    returnKeyType="next"
+                    returnKeyLabel="next"
+                    onSubmitEditing={() => password.current?.focus()}
                   />
                 )}
                 name="email"
@@ -91,6 +96,7 @@ const Login = () => {
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    ref={password}
                     icon="lock"
                     placeholder="Enter you password"
                     onChangeText={onChange}
@@ -98,6 +104,12 @@ const Login = () => {
                     value={value}
                     error={errors.password ? true : false}
                     touched={touchedFields.password}
+                    autoCompleteType="password"
+                    autoCapitalize="none"
+                    returnKeyType="go"
+                    returnKeyLabel="go"
+                    onSubmitEditing={handleSubmit(onSubmit)}
+                    secureTextEntry
                   />
                 )}
                 name="password"
@@ -114,7 +126,11 @@ const Login = () => {
                   required: true,
                 }}
                 render={({ field: { value } }) => (
-                  <Checkbox label="Remember me" value={value} onChange={(v: boolean) => setValue("remember", v)}/>
+                  <Checkbox
+                    label="Remember me"
+                    value={value}
+                    onChange={(v: boolean) => setValue("remember", v)}
+                  />
                 )}
                 name="remember"
               />

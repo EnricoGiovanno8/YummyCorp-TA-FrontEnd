@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import {
   StyleSheet,
   TextInput as RNTextInput,
@@ -13,7 +13,7 @@ interface TextInputProps extends RNTextInputProps {
   error?: boolean;
 }
 
-const TextInput = ({ icon, error, touched, ...props }: TextInputProps) => {
+const TextInput = forwardRef(({ icon, error, touched, ...props }: TextInputProps, ref) => {
   const theme = useTheme();
   const { borderRadii, colors } = theme;
   // @ts-ignore: Object is possibly 'undefined'.
@@ -38,6 +38,7 @@ const TextInput = ({ icon, error, touched, ...props }: TextInputProps) => {
         <RNTextInput
           underlineColorAndroid="transparent"
           placeholderTextColor={color}
+          {...{ ref }}
           {...props}
         />
       </Box>
@@ -57,6 +58,6 @@ const TextInput = ({ icon, error, touched, ...props }: TextInputProps) => {
       )}
     </Box>
   );
-};
+});
 
 export default TextInput;

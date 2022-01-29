@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Dimensions, Image, StatusBar, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Box, useTheme } from "./Theme";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const { width } = Dimensions.get("window");
 const aspectRatio = 750 / 1125;
