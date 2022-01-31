@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { RectButton } from "react-native-gesture-handler";
 import { Box, Text } from "../../components";
 import SocialLogin from "./SocialLogin";
 
@@ -14,7 +14,7 @@ const Footer = ({ onPress, title, action }: FooterProps) => {
     <>
       <SocialLogin />
       <Box alignItems="center" marginTop="m">
-        <TouchableWithoutFeedback {...{ onPress }}>
+        <RectButton {...{ onPress }}>
           <Box flexDirection="row" justifyContent="center">
             <Text variant="button" color="white">
               {title}
@@ -23,7 +23,7 @@ const Footer = ({ onPress, title, action }: FooterProps) => {
               {action}
             </Text>
           </Box>
-        </TouchableWithoutFeedback>
+        </RectButton>
       </Box>
     </>
   );

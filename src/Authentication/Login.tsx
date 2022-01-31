@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
-import {
-  TextInput as RNTextInput,
-} from "react-native";
+import { TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
 import { Box, Button, Container, Text } from "../components";
 import Checkbox from "./components/Form/Checkbox";
@@ -11,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../components/Navigation";
+import { RectButton } from "react-native-gesture-handler";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -49,7 +48,7 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
   );
 
   return (
-    <Container {...{ footer }}>
+    <Container pattern={0} {...{ footer }}>
       <Box padding="xl" justifyContent="center" flex={1}>
         <Text variant="title1" textAlign="center" marginBottom="l">
           Welcome back
@@ -113,6 +112,7 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
           flexDirection="row"
           justifyContent="space-between"
           marginBottom="m"
+          alignItems="center"
         >
           <Controller
             control={control}
@@ -128,12 +128,11 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
             )}
             name="remember"
           />
-          <Button
-            variant="transparent"
+          <RectButton
             onPress={() => navigation.navigate("ForgotPassword")}
           >
-            <Text color="primary">Forgot password</Text>
-          </Button>
+            <Text variant="button" color="primary">Forgot password</Text>
+          </RectButton>
         </Box>
         <Box alignItems="center">
           <Button

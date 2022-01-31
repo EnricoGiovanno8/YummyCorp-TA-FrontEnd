@@ -5,6 +5,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../components/Navigation";
 import { useTheme } from "../components/Theme";
 import Constants from "expo-constants";
+import { RectButton } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
@@ -95,11 +96,13 @@ const Welcome = ({ navigation }: StackScreenProps<Routes, "Welcome">) => {
             label="Join us, it's Free"
             onPress={() => navigation.navigate("SignUp")}
           />
-          <Button
-            variant="transparent"
-            label="Forgot password?"
+          <RectButton
             onPress={() => navigation.navigate("ForgotPassword")}
-          />
+          >
+            <Text variant="button" color="secondary">
+              Forgot Password?
+            </Text>
+          </RectButton>
         </Box>
       </Box>
     </Box>

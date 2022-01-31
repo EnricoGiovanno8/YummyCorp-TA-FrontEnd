@@ -16,31 +16,22 @@ const styles = StyleSheet.create({
 
 interface ButtonProps {
   label?: string;
-  variant: "primary" | "default" | "transparent";
+  variant: "primary" | "default";
   onPress: () => void;
-  children?: ReactNode;
 }
 
-const Button = ({ label, variant, onPress, children }: ButtonProps) => {
+const Button = ({ label, variant, onPress }: ButtonProps) => {
   const theme = useTheme<Theme>();
   const backgroundColor =
-    variant === "primary"
-      ? theme.colors.primary
-      : variant === "transparent"
-      ? "transparent"
-      : theme.colors.grey;
+    variant === "primary" ? theme.colors.primary : theme.colors.grey;
   const color =
     variant === "primary" ? theme.colors.white : theme.colors.secondary;
   return (
     <TouchableOpacity {...{ onPress }}>
       <RectButton style={{ ...styles.container, backgroundColor }}>
-        {children ? (
-          children
-        ) : (
-          <Text variant="button" style={{ color }}>
-            {label}
-          </Text>
-        )}
+        <Text variant="button" style={{ color }}>
+          {label}
+        </Text>
       </RectButton>
     </TouchableOpacity>
   );

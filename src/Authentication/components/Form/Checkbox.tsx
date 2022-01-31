@@ -12,8 +12,9 @@ interface CheckboxProps {
 const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
   return (
     <RectButton
+      rippleColor="white"
       onPress={() => {
-        onChange(!value)
+        onChange(!value);
       }}
       style={{ justifyContent: "center" }}
     >
