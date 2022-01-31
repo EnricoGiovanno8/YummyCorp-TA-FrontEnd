@@ -1,11 +1,12 @@
 import React from "react";
 import { Text, Box, Button } from "../../components";
-import { Dimensions, Image } from "react-native";
+import { Dimensions, Image, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../../components/Navigation";
 import { useTheme } from "../../components/Theme";
+import Constants from "expo-constants";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const picture = {
   src: require("../assets/5.png"),
@@ -24,7 +25,13 @@ const Welcome = ({ navigation }: StackScreenProps<Routes, "Welcome">) => {
   const { colors, borderRadii, spacing } = theme;
 
   return (
-    <Box style={{ backgroundColor: colors.white, flex: 1 }}>
+    <Box
+      style={{
+        backgroundColor: colors.white,
+        height:
+          height + (Platform.OS === "android" ? Constants.statusBarHeight : 0),
+      }}
+    >
       <Box
         flex={1}
         style={{
@@ -84,8 +91,15 @@ const Welcome = ({ navigation }: StackScreenProps<Routes, "Welcome">) => {
             label="Have an account? Login"
             onPress={() => navigation.navigate("Login")}
           />
-          <Button label="Join us, it's Free" />
-          <Button variant="transparent" label="Forgot password?" />
+          <Button
+            label="Join us, it's Free"
+            onPress={() => navigation.navigate("SignUp")}
+          />
+          <Button
+            variant="transparent"
+            label="Forgot password?"
+            onPress={() => navigation.navigate("ForgotPassword")}
+          />
         </Box>
       </Box>
     </Box>

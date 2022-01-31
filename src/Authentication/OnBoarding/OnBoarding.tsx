@@ -6,7 +6,9 @@ import {
   View,
   ScrollView,
   Image,
+  Platform,
 } from "react-native";
+import Constants from "expo-constants";
 
 import Slide, { SLIDE_HEIGHT } from "./Slide";
 import Subslide from "./Subslide";
@@ -16,7 +18,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../../components/Navigation";
 import { Theme } from "../../components/Theme";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const slides = [
   {
@@ -73,7 +75,8 @@ export const assets = slides.map((slide) => slide.picture.src);
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    flex: 1,
+    height:
+      height + (Platform.OS === "android" ? Constants.statusBarHeight : 0),
     backgroundColor: "white",
   },
   underlay: {
