@@ -1,15 +1,15 @@
 import React from "react";
-import { Text, Box, Button } from "../../components";
+import { Text, Box, Button } from "../components";
 import { Dimensions, Image, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Routes } from "../../components/Navigation";
-import { useTheme } from "../../components/Theme";
+import { Routes } from "../components/Navigation";
+import { useTheme } from "../components/Theme";
 import Constants from "expo-constants";
 
 const { width, height } = Dimensions.get("window");
 
 const picture = {
-  src: require("../assets/5.png"),
+  src: require("./assets/5.png"),
   width: 3383,
   height: 5074,
 };

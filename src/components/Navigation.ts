@@ -4,4 +4,5 @@ export type Routes = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
+  PasswordChanged: undefined
 };

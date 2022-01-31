@@ -28,7 +28,10 @@ const ForgotPassword = ({
     resolver: yupResolver(ForgotPasswordSchema),
   });
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    console.log(data);
+    navigation.navigate("PasswordChanged");
+  };
 
   const footer = (
     <Footer
@@ -72,7 +75,7 @@ const ForgotPassword = ({
             name="email"
           />
         </Box>
-        
+
         <Box alignItems="center">
           <Button
             variant="primary"
