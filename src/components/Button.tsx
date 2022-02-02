@@ -1,5 +1,5 @@
 import { useTheme } from "@shopify/restyle";
-import React, { ReactNode } from "react";
+import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { Theme, Text } from "./Theme";

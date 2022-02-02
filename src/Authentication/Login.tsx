@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { TextInput as RNTextInput } from "react-native";
+import { TextInput as RNTextInput, ToastAndroid } from "react-native";
 import Footer from "./components/Footer";
 import { Box, Button, Container, Text } from "../components";
 import Checkbox from "./components/Form/Checkbox";
@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
+import axios from "axios";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -19,14 +20,19 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
+const Login = ({ navigation, route }: StackScreenProps<Routes, "Login">) => {
+  let toastMessage;
+  if (route.params) {
+    toastMessage = route.params.toastMessage;
+  }
+
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors, touchedFields },
   } = useForm({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
@@ -35,7 +41,9 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
     resolver: yupResolver(LoginSchema),
   });
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
 
   const password = useRef<RNTextInput>(null);
 
@@ -50,6 +58,12 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
   return (
     <Container pattern={0} {...{ footer }}>
       <Box padding="xl" justifyContent="center" flex={1}>
+        {toastMessage &&
+          ToastAndroid.showWithGravity(
+            toastMessage,
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          )}
         <Text variant="title1" textAlign="center" marginBottom="l">
           Welcome back
         </Text>
@@ -128,10 +142,10 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
             )}
             name="remember"
           />
-          <RectButton
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
-            <Text variant="button" color="primary">Forgot password</Text>
+          <RectButton onPress={() => navigation.navigate("ForgotPassword")}>
+            <Text variant="button" color="primary">
+              Forgot password
+            </Text>
           </RectButton>
         </Box>
         <Box alignItems="center">

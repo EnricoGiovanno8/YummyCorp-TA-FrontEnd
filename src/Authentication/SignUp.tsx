@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../components/Navigation";
+import axios from "axios";
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -26,7 +27,7 @@ const SignUp = ({ navigation }: StackScreenProps<Routes, "Login">) => {
     handleSubmit,
     formState: { errors, touchedFields },
   } = useForm({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
@@ -35,7 +36,18 @@ const SignUp = ({ navigation }: StackScreenProps<Routes, "Login">) => {
     resolver: yupResolver(SignUpSchema),
   });
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    const { email, password } = data;
+    const body = { email, password };
+    await axios
+      .post("http://192.168.1.15:8000/api/register", body)
+      .then(() => {
+        navigation.navigate("Login", { toastMessage: "Register Success" });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   const password = useRef<RNTextInput>(null);
   const passwordConfirmation = useRef<RNTextInput>(null);
