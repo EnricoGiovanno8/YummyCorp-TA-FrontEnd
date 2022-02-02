@@ -10,7 +10,6 @@ import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Routes } from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
-import axios from "axios";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -42,7 +41,8 @@ const Login = ({ navigation, route }: StackScreenProps<Routes, "Login">) => {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    console.log(data)
+    navigation.navigate("Home")
   };
 
   const password = useRef<RNTextInput>(null);
