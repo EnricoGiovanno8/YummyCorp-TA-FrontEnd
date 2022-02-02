@@ -24,6 +24,8 @@ const SignUpSchema = Yup.object().shape({
 const SignUp = ({ navigation }: StackScreenProps<Routes, "Login">) => {
   const {
     control,
+    setValue,
+    setError,
     handleSubmit,
     formState: { errors, touchedFields },
   } = useForm({
@@ -37,15 +39,19 @@ const SignUp = ({ navigation }: StackScreenProps<Routes, "Login">) => {
   });
 
   const onSubmit = async (data: any) => {
-    const { email, password } = data;
-    const body = { email, password };
     await axios
-      .post("http://192.168.1.15:8000/api/register", body)
+      .post("http://192.168.1.15:8000/api/register", data)
       .then(() => {
-        navigation.navigate("Login", { toastMessage: "Register Success" });
+        navigation.navigate("RegisterSuccess");
       })
       .catch((err) => {
-        console.log(err.message);
+        setError("email", { message: "" });
+        setError("password", { message: "" });
+        setError("passwordConfirmation", { message: "" });
+        setValue("email", "");
+        setValue("password", "");
+        setValue("passwordConfirmation", "");
+        console.log(err?.response?.message || err.message);
       });
   };
 
