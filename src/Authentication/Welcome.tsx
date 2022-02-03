@@ -1,8 +1,7 @@
 import React from "react";
 import { Text, Box, Button } from "../components";
 import { Dimensions, Image, Platform } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { AuthenticationRoutes } from "../components/Navigation";
+import { AuthNavigationProps } from "../components/Navigation";
 import { useTheme } from "../components/Theme";
 import Constants from "expo-constants";
 import { RectButton } from "react-native-gesture-handler";
@@ -21,7 +20,7 @@ export const assets = [picture.src];
 
 // }
 
-const Welcome = ({ navigation }: StackScreenProps<AuthenticationRoutes, "Welcome">) => {
+const Welcome = ({ navigation }: AuthNavigationProps<"Welcome">) => {
   const theme = useTheme();
   const { colors, borderRadii, spacing } = theme;
 
@@ -96,9 +95,7 @@ const Welcome = ({ navigation }: StackScreenProps<AuthenticationRoutes, "Welcome
             label="Join us, it's Free"
             onPress={() => navigation.navigate("SignUp")}
           />
-          <RectButton
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
+          <RectButton onPress={() => navigation.navigate("ForgotPassword")}>
             <Text variant="button" color="secondary">
               Forgot Password?
             </Text>

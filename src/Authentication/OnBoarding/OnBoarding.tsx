@@ -14,8 +14,7 @@ import Slide, { SLIDE_HEIGHT } from "./Slide";
 import Subslide from "./Subslide";
 import Dot from "./Dot";
 import { makeStyles, useTheme } from "../../components";
-import { StackScreenProps } from "@react-navigation/stack";
-import { AuthenticationRoutes } from "../../components/Navigation";
+import { AuthNavigationProps } from "../../components/Navigation";
 import { Theme } from "../../components/Theme";
 
 const { width, height } = Dimensions.get("window");
@@ -111,7 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const OnBoarding = ({ navigation }: StackScreenProps<AuthenticationRoutes, "OnBoarding">) => {
+const OnBoarding = ({ navigation }: AuthNavigationProps<"OnBoarding">) => {
   const theme = useTheme();
   const styles = useStyles();
   // Scrolling Animation

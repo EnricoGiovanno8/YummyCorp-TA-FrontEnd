@@ -7,16 +7,9 @@ import TextInput from "./components/Form/TextInput";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { StackScreenProps } from "@react-navigation/stack";
-import {
-  AppRoutes,
-  AuthenticationRoutes,
-  HomeRoutes,
-} from "../components/Navigation";
+import { AuthNavigationProps } from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
 import axios from "axios";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { DrawerScreenProps } from "@react-navigation/drawer";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -26,12 +19,7 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const Login = ({
-  navigation,
-}: CompositeScreenProps<
-  StackScreenProps<AuthenticationRoutes, "Login">,
-  StackScreenProps<AppRoutes, "Home">
->) => {
+const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
   const {
     control,
     handleSubmit,
@@ -49,21 +37,22 @@ const Login = ({
   });
 
   const onSubmit = async (data: any) => {
-    await axios
-      .post("http://192.168.1.15:8000/api/login", data)
-      .then((res) => {
-        console.log(res.data);
-        navigation.navigate("Home");
-      })
-      .catch((err) => {
-        setError("email", { message: "" });
-        setError("password", { message: "" });
-        setError("remember", { message: "" });
-        setValue("email", "");
-        setValue("password", "");
-        setValue("remember", false);
-        console.log(err?.response?.message || err.message);
-      });
+    navigation.navigate("Home");
+    // await axios
+    //   .post("http://192.168.1.15:8000/api/login", data)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     navigation.navigate("Home");
+    //   })
+    //   .catch((err) => {
+    //     setError("email", { message: "" });
+    //     setError("password", { message: "" });
+    //     setError("remember", { message: "" });
+    //     setValue("email", "");
+    //     setValue("password", "");
+    //     setValue("remember", false);
+    //     console.log(err?.response?.message || err.message);
+    //   });
   };
 
   const password = useRef<RNTextInput>(null);

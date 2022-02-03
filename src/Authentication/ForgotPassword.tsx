@@ -1,10 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Linking } from "react-native";
 import { Box, Button, Container, Text } from "../components";
-import { AuthenticationRoutes } from "../components/Navigation";
+import { AuthNavigationProps } from "../components/Navigation";
 import Footer from "./components/Footer";
 import * as Yup from "yup";
 import TextInput from "./components/Form/TextInput";
@@ -15,7 +14,7 @@ const ForgotPasswordSchema = Yup.object().shape({
 
 const ForgotPassword = ({
   navigation,
-}: StackScreenProps<AuthenticationRoutes, "ForgotPassword">) => {
+}: AuthNavigationProps<"ForgotPassword">) => {
   const {
     control,
     handleSubmit,

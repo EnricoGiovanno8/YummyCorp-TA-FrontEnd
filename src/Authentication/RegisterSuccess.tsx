@@ -1,13 +1,19 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { AuthenticationRoutes } from "../components/Navigation";
-import { Box, Button, Container, Text, RoundedIconButton, RoundedIcon } from "../components";
+import { AuthNavigationProps } from "../components/Navigation";
+import {
+  Box,
+  Button,
+  Container,
+  Text,
+  RoundedIconButton,
+  RoundedIcon,
+} from "../components";
 
 const SIZE = 80;
 
 const RegisterSuccess = ({
   navigation,
-}: StackScreenProps<AuthenticationRoutes, "RegisterSuccess">) => {
+}: AuthNavigationProps<"RegisterSuccess">) => {
   return (
     <Container
       pattern={0}
@@ -24,7 +30,12 @@ const RegisterSuccess = ({
       }
     >
       <Box flex={1} justifyContent="center" alignItems="center" padding="xl">
-        <RoundedIcon name="check" size={SIZE} backgroundColor="primaryLight" color="primary" />
+        <RoundedIcon
+          name="check"
+          size={SIZE}
+          backgroundColor="primaryLight"
+          color="primary"
+        />
         <Text variant="title1" textAlign="center" marginVertical="l">
           Your account was successfully registered
         </Text>

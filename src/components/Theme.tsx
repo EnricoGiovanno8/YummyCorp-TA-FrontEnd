@@ -23,13 +23,17 @@ import { ImageStyle, TextStyle, ViewStyle } from "react-native";
 export const theme: BaseTheme = createTheme({
   colors: {
     primary: "#2CB9B0",
-    primaryLight: "#E7F9F7",
     secondary: "#0C0D34",
+    danger: "#FF0058",
     text: "rgba(12, 13, 52, 0.7)",
     white: "white",
-    greyButton: "rgba(12, 13, 52, 0.05)",
     grey: "#F4F0EF",
-    danger: "#FF0058",
+    primaryLight: "#E7F9F7",
+    orange: "#FE5E33",
+    yellow: "#FFc641",
+    pink: "#FF87A2",
+    violet: "#442CB9",
+    greyButton: "rgba(12, 13, 52, 0.05)",
   },
   spacing: {
     s: 8,
@@ -68,7 +72,7 @@ export const theme: BaseTheme = createTheme({
     },
     button: {
       fontSize: 13,
-      fontFamily: "SFProDisplay-Regular",
+      fontFamily: "SFProDisplay-Medium",
       color: "text",
     },
   },
