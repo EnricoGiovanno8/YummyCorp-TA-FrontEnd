@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
-import { Box, RoundedIconButton, Text } from "../../components";
+import { Box, Header, Text } from "../../components";
 import DrawerItem, { DrawerItemProps } from "./DrawerItem";
 
 const { width } = Dimensions.get("window");
@@ -47,6 +47,8 @@ const items: DrawerItemProps[] = [
   },
 ];
 
+export const assets = [require("./assets/drawer.jpg")];
+
 interface DrawerProps {}
 
 const DrawerContent = () => {
@@ -62,33 +64,19 @@ const DrawerContent = () => {
           // @ts-ignore: Object is possibly 'undefined'.
           borderBottomRightRadius="xl"
           backgroundColor="secondary"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          paddingHorizontal="m"
         >
-            <RoundedIconButton
-              size={24}
-              name="x"
-              color="white"
-              backgroundColor="secondary"
-              onPress={() => true}
-            />
-            <Text color="white">MY PROFILE</Text>
-            <RoundedIconButton
-              size={24}
-              name="shopping-bag"
-              color="white"
-              backgroundColor="secondary"
-              onPress={() => true}
-            />
+          <Header
+            title="Menu"
+            left={{ icon: "x", onPress: () => true }}
+            right={{ icon: "shopping-bag", onPress: () => true }}
+          />
         </Box>
       </Box>
       <Box flex={0.8}>
         <Box flex={1} backgroundColor="secondary" />
         <Box flex={1} backgroundColor="primaryLight" />
         <Image
-          source={require("../../components/assets/patterns/3.png")}
+          source={assets[0]}
           style={{
             position: "absolute",
             bottom: -height * 0.61,
@@ -137,11 +125,12 @@ const DrawerContent = () => {
         {...{ width: DRAWER_WIDTH, height: height * 0.5, overflow: "hidden" }}
       >
         <Image
-          source={require("../../components/assets/patterns/3.png")}
+          source={assets[0]}
           style={{
             ...StyleSheet.absoluteFillObject,
             width: undefined,
             height: undefined,
+            borderTopLeftRadius: 75,
           }}
         />
       </Box>

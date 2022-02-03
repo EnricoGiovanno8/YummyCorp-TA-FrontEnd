@@ -75,6 +75,12 @@ export const theme: BaseTheme = createTheme({
       fontFamily: "SFProDisplay-Medium",
       color: "text",
     },
+    header: {
+      fontSize: 12,
+      lineHeight: 24,
+      fontFamily: "SFProDisplay-Semibold",
+      color: "secondary",
+    },
   },
   borderRadii: {
     s: 4,
