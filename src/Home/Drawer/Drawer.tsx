@@ -1,3 +1,4 @@
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
 import { Box, Header, Text } from "../../components";
@@ -49,9 +50,9 @@ const items: DrawerItemProps[] = [
 
 export const assets = [require("./assets/drawer.jpg")];
 
-interface DrawerProps {}
+// interface DrawerProps {}
 
-const DrawerContent = () => {
+const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   return (
     <Box flex={1}>
       <Box flex={0.2} backgroundColor="white">
@@ -66,9 +67,10 @@ const DrawerContent = () => {
           backgroundColor="secondary"
         >
           <Header
-            title="Menu"
-            left={{ icon: "x", onPress: () => true }}
+            title="My Profile"
+            left={{ icon: "x", onPress: () => navigation.closeDrawer() }}
             right={{ icon: "shopping-bag", onPress: () => true }}
+            dark
           />
         </Box>
       </Box>

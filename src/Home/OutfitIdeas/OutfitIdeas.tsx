@@ -1,10 +1,17 @@
-import { DrawerScreenProps } from "@react-navigation/drawer";
 import React from "react";
-import { View } from "react-native";
-import { HomeRoutes } from "../../components/Navigation";
+import { Box, Header } from "../../components";
+import { HomeNavigationProps } from "../../components/Navigation";
 
-const OutfitIdeas = ({}: DrawerScreenProps<HomeRoutes, "OutfitIdeas">) => {
-  return <View style={{ flex: 1, backgroundColor: "red" }} />;
+const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
+  return (
+    <Box>
+      <Header
+        title="Outfit Ideas"
+        left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
+        right={{ icon: "shopping-bag", onPress: () => true }}
+      />
+    </Box>
+  );
 };
 
 export default OutfitIdeas;
