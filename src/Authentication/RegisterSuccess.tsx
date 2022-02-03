@@ -1,13 +1,13 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { Routes } from "../components/Navigation";
+import { AuthenticationRoutes } from "../components/Navigation";
 import { Box, Button, Container, Text, RoundedIconButton, RoundedIcon } from "../components";
 
 const SIZE = 80;
 
 const RegisterSuccess = ({
   navigation,
-}: StackScreenProps<Routes, "RegisterSuccess">) => {
+}: StackScreenProps<AuthenticationRoutes, "RegisterSuccess">) => {
   return (
     <Container
       pattern={0}

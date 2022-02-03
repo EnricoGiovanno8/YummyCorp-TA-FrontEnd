@@ -5,11 +5,12 @@ import {
   assets as authenticationAssets,
   AuthenticationNavigator,
 } from "./src/Authentication";
+import { HomeNavigator } from "./src/Home";
 import { LoadAssets } from "./src/components";
 import { theme } from "./src/components/Theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeNavigator } from "./src/Home";
+import { AppRoutes } from "./src/components/Navigation";
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -23,21 +24,14 @@ const fonts = {
   "SFProDisplay-Medium": require("./assets/fonts/SF-Pro-Display-Medium.otf"),
 };
 
-type AppStackRoutes = {
-  Authentication: undefined;
-  Home: undefined;
-};
-
-const AppStack = createStackNavigator<AppStackRoutes>();
+const AppStack = createStackNavigator<AppRoutes>();
 
 export default function App() {
   return (
     <ThemeProvider {...{ theme, assets }}>
       <LoadAssets {...{ fonts }}>
         <SafeAreaProvider>
-          <AppStack.Navigator
-            screenOptions={{ headerShown: false }}
-          >
+          <AppStack.Navigator screenOptions={{ headerShown: false }}>
             <AppStack.Screen name="Authentication" component={AuthenticationNavigator} />
             <AppStack.Screen name="Home" component={HomeNavigator} />
           </AppStack.Navigator>

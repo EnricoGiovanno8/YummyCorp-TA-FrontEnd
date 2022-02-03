@@ -15,7 +15,7 @@ import Subslide from "./Subslide";
 import Dot from "./Dot";
 import { makeStyles, useTheme } from "../../components";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Routes } from "../../components/Navigation";
+import { AuthenticationRoutes } from "../../components/Navigation";
 import { Theme } from "../../components/Theme";
 
 const { width, height } = Dimensions.get("window");
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const OnBoarding = ({ navigation }: StackScreenProps<Routes, "OnBoarding">) => {
+const OnBoarding = ({ navigation }: StackScreenProps<AuthenticationRoutes, "OnBoarding">) => {
   const theme = useTheme();
   const styles = useStyles();
   // Scrolling Animation

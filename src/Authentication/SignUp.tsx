@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Routes } from "../components/Navigation";
+import { AuthenticationRoutes } from "../components/Navigation";
 import axios from "axios";
 
 const SignUpSchema = Yup.object().shape({
@@ -21,7 +21,7 @@ const SignUpSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const SignUp = ({ navigation }: StackScreenProps<Routes, "Login">) => {
+const SignUp = ({ navigation }: StackScreenProps<AuthenticationRoutes, "Login">) => {
   const {
     control,
     setValue,

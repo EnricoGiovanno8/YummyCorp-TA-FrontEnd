@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Routes } from "../components/Navigation";
+import { AuthenticationRoutes } from "../components/Navigation";
 import OnBoarding, { assets as onBoardingAssets } from "./OnBoarding";
 import Welcome, { assets as welcomeAssets } from "./Welcome";
 import Login from "./Login"
@@ -11,7 +11,7 @@ import RegisterSuccess from "./RegisterSuccess";
 
 export const assets = [...onBoardingAssets, ...welcomeAssets];
 
-const AuthenticationStack = createStackNavigator<Routes>();
+const AuthenticationStack = createStackNavigator<AuthenticationRoutes>();
 export const AuthenticationNavigator = () => {
   return (
     <AuthenticationStack.Navigator screenOptions={{ headerShown: false }}>

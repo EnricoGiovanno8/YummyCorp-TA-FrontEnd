@@ -8,9 +8,15 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Routes } from "../components/Navigation";
+import {
+  AppRoutes,
+  AuthenticationRoutes,
+  HomeRoutes,
+} from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
 import axios from "axios";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -20,7 +26,12 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
+const Login = ({
+  navigation,
+}: CompositeScreenProps<
+  StackScreenProps<AuthenticationRoutes, "Login">,
+  StackScreenProps<AppRoutes, "Home">
+>) => {
   const {
     control,
     handleSubmit,
@@ -45,12 +56,12 @@ const Login = ({ navigation }: StackScreenProps<Routes, "Login">) => {
         navigation.navigate("Home");
       })
       .catch((err) => {
-        setError("email", { message: "" })
-        setError("password", { message: "" })
-        setError("remember", { message: "" })
-        setValue("email", "")
-        setValue("password", "")
-        setValue("remember", false)
+        setError("email", { message: "" });
+        setError("password", { message: "" });
+        setError("remember", { message: "" });
+        setValue("email", "");
+        setValue("password", "");
+        setValue("remember", false);
         console.log(err?.response?.message || err.message);
       });
   };

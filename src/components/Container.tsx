@@ -82,6 +82,7 @@ const Container = ({ children, footer, pattern }: ContainerProps) => {
               borderRadius: borderRadii.xl,
               borderTopLeftRadius: 0,
               backgroundColor: colors.white,
+              justifyContent: "center"
             }}
           >
             {children}

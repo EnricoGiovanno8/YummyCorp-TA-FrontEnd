@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Box, Button } from "../components";
 import { Dimensions, Image, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Routes } from "../components/Navigation";
+import { AuthenticationRoutes } from "../components/Navigation";
 import { useTheme } from "../components/Theme";
 import Constants from "expo-constants";
 import { RectButton } from "react-native-gesture-handler";
@@ -21,7 +21,7 @@ export const assets = [picture.src];
 
 // }
 
-const Welcome = ({ navigation }: StackScreenProps<Routes, "Welcome">) => {
+const Welcome = ({ navigation }: StackScreenProps<AuthenticationRoutes, "Welcome">) => {
   const theme = useTheme();
   const { colors, borderRadii, spacing } = theme;
 
