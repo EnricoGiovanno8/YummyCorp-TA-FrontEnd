@@ -19,7 +19,7 @@ interface HeaderProps {
 const Header = ({ left, title, right, dark }: HeaderProps) => {
   const insets = useSafeAreaInsets();
   const color = dark ? "white" : "secondary";
-  const backgroundColor = dark ? "secondary" : "grey";
+  const backgroundColor = dark ? "secondary" : "white";
   return (
     <Box
       flexDirection="row"
