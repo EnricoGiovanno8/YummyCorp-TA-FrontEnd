@@ -16,7 +16,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { mix, mixColor } from "react-native-redash";
 import { Box } from "../../components";
 
 const { width: wWidth } = Dimensions.get("window");
@@ -71,6 +70,7 @@ const Card = ({ onSwipe, source }: CardProps) => {
       height,
       borderRadius,
       transform: [{ translateY: y.value }, { translateX: x.value }],
+      overflow: "hidden"
     };
   });
   return (
