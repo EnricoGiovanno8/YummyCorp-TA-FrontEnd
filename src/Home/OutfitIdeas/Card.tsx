@@ -52,11 +52,11 @@ const Card = ({ onSwipe, source }: CardProps) => {
       if (x.value > 0.5 * width) {
         x.value = withSpring(width);
         y.value = withSpring(0);
-        runOnJS(onSwipe)()
+        runOnJS(onSwipe)();
       } else if (x.value < 0.5 * -width) {
         x.value = withSpring(-width);
         y.value = withSpring(0);
-        runOnJS(onSwipe)()
+        runOnJS(onSwipe)();
       } else {
         x.value = withSpring(0);
         y.value = withSpring(0);
@@ -70,7 +70,7 @@ const Card = ({ onSwipe, source }: CardProps) => {
       height,
       borderRadius,
       transform: [{ translateY: y.value }, { translateX: x.value }],
-      overflow: "hidden"
+      overflow: "hidden",
     };
   });
   return (
