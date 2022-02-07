@@ -1,10 +1,16 @@
 import React from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ImageRequireSource,
+  StyleSheet,
+} from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import Animated, {
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -19,7 +25,8 @@ const height = width * (425 / 294);
 const borderRadius = 24;
 
 interface CardProps {
-  position: number;
+  onSwipe: () => void;
+  source: ImageRequireSource;
 }
 
 type ContextInterface = {
@@ -27,18 +34,14 @@ type ContextInterface = {
   translateY: number;
 };
 
-const Card = ({ position }: CardProps) => {
-  const backgroundColor = mixColor(position, "#C9E9E7", "#74BCB8");
-  const translateYOffset = mix(position, 0, -50);
-  const scale = mix(position, 1, 0.9);
-
+const Card = ({ onSwipe, source }: CardProps) => {
   const x = useSharedValue(0);
-  const y = useSharedValue(translateYOffset);
+  const y = useSharedValue(0);
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     ContextInterface
   >({
-    onStart: (event, context) => {
+    onStart: (_, context) => {
       context.translateX = x.value;
       context.translateY = y.value;
     },
@@ -49,23 +52,25 @@ const Card = ({ position }: CardProps) => {
     onEnd: () => {
       if (x.value > 0.5 * width) {
         x.value = withSpring(width);
-        y.value = withSpring(translateYOffset);
+        y.value = withSpring(0);
+        runOnJS(onSwipe)()
       } else if (x.value < 0.5 * -width) {
         x.value = withSpring(-width);
-        y.value = withSpring(translateYOffset);
+        y.value = withSpring(0);
+        runOnJS(onSwipe)()
       } else {
         x.value = withSpring(0);
-        y.value = withSpring(translateYOffset);
+        y.value = withSpring(0);
       }
     },
   });
   const cardStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor,
+      backgroundColor: "#C9E9E7",
       width,
       height,
       borderRadius,
-      transform: [{ translateY: y.value }, { translateX: x.value }, { scale }],
+      transform: [{ translateY: y.value }, { translateX: x.value }],
     };
   });
   return (
@@ -75,7 +80,16 @@ const Card = ({ position }: CardProps) => {
       alignItems="center"
     >
       <PanGestureHandler onGestureEvent={gestureHandler}>
-        <Animated.View style={{ ...cardStyle }} />
+        <Animated.View style={cardStyle}>
+          <Image
+            {...{ source }}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              width: undefined,
+              height: undefined,
+            }}
+          />
+        </Animated.View>
       </PanGestureHandler>
     </Box>
   );

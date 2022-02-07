@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Header } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import Background from "./Background";
 import Card from "./Card";
 
+const cards = [
+  {
+    index: 3,
+    source: require("../../Authentication/assets/4.png"),
+  },
+  {
+    index: 2,
+    source: require("../../Authentication/assets/3.png"),
+  },
+  {
+    index: 1,
+    source: require("../../Authentication/assets/2.png"),
+  },
+  {
+    index: 0,
+    source: require("../../Authentication/assets/1.png"),
+  },
+];
+
 const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   return (
     <Box flex={1} backgroundColor="white">
       <Header
@@ -14,9 +34,16 @@ const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
       />
       <Box flex={1}>
         <Background />
-        <Card position={1} />
-        <Card position={0.5} />
-        <Card position={0} />
+        {cards.map(
+          ({ index, source }) =>
+            index >= currentIndex && (
+              <Card
+                key={index}
+                onSwipe={() => setCurrentIndex((prev) => prev + 1)}
+                {...{ source }}
+              />
+            )
+        )}
       </Box>
     </Box>
   );

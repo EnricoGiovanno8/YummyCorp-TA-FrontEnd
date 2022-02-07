@@ -6,7 +6,7 @@ const Background = () => {
   const theme = useTheme();
   return (
     <View style={StyleSheet.absoluteFill}>
-      <Box flex={1 / 3} backgroundColor="orange">
+      <Box flex={1 / 3}>
         <ImageBackground
           source={require("./assets/background.jpg")}
           style={{ flex: 1 }}
