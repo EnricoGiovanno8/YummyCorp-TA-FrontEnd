@@ -1,6 +1,6 @@
 import React from "react";
 import { Feather as Icon } from "@expo/vector-icons";
-import { RectButton } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Box, Text } from "../../../components";
 
 interface CheckboxProps {
@@ -11,8 +11,7 @@ interface CheckboxProps {
 
 const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
   return (
-    <RectButton
-      rippleColor="white"
+    <TouchableOpacity
       onPress={() => {
         onChange(!value);
       }}
@@ -35,7 +34,7 @@ const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
         </Box>
         <Text variant="button">{label}</Text>
       </Box>
-    </RectButton>
+    </TouchableOpacity>
   );
 };
 

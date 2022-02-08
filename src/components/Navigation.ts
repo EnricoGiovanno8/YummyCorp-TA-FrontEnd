@@ -33,4 +33,9 @@ export type AuthenticationRoutes = {
 };
 export type HomeRoutes = {
   OutfitIdeas: undefined;
+  FavouriteOutfits: undefined;
+  EditProfile: undefined;
+  TransactionHistory: undefined;
+  NotificationsSettings: undefined;
+  Logout: undefined;
 };

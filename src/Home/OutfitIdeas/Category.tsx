@@ -43,11 +43,11 @@ const Category = ({
               height: INNER_RADIUS * 2,
               borderRadius: INNER_RADIUS,
               backgroundColor,
-              opacity: selected ? 1 : 0.3,
+              opacity: selected ? 1 : 0.5,
             }}
           />
         </Box>
-        <Text textAlign="center" marginTop="s" opacity={selected ? 1 : 0.5}>
+        <Text textAlign="center" marginTop="s" opacity={selected ? 1 : 0.7}>
           {title}
         </Text>
       </Box>

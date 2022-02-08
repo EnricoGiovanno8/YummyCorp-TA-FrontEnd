@@ -37,6 +37,7 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
   });
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     navigation.navigate("Home");
     // await axios
     //   .post("http://192.168.1.15:8000/api/login", data)
