@@ -21,13 +21,13 @@ const items: DrawerItemProps[] = [
     icon: "heart",
     label: "Favourite Outfits",
     screen: "FavouriteOutfits",
-    color: "orange",
+    color: "graph1",
   },
   {
     icon: "user",
     label: "Edit Profile",
     screen: "EditProfile",
-    color: "yellow",
+    color: "graph2",
   },
   {
     icon: "clock",

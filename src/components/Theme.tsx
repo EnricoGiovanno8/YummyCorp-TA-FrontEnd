@@ -10,12 +10,18 @@ import React, { ReactNode } from "react";
 import { ImageStyle, TextStyle, ViewStyle } from "react-native";
 
 export const palette = {
+  green: "#2CB9B0",
   white: "white",
+  orange: "#FE5E33",
+  yellow: "#FFc641",
+  pink: "#FF87A2",
+  violet: "#442CB9",
+  lightBlue: "#BFEAF5",
 };
 
 const theme: BaseTheme = createTheme({
   colors: {
-    primary: "#2CB9B0",
+    primary: palette.green,
     secondary: "#0C0D34",
     danger: "#FF0058",
     text: "rgba(12, 13, 52, 0.7)",
@@ -24,11 +30,13 @@ const theme: BaseTheme = createTheme({
     darkGrey: "#808080",
     lightGrey: "#FAFAFA",
     primaryLight: "#E7F9F7",
-    orange: "#FE5E33",
-    yellow: "#FFc641",
-    pink: "#FF87A2",
-    violet: "#442CB9",
     greyButton: "rgba(12, 13, 52, 0.05)",
+    white: "white",
+    graph1: palette.orange,
+    graph2: palette.yellow,
+    pink: palette.pink,
+    violet: palette.violet,
+    lightBlue: palette.lightBlue,
   },
   spacing: {
     s: 8,

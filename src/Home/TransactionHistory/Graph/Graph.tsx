@@ -1,6 +1,11 @@
 import moment from "moment";
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { Dimensions } from "react-native";
+import {
+  Transition,
+  Transitioning,
+  TransitioningView,
+} from "react-native-reanimated";
 import { Box, useTheme } from "../../../components";
 import { Theme } from "../../../components/Theme";
 import { lerp } from "./Scale";
@@ -8,6 +13,16 @@ import Underlay, { MARGIN } from "./Underlay";
 
 const { width: wWidth } = Dimensions.get("window");
 const aspectRatio = 195 / 305;
+
+const transition = (
+  <Transition.Together>
+    <Transition.In
+      type="slide-bottom"
+      durationMs={650}
+      interpolation="easeInOut"
+    />
+  </Transition.Together>
+);
 
 export interface DataPoint {
   date: number;
@@ -23,6 +38,7 @@ interface GraphProps {
 }
 
 const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
+  const ref = useRef<TransitioningView>(null);
   const theme = useTheme();
   // @ts-ignore: Object is possibly 'undefined'.
   const canvasWidth = wWidth - theme.spacing.m * 2;
@@ -38,6 +54,10 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
   const minY = Math.min(...values);
   const maxY = Math.max(...values);
 
+  useLayoutEffect(() => {
+    ref.current?.animateNextTransition();
+  }, []);
+
   return (
     <Box marginTop="xl" paddingLeft={MARGIN} paddingBottom={MARGIN}>
       <Underlay
@@ -47,9 +67,15 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
         numberOfMonths={numberOfMonths}
         step={step}
       />
-      <Box {...{ width, height }}>
+      <Transitioning.View
+        style={{ width, height }}
+        ref={ref}
+        transition={transition}
+      >
         {data.map((point) => {
-          const i = Math.round(moment.duration(moment(point.date).diff(startDate)).asMonths())
+          const i = Math.round(
+            moment.duration(moment(point.date).diff(startDate)).asMonths()
+          );
           return (
             <Box
               key={point.id}
@@ -85,7 +111,7 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
             </Box>
           );
         })}
-      </Box>
+      </Transitioning.View>
     </Box>
   );
 };
