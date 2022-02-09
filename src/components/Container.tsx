@@ -43,7 +43,7 @@ const Container = ({ children, footer, pattern }: ContainerProps) => {
         }}
       >
         <StatusBar barStyle="light-content" />
-        <Box style={{ backgroundColor: colors.white }}>
+        <Box style={{ backgroundColor: colors.background }}>
           <Box
             style={{
               // @ts-ignore: Object is possibly 'undefined'.
@@ -81,7 +81,7 @@ const Container = ({ children, footer, pattern }: ContainerProps) => {
               // @ts-ignore: Object is possibly 'undefined'.
               borderRadius: borderRadii.xl,
               borderTopLeftRadius: 0,
-              backgroundColor: colors.white,
+              backgroundColor: colors.background,
               justifyContent: "center"
             }}
           >

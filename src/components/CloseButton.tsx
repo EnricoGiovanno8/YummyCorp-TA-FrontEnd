@@ -14,7 +14,7 @@ const CloseButton = ({ onPress }: CloseButtonProps) => {
     <RectButton {...{ onPress }}>
       <Box
         style={{ height: SIZE, width: SIZE, borderRadius: SIZE / 2 }}
-        backgroundColor="white"
+        backgroundColor="background"
         justifyContent="center"
         alignItems="center"
       >

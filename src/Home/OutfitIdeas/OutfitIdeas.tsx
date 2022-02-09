@@ -27,7 +27,7 @@ const cards = [
 const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
-    <Box flex={1} backgroundColor="white">
+    <Box flex={1} backgroundColor="background">
       <Header
         title="Outfit Ideas"
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}

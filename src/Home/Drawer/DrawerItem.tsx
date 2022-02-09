@@ -28,12 +28,9 @@ const DrawerItem = ({ icon, label, color, ...props }: DrawerItemProps) => {
   return (
     <RectButton
       onPress={() =>
-        // @ts-ignore
-        props.screen
-          ? // @ts-ignore
-            navigation.navigate(props.screen)
-          : // @ts-ignore
-            props.onPress(navigation)
+        "screen" in props
+          ? navigation.navigate(props.screen)
+          : props.onPress(navigation)
       }
     >
       <Box flexDirection="row" alignItems="center" padding="m">
@@ -42,7 +39,7 @@ const DrawerItem = ({ icon, label, color, ...props }: DrawerItemProps) => {
           size={36}
           iconRatio={0.5}
           backgroundColor={color}
-          color={"white"}
+          color="background"
         />
         <Text variant="button" color="secondary" marginLeft="m">
           {label}

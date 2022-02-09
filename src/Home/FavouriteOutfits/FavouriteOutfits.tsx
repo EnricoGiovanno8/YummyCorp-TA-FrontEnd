@@ -105,7 +105,7 @@ const FavouriteOutfits = ({
     setOutfits(newOutfits);
   };
   return (
-    <Box flex={1} backgroundColor="white">
+    <Box flex={1} backgroundColor="background">
       <Header
         title="Favourite Outfits"
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}

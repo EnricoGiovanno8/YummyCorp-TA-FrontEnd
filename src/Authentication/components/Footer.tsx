@@ -16,7 +16,7 @@ const Footer = ({ onPress, title, action }: FooterProps) => {
       <Box alignItems="center" marginTop="m">
         <RectButton {...{ onPress }}>
           <Box flexDirection="row" justifyContent="center">
-            <Text variant="button" color="white">
+            <Text variant="button" color="background">
               {title}
             </Text>
             <Text marginLeft="s" variant="button" color="primary">

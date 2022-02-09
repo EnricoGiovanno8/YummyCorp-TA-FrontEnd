@@ -104,7 +104,7 @@ const SocialIcon = ({ children }: SocialIconProps) => {
     <Box
       style={{
         marginHorizontal: spacing.m,
-        backgroundColor: colors.white,
+        backgroundColor: colors.background,
         width: SIZE,
         height: SIZE,
         borderRadius: SIZE,

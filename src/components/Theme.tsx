@@ -1,32 +1,25 @@
 import {
+  ThemeProvider as ReStyleThemeProvider,
   BaseTheme,
   createBox,
   createText,
   createTheme,
   useTheme as useReTheme,
 } from "@shopify/restyle";
+import React, { ReactNode } from "react";
 import { ImageStyle, TextStyle, ViewStyle } from "react-native";
 
-// const palette = {
-//   purpleLight: "#8C6FF7",
-//   purplePrimary: "#5A31F4",
-//   purpleDark: "#3F22AB",
+export const palette = {
+  white: "white",
+};
 
-//   greenLight: "#56DCBA",
-//   greenPrimary: "#0ECD9D",
-//   greenDark: "#0A906E",
-
-//   black: "#0B0B0B",
-//   white: "#F0F2F3",
-// };
-
-export const theme: BaseTheme = createTheme({
+const theme: BaseTheme = createTheme({
   colors: {
     primary: "#2CB9B0",
     secondary: "#0C0D34",
     danger: "#FF0058",
     text: "rgba(12, 13, 52, 0.7)",
-    white: "white",
+    background: palette.white,
     grey: "#F4F0EF",
     darkGrey: "#808080",
     lightGrey: "#FAFAFA",
@@ -53,7 +46,7 @@ export const theme: BaseTheme = createTheme({
       fontSize: 65,
       lineHeight: 65,
       fontFamily: "SFProDisplay-Bold",
-      color: "white",
+      color: "background",
       textAlign: "center",
     },
     title1: {
@@ -97,6 +90,10 @@ export const theme: BaseTheme = createTheme({
     xl: 75,
   },
 });
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  return <ReStyleThemeProvider {...{ theme }}>{children}</ReStyleThemeProvider>;
+};
 
 export type Theme = typeof theme;
 export const Text = createText<Theme>();

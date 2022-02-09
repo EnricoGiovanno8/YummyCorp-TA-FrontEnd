@@ -22,7 +22,7 @@ const RegisterSuccess = ({
           <RoundedIconButton
             name="x"
             size={60}
-            backgroundColor="white"
+            backgroundColor="background"
             color="secondary"
             onPress={() => navigation.navigate("Login")}
           />

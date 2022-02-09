@@ -28,7 +28,7 @@ const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
           alignItems="center"
           borderWidth={1}
           borderColor="primary"
-          backgroundColor={value ? "primary" : "white"}
+          backgroundColor={value ? "primary" : "background"}
         >
           <Icon name="check" color="white" />
         </Box>

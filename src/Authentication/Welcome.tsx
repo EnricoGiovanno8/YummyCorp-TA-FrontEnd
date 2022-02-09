@@ -27,7 +27,7 @@ const Welcome = ({ navigation }: AuthNavigationProps<"Welcome">) => {
   return (
     <Box
       style={{
-        backgroundColor: colors.white,
+        backgroundColor: colors.background,
         height:
           height + (Platform.OS === "android" ? Constants.statusBarHeight : 0),
       }}
@@ -72,7 +72,7 @@ const Welcome = ({ navigation }: AuthNavigationProps<"Welcome">) => {
         />
         <Box
           style={{
-            backgroundColor: "white",
+            backgroundColor: theme.colors.background,
             // @ts-ignore: Object is possibly 'undefined'.
             borderTopLeftRadius: borderRadii.xl,
             flex: 1,

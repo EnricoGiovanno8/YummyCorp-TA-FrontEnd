@@ -25,7 +25,7 @@ const Button = ({ label, variant, onPress }: ButtonProps) => {
   const backgroundColor =
     variant === "primary" ? theme.colors.primary : theme.colors.grey;
   const color =
-    variant === "primary" ? theme.colors.white : theme.colors.secondary;
+    variant === "primary" ? theme.colors.background : theme.colors.secondary;
   return (
     <TouchableOpacity {...{ onPress }}>
       <RectButton style={{ ...styles.container, backgroundColor }}>

@@ -12,11 +12,11 @@ const Background = () => {
           style={{ flex: 1 }}
         >
           {/*@ts-ignore: Object is possibly 'undefined'.*/}
-          <Box flex={1} backgroundColor="white" borderBottomRightRadius="xl" />
+          <Box flex={1} backgroundColor="background" borderBottomRightRadius="xl" />
         </ImageBackground>
       </Box>
       <Box flex={1 / 3} backgroundColor="secondary">
-        <Box flex={1} backgroundColor="white" />
+        <Box flex={1} backgroundColor="background" />
         <Box flex={1} backgroundColor="secondary" />
         <Image
           source={require("./assets/background.jpg")}

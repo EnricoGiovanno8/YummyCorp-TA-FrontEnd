@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     height:
       height + (Platform.OS === "android" ? Constants.statusBarHeight : 0),
-    backgroundColor: "white",
+    backgroundColor: theme.colors.background,
   },
   underlay: {
     ...StyleSheet.absoluteFillObject,
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   footerContent: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.background,
     // @ts-ignore: Object is possibly 'undefined'.
     borderTopLeftRadius: theme.borderRadii.xl,
   },
