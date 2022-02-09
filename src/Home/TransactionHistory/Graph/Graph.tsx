@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import { Dimensions } from "react-native";
 import { Box, useTheme } from "../../../components";
@@ -33,7 +34,7 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
 
   const step = width / numberOfMonths;
   const values = data.map((p) => p.value);
-  const dates = data.map((p) => p.date);
+  // const dates = data.map((p) => p.date);
   const minY = Math.min(...values);
   const maxY = Math.max(...values);
 
@@ -48,7 +49,7 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
       />
       <Box {...{ width, height }}>
         {data.map((point) => {
-          const i = new Date(point.date - startDate).getMonth();
+          const i = Math.round(moment.duration(moment(point.date).diff(startDate)).asMonths())
           return (
             <Box
               key={point.id}

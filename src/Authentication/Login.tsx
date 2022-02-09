@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { AuthNavigationProps } from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
 import axios from "axios";
+import { CommonActions } from "@react-navigation/native";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -38,7 +39,12 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
 
   const onSubmit = async (data: any) => {
     console.log(data);
-    navigation.navigate("Home");
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      })
+    )
     // await axios
     //   .post("http://192.168.1.15:8000/api/login", data)
     //   .then((res) => {

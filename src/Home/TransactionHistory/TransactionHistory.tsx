@@ -1,18 +1,34 @@
 import React from "react";
-import { ScrollView } from "react-native";
-import { Box, Header, Text } from "../../components";
+import { Dimensions, Image, ScrollView, StyleSheet } from "react-native";
+import { Box, Header, makeStyles, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
+import { Theme } from "../../components/Theme";
 
 import Graph, { DataPoint } from "./Graph";
+import TopCurve from "./TopCurve";
 import Transaction from "./Transaction";
+
+const footerHeight = (Dimensions.get("window").width / 3) * 0.8;
+const useStyles = makeStyles((theme: Theme) => ({
+  footer: {
+    ...StyleSheet.absoluteFillObject,
+    width: undefined,
+    height: undefined,
+    // @ts-ignore: Object is possibly 'undefined'.
+    borderTopLeftRadius: theme.borderRadii.xl,
+  },
+  scrollView: {
+    paddingBottom: footerHeight,
+  },
+}));
 
 const startDate = new Date("2019-09-01").getTime();
 const maxDate = new Date("2020-03-01").getTime();
-const numberOfMonths = (new Date(maxDate - startDate).getMonth())
+const numberOfMonths = new Date(maxDate - startDate).getMonth();
 
 const data: DataPoint[] = [
   {
-    date: new Date("2019-11-01").getTime(),
+    date: new Date("2019-10-02").getTime(),
     value: 139.42,
     color: "primary",
     id: 245672,
@@ -34,6 +50,7 @@ const data: DataPoint[] = [
 const TransactionHistory = ({
   navigation,
 }: HomeNavigationProps<"TransactionHistory">) => {
+  const styles = useStyles();
   return (
     <Box flex={1} backgroundColor="white">
       <Header
@@ -62,12 +79,29 @@ const TransactionHistory = ({
             <Text color="primary">All Time</Text>
           </Box>
         </Box>
-        <Graph data={data} startDate={startDate} numberOfMonths={numberOfMonths} />
-        <ScrollView>
+        <Graph
+          data={data}
+          startDate={startDate}
+          numberOfMonths={numberOfMonths}
+        />
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollView}>
           {data.map((transaction) => (
             <Transaction key={transaction.id} transaction={transaction} />
           ))}
         </ScrollView>
+      </Box>
+      <TopCurve footerHeight={footerHeight} />
+      <Box
+        position="absolute"
+        left={0}
+        right={0}
+        bottom={0}
+        height={footerHeight}
+      >
+        <Image
+          style={styles.footer}
+          source={require("../OutfitIdeas/assets/background.jpg")}
+        />
       </Box>
     </Box>
   );
