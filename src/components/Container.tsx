@@ -80,7 +80,6 @@ const Container = ({ children, footer, pattern }: ContainerProps) => {
               flex: 1,
               // @ts-ignore: Object is possibly 'undefined'.
               borderRadius: borderRadii.xl,
-              borderTopLeftRadius: 0,
               backgroundColor: colors.background,
               justifyContent: "center"
             }}

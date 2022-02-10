@@ -37,7 +37,7 @@ const Welcome = ({ navigation }: AuthNavigationProps<"Welcome">) => {
         style={{
           // @ts-ignore: Object is possibly 'undefined'.
           borderBottomRightRadius: borderRadii.xl,
-          backgroundColor: colors.grey,
+          backgroundColor: colors.background2,
           justifyContent: "flex-end",
           alignItems: "center",
         }}
@@ -62,7 +62,7 @@ const Welcome = ({ navigation }: AuthNavigationProps<"Welcome">) => {
       >
         <Box
           style={{
-            backgroundColor: colors.grey,
+            backgroundColor: colors.background2,
             position: "absolute",
             top: 0,
             left: 0,

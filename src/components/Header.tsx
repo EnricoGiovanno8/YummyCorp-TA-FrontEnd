@@ -32,6 +32,7 @@ const Header = ({ left, title, right, dark }: HeaderProps) => {
         size={44}
         name={left.icon}
         onPress={left.onPress}
+        align={backgroundColor === undefined ? "flex-start" : "center"}
         {...{ color, backgroundColor }}
       />
       <Text variant="header" {...{ color }}>
@@ -41,6 +42,7 @@ const Header = ({ left, title, right, dark }: HeaderProps) => {
         size={44}
         name={right.icon}
         onPress={right.onPress}
+        align={backgroundColor === undefined ? "flex-end" : "center"}
         {...{ color, backgroundColor }}
       />
     </Box>
