@@ -1,7 +1,10 @@
 import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 import { Theme, Text } from "./Theme";
 
 const styles = StyleSheet.create({
@@ -18,21 +21,23 @@ interface ButtonProps {
   label?: string;
   variant: "primary" | "default";
   onPress: () => void;
+  style?: TouchableOpacityProps["style"];
 }
 
-const Button = ({ label, variant, onPress }: ButtonProps) => {
+const Button = ({ label, variant, onPress, style }: ButtonProps) => {
   const theme = useTheme<Theme>();
   const backgroundColor =
     variant === "primary" ? theme.colors.primary : theme.colors.background2;
   const color =
-    variant === "primary" ? theme.colors.background : undefined;
+    variant === "primary" ? theme.colors.background : theme.colors.secondary;
   return (
-    <TouchableOpacity {...{ onPress }}>
-      <RectButton style={{ ...styles.container, backgroundColor }}>
-        <Text variant="button" style={{ color }}>
-          {label}
-        </Text>
-      </RectButton>
+    <TouchableOpacity
+      {...{ onPress }}
+      style={[styles.container, style, { backgroundColor }]}
+    >
+      <Text variant="button" style={{ color }}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 };

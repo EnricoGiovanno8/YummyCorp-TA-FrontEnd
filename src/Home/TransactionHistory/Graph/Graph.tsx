@@ -1,11 +1,11 @@
+import { useIsFocused } from "@react-navigation/native";
 import moment from "moment";
-import React, { useLayoutEffect, useRef } from "react";
-import { Dimensions } from "react-native";
-import {
-  Transition,
-  Transitioning,
-  TransitioningView,
+import React from "react";
+import { Dimensions, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
 } from "react-native-reanimated";
+import { useTiming } from "react-native-redash";
 import { Box, useTheme } from "../../../components";
 import { Theme } from "../../../components/Theme";
 import { lerp } from "./Scale";
@@ -13,16 +13,7 @@ import Underlay, { MARGIN } from "./Underlay";
 
 const { width: wWidth } = Dimensions.get("window");
 const aspectRatio = 195 / 305;
-
-const transition = (
-  <Transition.Together>
-    <Transition.In
-      type="slide-bottom"
-      durationMs={650}
-      interpolation="easeInOut"
-    />
-  </Transition.Together>
-);
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export interface DataPoint {
   date: number;
@@ -38,7 +29,8 @@ interface GraphProps {
 }
 
 const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
-  const ref = useRef<TransitioningView>(null);
+  const isFocused = useIsFocused();
+  const transition = useTiming(isFocused, { duration: 650 });
   const theme = useTheme();
   // @ts-ignore: Object is possibly 'undefined'.
   const canvasWidth = wWidth - theme.spacing.m * 2;
@@ -54,9 +46,11 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
   const minY = Math.min(...values);
   const maxY = Math.max(...values);
 
-  useLayoutEffect(() => {
-    ref.current?.animateNextTransition();
-  }, []);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleY: transition.value }],
+    };
+  });
 
   return (
     <Box marginTop="xl" paddingLeft={MARGIN} paddingBottom={MARGIN}>
@@ -67,23 +61,20 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
         numberOfMonths={numberOfMonths}
         step={step}
       />
-      <Transitioning.View
-        style={{ width, height }}
-        ref={ref}
-        transition={transition}
-      >
+      <View style={{ width, height }}>
         {data.map((point) => {
           const i = Math.round(
             moment.duration(moment(point.date).diff(startDate)).asMonths()
           );
           return (
-            <Box
+            <AnimatedBox
               key={point.id}
               position="absolute"
               left={i * step}
               bottom={0}
               width={step}
               height={lerp(0, height, point.value / maxY)}
+              style={animatedStyle}
             >
               <Box
                 backgroundColor={point.color}
@@ -108,10 +99,10 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
                 // @ts-ignore: Object is possibly 'undefined'.
                 borderRadius="m"
               />
-            </Box>
+            </AnimatedBox>
           );
         })}
-      </Transitioning.View>
+      </View>
     </Box>
   );
 };
