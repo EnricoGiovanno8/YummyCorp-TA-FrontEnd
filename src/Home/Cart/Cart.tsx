@@ -22,10 +22,20 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
             isShoppingCart
           />
         </Box>
+      </Box>
+      <Box flex={1}>
+        <ScrollView
+          contentContainerStyle={{ paddingVertical: 50 * aspectRatio }}
+        >
+          <Item />
+          <Item />
+          <Item />
+          <Item />
+        </ScrollView>
         <Box
           style={{
             position: "absolute",
-            bottom: -height,
+            top: 0,
             left: 0,
             right: 0,
             height,
@@ -39,12 +49,6 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
           </Text>
         </Box>
       </Box>
-      <ScrollView>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-      </ScrollView>
     </CartContainer>
   );
 };

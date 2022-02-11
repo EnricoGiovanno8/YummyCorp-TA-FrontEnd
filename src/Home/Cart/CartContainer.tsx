@@ -55,27 +55,27 @@ const CartContainer = ({ children }: CartContainerProps) => {
   }));
   return (
     <Box flex={1} backgroundColor="secondary">
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height,
-              backgroundColor: "white",
-              // @ts-ignore
-              borderBottomLeftRadius: theme.borderRadii.xl,
-              // @ts-ignore
-              borderBottomRightRadius: theme.borderRadii.xl,
-              overflow: "hidden"
-            },
-            style,
-          ]}
-        >
-          {children}
-          <View
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height,
+            backgroundColor: "white",
+            // @ts-ignore
+            borderBottomLeftRadius: theme.borderRadii.xl,
+            // @ts-ignore
+            borderBottomRightRadius: theme.borderRadii.xl,
+            overflow: "hidden",
+          },
+          style,
+        ]}
+      >
+        {children}
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <Animated.View
             style={{
               position: "absolute",
               bottom: 0,
@@ -96,9 +96,9 @@ const CartContainer = ({ children }: CartContainerProps) => {
                 marginBottom: theme.spacing.m,
               }}
             />
-          </View>
-        </Animated.View>
-      </PanGestureHandler>
+          </Animated.View>
+        </PanGestureHandler>
+      </Animated.View>
     </Box>
   );
 };
