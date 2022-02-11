@@ -15,12 +15,13 @@ interface HeaderProps {
     onPress: () => void;
   };
   dark: boolean;
+  isShoppingCart?: boolean
 }
 
-const Header = ({ left, title, right, dark }: HeaderProps) => {
+const Header = ({ left, title, right, dark, isShoppingCart }: HeaderProps) => {
   const insets = useSafeAreaInsets();
-  const color = dark ? "background" : "secondary";
-  const backgroundColor = dark ? "secondary" : "background";
+  const color = isShoppingCart ? "background" : dark ? "background" : "secondary";
+  const backgroundColor = isShoppingCart ? "primary" : dark ? "secondary" : "background";
   return (
     <Box
       flexDirection="row"
@@ -33,7 +34,7 @@ const Header = ({ left, title, right, dark }: HeaderProps) => {
         size={44}
         name={left.icon}
         onPress={left.onPress}
-        align={backgroundColor === undefined ? "flex-start" : "center"}
+        align={backgroundColor === "background" ? "flex-start" : "center"}
         {...{ color, backgroundColor }}
       />
       <Text variant="header" {...{ color }}>
@@ -44,7 +45,7 @@ const Header = ({ left, title, right, dark }: HeaderProps) => {
           size={44}
           name={right.icon}
           onPress={right.onPress}
-          align={backgroundColor === undefined ? "flex-end" : "center"}
+          align={backgroundColor === "background" ? "flex-end" : "center"}
           {...{ color, backgroundColor }}
         />
       ) : (

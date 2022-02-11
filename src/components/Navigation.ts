@@ -38,4 +38,5 @@ export type HomeRoutes = {
   TransactionHistory: undefined;
   NotificationsSettings: undefined;
   Logout: undefined;
+  Cart: undefined;
 };

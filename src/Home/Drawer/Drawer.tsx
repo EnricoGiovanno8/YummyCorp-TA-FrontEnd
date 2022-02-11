@@ -77,7 +77,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           <Header
             title="My Profile"
             left={{ icon: "x", onPress: () => navigation.closeDrawer() }}
-            right={{ icon: "shopping-bag", onPress: () => true }}
+            right={{ icon: "shopping-bag", onPress: () => navigation.navigate("Cart") }}
             dark
           />
         </Box>
