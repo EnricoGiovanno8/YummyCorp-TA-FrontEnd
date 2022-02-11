@@ -27,6 +27,7 @@ const theme: BaseTheme = createTheme({
     danger: "#FF0058",
     info: "#808080",
     text: "rgba(12, 13, 52, 0.7)",
+    textContrast: palette.white,
     background: palette.white,
     background2: "#F4F0EF",
     greyButton: "rgba(12, 13, 52, 0.05)",

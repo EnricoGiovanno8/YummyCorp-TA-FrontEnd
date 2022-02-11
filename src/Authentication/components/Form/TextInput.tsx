@@ -8,7 +8,7 @@ import { Box, useTheme, RoundedIcon } from "../../../components";
 import { Feather as Icon } from "@expo/vector-icons";
 
 interface TextInputProps extends RNTextInputProps {
-  icon: "mail" | "lock";
+  icon: any;
   touched?: boolean;
   error?: boolean;
 }

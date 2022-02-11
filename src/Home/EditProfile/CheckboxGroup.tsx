@@ -3,19 +3,24 @@ import { Box, Button } from "../../components";
 
 interface CheckboxGroupProps {
   options: { value: string; label: string }[];
+  radio?: boolean;
 }
 
-const CheckboxGroup = ({ options }: CheckboxGroupProps) => {
+const CheckboxGroup = ({ options, radio }: CheckboxGroupProps) => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
-  const select = (value: string) => {
-    const exist = selectedValues.filter((sV) => sV === value);
-
-    if (exist.length > 0) {
-      const newArray = selectedValues.filter((sV) => sV !== value);
-      setSelectedValues(newArray);
+  const select = (value: string, radio: boolean | undefined) => {
+    if (radio) {
+      setSelectedValues([value]);
     } else {
-      setSelectedValues([...selectedValues, value]);
+      const exist = selectedValues.filter((sV) => sV === value);
+
+      if (exist.length > 0) {
+        const newArray = selectedValues.filter((sV) => sV !== value);
+        setSelectedValues(newArray);
+      } else {
+        setSelectedValues([...selectedValues, value]);
+      }
     }
   };
   return (
@@ -24,14 +29,14 @@ const CheckboxGroup = ({ options }: CheckboxGroupProps) => {
         <Button
           key={value}
           variant={selectedValues.indexOf(value) !== -1 ? "primary" : "default"}
-          onPress={() => select(value)}
+          onPress={() => select(value, radio)}
           label={label}
           style={{
             width: "auto",
             height: "auto",
             padding: 16,
-            marginBottom: 8,
-            marginRight: 4,
+            marginBottom: 16,
+            marginRight: 8,
           }}
         />
       ))}
