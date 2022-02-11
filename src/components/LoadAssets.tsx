@@ -22,6 +22,7 @@ const usePromiseAll = (promises: Promise<void | void[]>[], cb: () => void) =>
 const useLoadAssets = (assets: number[], fonts: FontSource): boolean => {
   const [ready, setReady] = useState(false);
   usePromiseAll(
+    // @ts-ignore
     [Font.loadAsync(fonts), ...assets.map((asset) => Asset.loadAsync(asset))],
     () => setReady(true)
   );

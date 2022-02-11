@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Header, ContentFooter } from "../../components";
+import { Box, Header, Content } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import Notification from "./Notification";
 
@@ -7,7 +7,7 @@ const NotificationsSettings = ({
   navigation,
 }: HomeNavigationProps<"NotificationsSettings">) => {
   return (
-    <ContentFooter>
+    <Content>
       <Box backgroundColor="background">
         <Header
           left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
@@ -33,7 +33,7 @@ const NotificationsSettings = ({
           />
         </Box>
       </Box>
-    </ContentFooter>
+    </Content>
   );
 };
 

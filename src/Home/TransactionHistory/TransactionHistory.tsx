@@ -1,11 +1,10 @@
 import React from "react";
-import { Dimensions, Image, ScrollView, StyleSheet } from "react-native";
-import { Box, Header, makeStyles, Text } from "../../components";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { Box, ScrollableContent, Header, makeStyles, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import { Theme } from "../../components/Theme";
 
 import Graph, { DataPoint } from "./Graph";
-import TopCurve from "./TopCurve";
 import Transaction from "./Transaction";
 
 const footerHeight = (Dimensions.get("window").width / 3) * 0.8;
@@ -45,6 +44,24 @@ const data: DataPoint[] = [
     color: "graph2",
     id: 245674,
   },
+  {
+    date: new Date("2019-10-02").getTime(),
+    value: 139.42,
+    color: "primary",
+    id: 245675,
+  },
+  {
+    date: new Date("2019-12-01").getTime(),
+    value: 281.23,
+    color: "graph1",
+    id: 245676,
+  },
+  {
+    date: new Date("2020-02-01").getTime(),
+    value: 198.54,
+    color: "graph2",
+    id: 245677,
+  },
 ];
 
 const TransactionHistory = ({
@@ -52,58 +69,50 @@ const TransactionHistory = ({
 }: HomeNavigationProps<"TransactionHistory">) => {
   const styles = useStyles();
   return (
-    <Box flex={1} backgroundColor="background">
-      <Header
-        title="Transaction History"
-        left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
-        right={{ icon: "share", onPress: () => true }}
-      />
-      <Box padding="m" flex={1}>
-        <Box
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
-        >
-          <Box>
-            <Text variant="header" color="secondary" opacity={0.3}>
-              TOTAL SPENT
-            </Text>
-            <Text variant="title1">$619,19</Text>
-          </Box>
+    <ScrollableContent>
+      <Box flex={1} backgroundColor="background">
+        <Header
+          title="Transaction History"
+          left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
+          right={{ icon: "share", onPress: () => true }}
+        />
+        <Box padding="m" flex={1}>
           <Box
-            backgroundColor="primaryLight"
-            // @ts-ignore: Object is possibly 'undefined'.
-            borderRadius="xl"
-            padding="sm"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
           >
-            <Text color="primary">All Time</Text>
+            <Box>
+              <Text variant="header" color="secondary" opacity={0.3}>
+                TOTAL SPENT
+              </Text>
+              <Text variant="title1">$619,19</Text>
+            </Box>
+            <Box
+              backgroundColor="primaryLight"
+              // @ts-ignore: Object is possibly 'undefined'.
+              borderRadius="xl"
+              padding="sm"
+            >
+              <Text color="primary">All Time</Text>
+            </Box>
           </Box>
+          <Graph
+            data={data}
+            startDate={startDate}
+            numberOfMonths={numberOfMonths}
+          />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollView}
+          >
+            {data.map((transaction) => (
+              <Transaction key={transaction.id} transaction={transaction} />
+            ))}
+          </ScrollView>
         </Box>
-        <Graph
-          data={data}
-          startDate={startDate}
-          numberOfMonths={numberOfMonths}
-        />
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollView}>
-          {data.map((transaction) => (
-            <Transaction key={transaction.id} transaction={transaction} />
-          ))}
-        </ScrollView>
       </Box>
-      <TopCurve footerHeight={footerHeight} />
-      <Box
-        position="absolute"
-        left={0}
-        right={0}
-        bottom={0}
-        height={footerHeight}
-      >
-        <Image
-          style={styles.footer}
-          source={require("../OutfitIdeas/assets/background.jpg")}
-        />
-      </Box>
-    </Box>
+    </ScrollableContent>
   );
 };
 

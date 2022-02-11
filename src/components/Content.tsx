@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ContentFooter = ({ children }: ContentFooterProps) => {
+const Content = ({ children }: ContentFooterProps) => {
   const theme = useTheme();
   return (
     <>
@@ -46,4 +46,4 @@ const ContentFooter = ({ children }: ContentFooterProps) => {
   );
 };
 
-export default ContentFooter;
+export default Content;
