@@ -40,7 +40,7 @@ const PersonalInfo = () => {
     <ScrollView>
       <Box padding="m">
         <Text variant="body">Account Information</Text>
-        <Box marginBottom="m">
+        <Box marginVertical="m">
           <Controller
             control={control}
             rules={{
@@ -75,7 +75,7 @@ const PersonalInfo = () => {
             name="password"
           />
         </Box>
-        <Box marginBottom="m">
+        <Box marginBottom="s">
           <Controller
             control={control}
             rules={{
