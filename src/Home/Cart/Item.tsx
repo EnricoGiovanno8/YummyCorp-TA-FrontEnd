@@ -1,20 +1,55 @@
 import React from "react";
-import { Box } from "../../components";
-import { palette } from "../../components/Theme";
+import { Box, Text } from "../../components";
+import SwipeableRow from "./SwipeableRow";
 
-interface ItemProps {}
+interface ItemProps {
+  onDelete: () => void;
+}
 
-const Item = () => {
+const Item = ({ onDelete }: ItemProps) => {
   return (
-    <Box padding="m" flexDirection="row">
-      <Box
-        width={120}
-        height={120}
-        // @ts-ignore
-        borderRadius="m"
-        style={{ backgroundColor: palette.yellow }}
-      />
-    </Box>
+    <SwipeableRow onDelete={onDelete}>
+      <Box padding="m" flexDirection="row">
+        <Box
+          width={120}
+          height={120}
+          // @ts-ignore
+          borderRadius="m"
+          style={{ backgroundColor: "#BFEAF5" }}
+        />
+        <Box paddingHorizontal="s" flex={1} justifyContent="center">
+          <Text variant="header" style={{ fontSize: 12 }}>
+            Size M, L
+          </Text>
+          <Text variant="title3" marginBottom="s" style={{ fontSize: 13 }}>
+            Short Sleeve Organic Top
+          </Text>
+          <Text variant="title3" style={{ fontSize: 13 }} color="primary">
+            $29.99
+          </Text>
+        </Box>
+        <Box justifyContent="center">
+          <Box
+            backgroundColor="secondary"
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: 24,
+              height: 24,
+              borderRadius: 12,
+            }}
+          >
+            <Text
+              variant="header"
+              style={{ fontSize: 10, lineHeight: 12 }}
+              color="background"
+            >
+              x2
+            </Text>
+          </Box>
+        </Box>
+      </Box>
+    </SwipeableRow>
   );
 };
 

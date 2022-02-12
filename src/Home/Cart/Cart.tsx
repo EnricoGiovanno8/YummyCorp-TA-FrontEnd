@@ -1,16 +1,17 @@
-import React from "react";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { Box, Header, aspectRatio, useTheme, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import CartContainer from "./CartContainer";
 import Item from "./Item";
 
-const { width } = Dimensions.get("window");
 const height = 100 * aspectRatio;
 const d = "M 0 0 A 50 50 0 0 0 50 50 H 325 A 50 50 0 0 1 375 100 V 0 Z";
+const defaultItems = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
 const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
+  const [items, setItems] = useState(defaultItems);
   const theme = useTheme();
   return (
     <CartContainer>
@@ -27,10 +28,15 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
         <ScrollView
           contentContainerStyle={{ paddingVertical: 50 * aspectRatio }}
         >
-          <Item />
-          <Item />
-          <Item />
-          <Item />
+          {items.map((item, index) => (
+            <Item
+              key={item.id}
+              onDelete={() => {
+                items.splice(index, 1);
+                setItems(items.concat());
+              }}
+            />
+          ))}
         </ScrollView>
         <Box
           style={{
