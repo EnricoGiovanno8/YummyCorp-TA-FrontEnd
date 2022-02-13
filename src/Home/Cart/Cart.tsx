@@ -4,6 +4,7 @@ import Svg, { Path } from "react-native-svg";
 import { Box, Header, aspectRatio, useTheme, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import CartContainer from "./CartContainer";
+import Checkout from "./Checkout";
 import Item from "./Item";
 
 const height = 100 * aspectRatio;
@@ -14,7 +15,7 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
   const [items, setItems] = useState(defaultItems);
   const theme = useTheme();
   return (
-    <CartContainer>
+    <CartContainer CheckoutComponent={Checkout}>
       <Box>
         <Box backgroundColor="primary">
           <Header

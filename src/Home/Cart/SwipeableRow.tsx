@@ -11,6 +11,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { snapPoint } from "react-native-redash";
 import {
@@ -29,13 +30,19 @@ const snapPoints = [-editWidth, 0, finalDestination];
 interface SwipeableRowProps {
   children: ReactNode;
   onDelete: () => void;
+  height: number;
 }
 
 type ctxProps = {
   x: number;
 };
 
-const SwipeableRow = ({ children, onDelete }: SwipeableRowProps) => {
+const SwipeableRow = ({
+  children,
+  onDelete,
+  height: defaultHeight,
+}: SwipeableRowProps) => {
+  const height = useSharedValue(defaultHeight);
   const theme = useTheme();
   const translateX = useSharedValue(0);
   const onGestureEvent = useAnimatedGestureHandler<
@@ -52,12 +59,15 @@ const SwipeableRow = ({ children, onDelete }: SwipeableRowProps) => {
       const dest = snapPoint(translateX.value, velocityX, snapPoints);
       translateX.value = withSpring(dest, { overshootClamping: true }, () => {
         if (dest === finalDestination) {
-          runOnJS(onDelete)();
+          height.value = withTiming(0, { duration: 250 }, () => {
+            runOnJS(onDelete)();
+          });
         }
       });
     },
   });
   const style = useAnimatedStyle(() => ({
+    height: height.value,
     backgroundColor: theme.colors.background,
     transform: [{ translateX: translateX.value }],
   }));
