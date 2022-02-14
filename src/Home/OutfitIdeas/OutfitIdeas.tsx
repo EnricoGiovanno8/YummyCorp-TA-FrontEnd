@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTiming } from "react-native-redash";
 import { Box, Header } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import Background from "./Background";
@@ -24,25 +25,43 @@ const cards = [
   },
 ];
 
+const step = 1 / (cards.length - 1);
 
 const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const aIndex = useTiming(currentIndex);
   return (
     <Box flex={1} backgroundColor="background">
       <Header
         title="Outfit Ideas"
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
-        right={{ icon: "shopping-bag", onPress: () => navigation.navigate("Cart") }}
+        right={{
+          icon: "shopping-bag",
+          onPress: () => navigation.navigate("Cart"),
+        }}
       />
+      <Categories />
       <Box flex={1}>
         <Background />
-        <Categories />
-        {cards.map(
+        {/* {cards.map(
           ({ index, source }) =>
             index >= currentIndex && (
               <Card
                 key={index}
                 onSwipe={() => setCurrentIndex((prev) => prev + 1)}
+                {...{ source }}
+              />
+            )
+        )} */}
+        {cards.map(
+          ({ index, source }) =>
+            currentIndex < index * step + step && (
+              <Card
+                key={index}
+                index={index}
+                aIndex={aIndex}
+                step={step}
+                onSwipe={() => setCurrentIndex((prev) => prev + step)}
                 {...{ source }}
               />
             )
