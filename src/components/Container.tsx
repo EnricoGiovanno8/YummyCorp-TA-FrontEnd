@@ -79,9 +79,13 @@ const Container = ({ children, footer, pattern }: ContainerProps) => {
             style={{
               flex: 1,
               // @ts-ignore: Object is possibly 'undefined'.
-              borderRadius: borderRadii.xl,
+              borderTopRightRadius: borderRadii.xl,
+              // @ts-ignore: Object is possibly 'undefined'.
+              borderBottomLeftRadius: borderRadii.xl,
+              // @ts-ignore: Object is possibly 'undefined'.
+              borderBottomRightRadius: borderRadii.xl,
               backgroundColor: colors.background,
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             {children}

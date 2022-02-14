@@ -24,6 +24,7 @@ const cards = [
   },
 ];
 
+
 const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
