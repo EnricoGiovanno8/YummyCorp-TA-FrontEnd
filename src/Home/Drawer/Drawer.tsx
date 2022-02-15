@@ -44,14 +44,15 @@ const items: DrawerItemProps[] = [
   {
     icon: "log-out",
     label: "Logout",
-    onPress: (navigation) =>
-    // @ts-ignore
+    onPress: async (navigation) => {
+      // @ts-ignore
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [{ name: "Authentication" }],
         })
-      ),
+      );
+    },
     color: "secondary",
   },
 ];
@@ -77,7 +78,10 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           <Header
             title="My Profile"
             left={{ icon: "x", onPress: () => navigation.closeDrawer() }}
-            right={{ icon: "shopping-bag", onPress: () => navigation.navigate("Cart") }}
+            right={{
+              icon: "shopping-bag",
+              onPress: () => navigation.navigate("Cart"),
+            }}
             dark
           />
         </Box>

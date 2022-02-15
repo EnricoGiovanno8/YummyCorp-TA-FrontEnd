@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
 import { Box, Button, Container, Text } from "../components";
@@ -7,28 +7,28 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { AuthNavigationProps } from "../components/Navigation";
-import axios from "axios";
+import AuthContext from "../../context";
 
 const SignUpSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  email: Yup.string().email("Invalid email").required("Email Required"),
   password: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
+    .min(2, "Password has to be 2 characters minimum!")
+    .max(50, "Password Too Long!")
+    .required("Password Required"),
   passwordConfirmation: Yup.string()
     .equals([Yup.ref("password")], "Password don't match")
-    .required("Required"),
+    .required("Pasword Confirmation Required"),
 });
 
 const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
+  const { register, error } = useContext(AuthContext);
+
   const {
     control,
-    setValue,
-    setError,
     handleSubmit,
     formState: { errors, touchedFields },
   } = useForm({
-    mode: "onBlur",
+    mode: "all",
     defaultValues: {
       email: "",
       password: "",
@@ -38,20 +38,11 @@ const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
   });
 
   const onSubmit = async (data: any) => {
-    await axios
-      .post("http://192.168.1.15:8000/api/register", data)
-      .then(() => {
-        navigation.navigate("RegisterSuccess");
-      })
-      .catch((err) => {
-        setError("email", { message: "" });
-        setError("password", { message: "" });
-        setError("passwordConfirmation", { message: "" });
-        setValue("email", "");
-        setValue("password", "");
-        setValue("passwordConfirmation", "");
-        console.log(err?.response?.message || err.message);
-      });
+    const user = await register(data);
+
+    if (user) {
+      navigation.navigate("RegisterSuccess");
+    }
   };
 
   const password = useRef<RNTextInput>(null);
@@ -153,6 +144,22 @@ const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
             name="passwordConfirmation"
           />
         </Box>
+        {errors.email || errors.password || errors.passwordConfirmation ? (
+          <Box alignItems="center">
+            {errors.email ? (
+              <Text variant="error">{errors.email.message}</Text>
+            ) : errors.password ? (
+              <Text variant="error">{errors.password.message}</Text>
+            ) : errors.passwordConfirmation ? (
+              <Text variant="error">{errors.passwordConfirmation.message}</Text>
+            ) : null}
+          </Box>
+        ) : null}
+        {error ? (
+          <Box alignItems="center">
+            <Text variant="error">{error}</Text>
+          </Box>
+        ) : null}
         <Box alignItems="center" marginTop="m">
           <Button
             variant="primary"

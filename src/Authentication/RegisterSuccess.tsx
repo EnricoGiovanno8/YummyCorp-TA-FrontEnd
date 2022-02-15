@@ -24,7 +24,7 @@ const RegisterSuccess = ({
             size={60}
             backgroundColor="background"
             color="secondary"
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.goBack()}
           />
         </Box>
       }

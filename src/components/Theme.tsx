@@ -96,6 +96,11 @@ const theme: BaseTheme = createTheme({
       fontFamily: "SFProDisplay-Semibold",
       color: "secondary",
     },
+    error: {
+      fontSize: 12,
+      fontFamily: "SFProDisplay-Semibold",
+      color: "danger",
+    },
   },
   borderRadii: {
     s: 4,

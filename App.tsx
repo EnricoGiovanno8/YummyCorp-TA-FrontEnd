@@ -10,6 +10,7 @@ import { ThemeProvider } from "./src/components/Theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AppRoutes } from "./src/components/Navigation";
+import { AuthProvider } from "./context";
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -27,15 +28,20 @@ const AppStack = createStackNavigator<AppRoutes>();
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <LoadAssets {...{ fonts, assets }}>
-        <SafeAreaProvider>
-          <AppStack.Navigator screenOptions={{ headerShown: false }}>
-            <AppStack.Screen name="Authentication" component={AuthenticationNavigator} />
-            <AppStack.Screen name="Home" component={HomeNavigator} />
-          </AppStack.Navigator>
-        </SafeAreaProvider>
-      </LoadAssets>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <LoadAssets {...{ fonts, assets }}>
+          <SafeAreaProvider>
+            <AppStack.Navigator screenOptions={{ headerShown: false }}>
+              <AppStack.Screen
+                name="Authentication"
+                component={AuthenticationNavigator}
+              />
+              <AppStack.Screen name="Home" component={HomeNavigator} />
+            </AppStack.Navigator>
+          </SafeAreaProvider>
+        </LoadAssets>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

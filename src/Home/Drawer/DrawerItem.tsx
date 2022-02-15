@@ -1,10 +1,11 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import { RectButton } from "react-native-gesture-handler";
 import { RoundedIcon } from "../../components";
 import { HomeRoutes } from "../../components/Navigation";
 import { Theme, Box, Text } from "../../components/Theme";
+import AuthContext from "../../../context";
 
 interface BaseDrawerItem {
   icon: string;
@@ -23,14 +24,18 @@ interface OnPressDrawerItem extends BaseDrawerItem {
 export type DrawerItemProps = ScreenDrawerItem | OnPressDrawerItem;
 
 const DrawerItem = ({ icon, label, color, ...props }: DrawerItemProps) => {
+  const { logout } = useContext(AuthContext);
   const navigation =
     useNavigation<DrawerNavigationProp<HomeRoutes, "OutfitIdeas">>();
+
+  const onLogout = (props: any) => {
+    logout();
+    props.onPress(navigation);
+  };
   return (
     <RectButton
       onPress={() =>
-        "screen" in props
-          ? navigation.navigate(props.screen)
-          : props.onPress(navigation)
+        "screen" in props ? navigation.navigate(props.screen) : onLogout(props)
       }
     >
       <Box flexDirection="row" alignItems="center" padding="m">

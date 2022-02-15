@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
 import { Box, Button, Container, Text } from "../components";
@@ -9,26 +9,27 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { AuthNavigationProps } from "../components/Navigation";
 import { RectButton } from "react-native-gesture-handler";
-import axios from "axios";
+import AuthContext from "../../context";
 import { CommonActions } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  email: Yup.string().email("Invalid Email").required("Email Required"),
   password: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
+    .min(2, "Password has to be 2 characters minimum")
+    .max(50, "Password Too Long!")
+    .required("Password Required"),
 });
 
 const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
+  const { login, error } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     setValue,
-    setError,
     formState: { errors, touchedFields },
   } = useForm({
-    mode: "onBlur",
+    mode: "all",
     defaultValues: {
       email: "",
       password: "",
@@ -37,29 +38,28 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
     resolver: yupResolver(LoginSchema),
   });
 
+  useEffect(() => {
+    (async () => {
+      const emailRememberMe = await AsyncStorage.getItem("remember");
+
+      if (emailRememberMe) {
+        setValue("email", emailRememberMe);
+        setValue("remember", true);
+      }
+    })();
+  }, []);
+
   const onSubmit = async (data: any) => {
-    console.log(data);
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      })
-    )
-    // await axios
-    //   .post("http://192.168.1.15:8000/api/login", data)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     navigation.navigate("Home");
-    //   })
-    //   .catch((err) => {
-    //     setError("email", { message: "" });
-    //     setError("password", { message: "" });
-    //     setError("remember", { message: "" });
-    //     setValue("email", "");
-    //     setValue("password", "");
-    //     setValue("remember", false);
-    //     console.log(err?.response?.message || err.message);
-    //   });
+    const user = await login(data);
+
+    if (user) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        })
+      );
+    }
   };
 
   const password = useRef<RNTextInput>(null);
@@ -95,7 +95,7 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
                 onBlur={onBlur}
                 value={value}
                 error={errors.email ? true : false}
-                touched={touchedFields.email}
+                touched={value ? true : touchedFields.email}
                 autoCompleteType="email"
                 autoCapitalize="none"
                 returnKeyType="next"
@@ -159,6 +159,20 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
             </Text>
           </RectButton>
         </Box>
+        {errors.email || errors.password ? (
+          <Box alignItems="center" marginBottom="m">
+            {errors.email ? (
+              <Text variant="error">{errors.email.message}</Text>
+            ) : errors.password ? (
+              <Text variant="error">{errors.password.message}</Text>
+            ) : null}
+          </Box>
+        ) : null}
+        {error ? (
+          <Box alignItems="center" marginBottom="m">
+            <Text variant="error">{error}</Text>
+          </Box>
+        ) : null}
         <Box alignItems="center">
           <Button
             variant="primary"

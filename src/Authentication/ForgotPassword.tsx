@@ -28,7 +28,6 @@ const ForgotPassword = ({
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     navigation.navigate("PasswordChanged");
   };
 
