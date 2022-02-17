@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import { HomeRoutes } from "../components/Navigation";
+import { AppRoutes, HomeRoutes } from "../components/Navigation";
 import { DrawerContent, DRAWER_WIDTH } from "./Drawer";
 export { assets } from "./Drawer";
 
@@ -13,12 +13,14 @@ import NotificationsSettings from "./NotificationsSettings";
 import Cart from "./Cart";
 import AuthContext from "../../context";
 import { CommonActions } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const Drawer = createDrawerNavigator<HomeRoutes>();
-export const HomeNavigator = () => {
+export const HomeNavigator = ({
+  navigation,
+}: StackScreenProps<AppRoutes, "Home">) => {
   const { user } = useContext(AuthContext);
   if (!user) {
-    console.log("TIDAK ADA USER HARUS KE AUTHENTICATION")
     // return navigation.dispatch(
     //   CommonActions.reset({
     //     index: 0,

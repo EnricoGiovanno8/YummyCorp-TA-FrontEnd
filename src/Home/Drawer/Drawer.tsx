@@ -2,8 +2,9 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { CommonActions } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
-import { Box, Header, Text } from "../../components";
+import { Box, Header } from "../../components";
 import DrawerItem, { DrawerItemProps } from "./DrawerItem";
+import TextContext from "./TextContext";
 
 const { width } = Dimensions.get("window");
 export const DRAWER_WIDTH = width * 0.8;
@@ -58,8 +59,6 @@ const items: DrawerItemProps[] = [
 ];
 
 export const assets = [require("./assets/drawer.jpg")];
-
-// interface DrawerProps {}
 
 const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   return (
@@ -121,14 +120,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             height={100}
             style={{ borderRadius: 50, top: -80 }}
           />
-          <Box marginBottom="m" style={{ marginTop: -60 }}>
-            <Text variant="title1" textAlign="center">
-              Mike Peter
-            </Text>
-            <Text variant="body" textAlign="center">
-              mike@flexinstudio.com
-            </Text>
-          </Box>
+          <TextContext />
           {items.map((item) => (
             <DrawerItem key={item.label} {...item} />
           ))}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useEffect, useState } from "react";
-const URL = "http://192.168.100.13:8000/api";
+const URL = "http://192.168.1.4:8000/api";
 
 // interface User {
 //   id: number;
@@ -24,16 +24,20 @@ interface Login {
 }
 
 interface AuthContextProps {
+  isLoading: boolean;
   user: any;
-  error: string;
+  errorRegister: string;
+  errorLogin: string;
   register: (body: Register) => any;
   login: (body: Login) => any;
-  logout: () => void
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({
+  isLoading: false,
   user: null,
-  error: "",
+  errorRegister: "",
+  errorLogin: "",
   register: () => true,
   login: () => true,
   logout: () => true,
@@ -44,8 +48,10 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
+  const [errorRegister, setErrorRegister] = useState("");
+  const [errorLogin, setErrorLogin] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -54,19 +60,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const register = async (body: Register) => {
+    setIsLoading(true)
     let user;
     await axios
       .post(`${URL}/register`, body)
       .then((res) => {
         user = res.data;
+        setErrorRegister("");
+        setIsLoading(false)
       })
       .catch((err) => {
         if (Array.isArray(err?.response?.data?.message)) {
-          setError(err.response.data.message[0]);
+          setErrorRegister(err.response.data.message[0]);
+          setIsLoading(false)
         } else if (err.response.data.message) {
-          setError(err.response.data.message);
+          setErrorRegister(err.response.data.message);
+          setIsLoading(false)
         } else {
-          setError(err.message);
+          setErrorRegister(err.message);
+          setIsLoading(false)
         }
       });
 
@@ -82,6 +94,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const login = async (body: Login) => {
+    setIsLoading(true)
     const { remember, email } = body;
     if (remember) {
       rememberMe(remember, email);
@@ -95,15 +108,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then(async (res) => {
         user = res.data.user;
         setUser(user);
+        setErrorLogin("");
         await AsyncStorage.setItem("token", res.data.token);
+        setIsLoading(false)
       })
       .catch((err) => {
         if (Array.isArray(err?.response?.data?.message)) {
-          setError(err.response.data.message[0]);
+          setErrorLogin(err.response.data.message[0]);
+          setIsLoading(false)
         } else if (err.response.data.message) {
-          setError(err.response.data.message);
+          setErrorLogin(err.response.data.message);
+          setIsLoading(false)
         } else {
-          setError(err.message);
+          setErrorLogin(err.message);
+          setIsLoading(false)
         }
       });
 
@@ -126,12 +144,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem("token").catch(() => console.log("gagal hapus token"))
-    setUser(null)
-  }
+    await AsyncStorage.removeItem("token").catch(() =>
+      console.log("gagal hapus token")
+    );
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, error, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoading, user, errorRegister, errorLogin, register, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

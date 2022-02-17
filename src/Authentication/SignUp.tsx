@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
-import { TextInput as RNTextInput } from "react-native";
+import { ActivityIndicator, TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
-import { Box, Button, Container, Text } from "../components";
+import { Box, Button, Container, Text, palette } from "../components";
 import TextInput from "./components/Form/TextInput";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,7 +21,7 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
-  const { register, error } = useContext(AuthContext);
+  const { register, errorRegister, isLoading } = useContext(AuthContext);
 
   const {
     control,
@@ -155,17 +155,21 @@ const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
             ) : null}
           </Box>
         ) : null}
-        {error ? (
+        {errorRegister ? (
           <Box alignItems="center">
-            <Text variant="error">{error}</Text>
+            <Text variant="error">{errorRegister}</Text>
           </Box>
         ) : null}
         <Box alignItems="center" marginTop="m">
-          <Button
-            variant="primary"
-            label="Create your account"
-            onPress={handleSubmit(onSubmit)}
-          />
+          {isLoading ? (
+            <ActivityIndicator size={50}color={palette.green} />
+          ) : (
+            <Button
+              variant="primary"
+              label="Create your account"
+              onPress={handleSubmit(onSubmit)}
+            />
+          )}
         </Box>
       </Box>
     </Container>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { TextInput as RNTextInput } from "react-native";
+import { ActivityIndicator, TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
-import { Box, Button, Container, Text } from "../components";
+import { Box, Button, Container, palette, Text } from "../components";
 import Checkbox from "./components/Form/Checkbox";
 import TextInput from "./components/Form/TextInput";
 import { useForm, Controller } from "react-hook-form";
@@ -22,7 +22,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
-  const { login, error } = useContext(AuthContext);
+  const { login, errorLogin, isLoading } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
@@ -168,17 +168,21 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
             ) : null}
           </Box>
         ) : null}
-        {error ? (
+        {errorLogin ? (
           <Box alignItems="center" marginBottom="m">
-            <Text variant="error">{error}</Text>
+            <Text variant="error">{errorLogin}</Text>
           </Box>
         ) : null}
         <Box alignItems="center">
-          <Button
-            variant="primary"
-            label="Log into your account"
-            onPress={handleSubmit(onSubmit)}
-          />
+          {isLoading ? (
+            <ActivityIndicator size={50}color={palette.green} />
+          ) : (
+            <Button
+              variant="primary"
+              label="Log into your account"
+              onPress={handleSubmit(onSubmit)}
+            />
+          )}
         </Box>
       </Box>
     </Container>

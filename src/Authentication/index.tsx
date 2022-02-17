@@ -18,10 +18,11 @@ export const assets = [...onBoardingAssets, ...welcomeAssets];
 
 const AuthenticationStack = createStackNavigator<AuthenticationRoutes>();
 
-export const AuthenticationNavigator = () => {
+export const AuthenticationNavigator = ({
+  navigation,
+}: StackScreenProps<AppRoutes, "Authentication">) => {
   const { user } = useContext(AuthContext);
   if (user) {
-    console.log("ADA USER HARUS KE HOME")
     // return navigation.dispatch(
     //   CommonActions.reset({
     //     index: 0,
