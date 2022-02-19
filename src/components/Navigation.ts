@@ -22,6 +22,14 @@ export interface HomeNavigationProps<RouteName extends keyof HomeRoutes> {
   route: RouteProp<HomeRoutes, RouteName>;
 }
 
+export interface ProductNavigationProps<RouteName extends keyof ProductRoutes> {
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<ProductRoutes, RouteName>,
+    DrawerNavigationProp<HomeRoutes>
+  >;
+  route: RouteProp<ProductRoutes, RouteName>;
+}
+
 export type AppRoutes = {
   Authentication: undefined;
   Home: undefined;
@@ -36,7 +44,9 @@ export type AuthenticationRoutes = {
   ForgotPassword: undefined;
   PasswordChanged: undefined;
 };
+
 export type HomeRoutes = {
+  ProductNavigator: undefined;
   OutfitIdeas: undefined;
   FavouriteOutfits: undefined;
   EditProfile: undefined;
@@ -44,4 +54,9 @@ export type HomeRoutes = {
   NotificationsSettings: undefined;
   Logout: undefined;
   Cart: undefined;
+};
+
+export type ProductRoutes = {
+  Product: undefined;
+  ProductDetail: undefined;
 };

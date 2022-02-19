@@ -20,6 +20,7 @@ export const palette = {
   pink: "#FF87A2",
   violet: "#442CB9",
   lightBlue: "#BFEAF5",
+  homeBlue: "#6FA8DC"
 };
 
 const theme: BaseTheme = createTheme({
@@ -36,6 +37,7 @@ const theme: BaseTheme = createTheme({
     background2: "#F4F0EF",
     greyButton: "rgba(12, 13, 52, 0.05)",
     white: palette.white,
+    home: palette.homeBlue,
     graph1: palette.orange,
     graph2: palette.yellow,
     drawer1: palette.orange,
@@ -101,11 +103,17 @@ const theme: BaseTheme = createTheme({
       fontFamily: "SFProDisplay-Semibold",
       color: "danger",
     },
+    filter: {
+      fontSize: 16,
+      fontFamily: "SFProDisplay-Medium",
+      color: "text",
+    }
   },
   borderRadii: {
     s: 4,
     m: 10,
     l: 25,
+    ll: 40,
     xl: 75,
   },
 });

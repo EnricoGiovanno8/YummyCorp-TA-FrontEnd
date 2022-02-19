@@ -11,7 +11,6 @@ const NotificationsSettings = ({
       <Box backgroundColor="background">
         <Header
           left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
-          right={{ icon: "share", onPress: () => true }}
           title="Notifications Settings"
         />
         <Box padding="m">

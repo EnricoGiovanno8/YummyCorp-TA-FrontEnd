@@ -109,7 +109,7 @@ const FavouriteOutfits = ({
       <Header
         title="Favourite Outfits"
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
-        right={{ icon: "shopping-bag", onPress: () => navigation.navigate("Cart") }}
+        right={{ icon: "heart", onPress: () => navigation.navigate("Cart") }}
       />
       <Box flex={1}>
         <ScrollView

@@ -13,6 +13,12 @@ const height = DRAWER_WIDTH * aspectRatio;
 
 const items: DrawerItemProps[] = [
   {
+    icon: "home",
+    label: "Home",
+    screen: "ProductNavigator",
+    color: "home",
+  },
+  {
     icon: "zap",
     label: "Outfit Ideas",
     screen: "OutfitIdeas",
@@ -118,7 +124,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             backgroundColor="primary"
             width={100}
             height={100}
-            style={{ borderRadius: 50, top: -80 }}
+            style={{ borderRadius: 50, top: -75 }}
           />
           <TextContext />
           {items.map((item) => (

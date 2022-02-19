@@ -14,6 +14,7 @@ import Cart from "./Cart";
 import AuthContext from "../../context";
 import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { ProductNavigator } from "./ProductNavigator";
 
 const Drawer = createDrawerNavigator<HomeRoutes>();
 export const HomeNavigator = ({
@@ -38,7 +39,9 @@ export const HomeNavigator = ({
         headerShown: false,
         drawerStyle: { width: DRAWER_WIDTH },
       }}
+      initialRouteName="ProductNavigator"
     >
+      <Drawer.Screen name="ProductNavigator" component={ProductNavigator} />
       <Drawer.Screen name="OutfitIdeas" component={OutfitIdeas} />
       <Drawer.Screen name="FavouriteOutfits" component={FavouriteOutfits} />
       <Drawer.Screen name="TransactionHistory" component={TransactionHistory} />

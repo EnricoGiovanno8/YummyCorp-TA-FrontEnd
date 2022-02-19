@@ -38,7 +38,7 @@ const DrawerItem = ({ icon, label, color, ...props }: DrawerItemProps) => {
         "screen" in props ? navigation.navigate(props.screen) : onLogout(props)
       }
     >
-      <Box flexDirection="row" alignItems="center" padding="m">
+      <Box flexDirection="row" alignItems="center" padding="sm">
         <RoundedIcon
           name={icon}
           size={36}
