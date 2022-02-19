@@ -160,7 +160,7 @@ const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
             ) : null}
           </Box>
         ) : null}
-        {errorRegister ? (
+        {errors.email || errors.password || errors.passwordConfirmation  ?  null : errorRegister ? (
           <Box alignItems="center">
             <Text variant="error">{errorRegister}</Text>
           </Box>

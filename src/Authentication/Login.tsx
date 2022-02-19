@@ -170,7 +170,7 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
             ) : null}
           </Box>
         ) : null}
-        {errorLogin ? (
+        {errors.email || errors.password ?  null : errorLogin ? (
           <Box alignItems="center" marginBottom="m">
             <Text variant="error">{errorLogin}</Text>
           </Box>
