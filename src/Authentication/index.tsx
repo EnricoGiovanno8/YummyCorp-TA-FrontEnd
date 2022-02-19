@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   createStackNavigator,
   StackScreenProps,
@@ -22,14 +22,17 @@ export const AuthenticationNavigator = ({
   navigation,
 }: StackScreenProps<AppRoutes, "Authentication">) => {
   const { user } = useContext(AuthContext);
-  if (user) {
-    // return navigation.dispatch(
-    //   CommonActions.reset({
-    //     index: 0,
-    //     routes: [{ name: "Home" }],
-    //   })
-    // );
-  }
+  useEffect(() => {
+    if (user) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        })
+      );
+    }
+  }, []);
+  
   return (
     <AuthenticationStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthenticationStack.Screen name="OnBoarding" component={OnBoarding} />

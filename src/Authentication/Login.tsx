@@ -22,7 +22,8 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
-  const { login, errorLogin, isLoading } = useContext(AuthContext);
+  const { errorLogin, isLoading, clearErrorLogin, login } =
+    useContext(AuthContext);
   const {
     control,
     handleSubmit,
@@ -40,6 +41,7 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
 
   useEffect(() => {
     (async () => {
+      clearErrorLogin();
       const emailRememberMe = await AsyncStorage.getItem("remember");
 
       if (emailRememberMe) {
@@ -175,7 +177,7 @@ const Login = ({ navigation }: AuthNavigationProps<"Login">) => {
         ) : null}
         <Box alignItems="center">
           {isLoading ? (
-            <ActivityIndicator size={50}color={palette.green} />
+            <ActivityIndicator size={50} color={palette.green} />
           ) : (
             <Button
               variant="primary"

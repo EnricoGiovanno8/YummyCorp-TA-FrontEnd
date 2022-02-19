@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import { AppRoutes, HomeRoutes } from "../components/Navigation";
@@ -20,14 +20,17 @@ export const HomeNavigator = ({
   navigation,
 }: StackScreenProps<AppRoutes, "Home">) => {
   const { user } = useContext(AuthContext);
-  if (!user) {
-    // return navigation.dispatch(
-    //   CommonActions.reset({
-    //     index: 0,
-    //     routes: [{ name: "Authentication" }],
-    //   })
-    // );
-  }
+  useEffect(() => {
+    if (!user) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Authentication" }],
+        })
+      );
+    }
+  }, []);
+
   return (
     <Drawer.Navigator
       drawerContent={DrawerContent}

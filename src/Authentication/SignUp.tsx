@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { ActivityIndicator, TextInput as RNTextInput } from "react-native";
 import Footer from "./components/Footer";
 import { Box, Button, Container, Text, palette } from "../components";
@@ -21,7 +21,12 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
-  const { register, errorRegister, isLoading } = useContext(AuthContext);
+  const { errorRegister, isLoading, clearErrorRegister, register } =
+    useContext(AuthContext);
+
+  useEffect(() => {
+    clearErrorRegister();
+  }, []);
 
   const {
     control,
@@ -162,7 +167,7 @@ const SignUp = ({ navigation }: AuthNavigationProps<"SignUp">) => {
         ) : null}
         <Box alignItems="center" marginTop="m">
           {isLoading ? (
-            <ActivityIndicator size={50}color={palette.green} />
+            <ActivityIndicator size={50} color={palette.green} />
           ) : (
             <Button
               variant="primary"
