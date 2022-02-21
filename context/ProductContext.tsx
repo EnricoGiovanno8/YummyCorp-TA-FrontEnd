@@ -5,14 +5,14 @@ import { URL } from "./AuthContext";
 interface ProductContextProps {
   products: any;
   isLoadingProduct: boolean;
-  getProducts: (page: number) => void
+  getProducts: (keyword: string, page: number) => void;
 }
 
 const ProductContext = createContext<ProductContextProps>({
   products: null,
   isLoadingProduct: false,
   // @ts-ignore
-  getProducts: (page = 1) => true
+  getProducts: (keyword = "", page = 1) => true,
 });
 
 interface ProductProviderProps {
@@ -25,14 +25,14 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
 
   useEffect(() => {
     (async () => {
-      await getProducts(1);
+      await getProducts("", 1);
     })();
   }, []);
 
-  const getProducts = async (page: number) => {
+  const getProducts = async (keyword: string, page: number) => {
     setIsLoadingProduct(true);
     await axios
-      .get(`${URL}/product?page=${page}`)
+      .get(`${URL}/product?keyword=${keyword}&page=${page}`)
       .then((res) => {
         setProducts(res.data);
         setIsLoadingProduct(false);
@@ -56,7 +56,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
       value={{
         products,
         isLoadingProduct,
-        getProducts
+        getProducts,
       }}
     >
       {children}

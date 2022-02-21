@@ -140,14 +140,14 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     if (products.meta.page === 1) {
       console.log("First Page");
     } else {
-      getProducts(products.meta.page - 1);
+      getProducts(searchKeyword, products.meta.page - 1);
     }
   };
   const nextPage = () => {
     if (products.meta.page === products.meta.lastPage) {
       console.log("First Page");
     } else {
-      getProducts(products.meta.page + 1);
+      getProducts(searchKeyword, products.meta.page + 1);
     }
   };
 
@@ -167,8 +167,7 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
           <Searchbar
             value={searchKeyword}
             onChangeText={(text) => setSearchKeyword(text)}
-            onSubmitEditing={() => console.log(searchKeyword)}
-            blurOnSubmit
+            onSubmitEditing={() => getProducts(searchKeyword, 1)}
             autoComplete={false}
           />
         </Box>
@@ -208,7 +207,7 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
               backgroundColor="background"
             />
             <Text variant="filter" marginHorizontal="s">
-              {products && products.meta.length !== 0
+              {products && products.meta.lastPage !== 0
                 ? `${products.meta.page} of ${products.meta.lastPage}`
                 : "0 of 0"}
             </Text>
@@ -221,11 +220,9 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
             />
           </Box>
         </Box>
-        {products && products.data ? (
+        {products && products.data.length !== 0 ? (
           <Box flex={1}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-            >
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Box flexDirection="row">
                 <Box flex={1} paddingRight="s">
                   {products.data
