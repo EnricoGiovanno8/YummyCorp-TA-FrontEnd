@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useEffect, useState } from "react";
-const URL = "http://192.168.100.13:8000/api";
+export const URL = "http://192.168.48.162:8000/api";
 
 // interface User {
 //   id: number;
@@ -85,10 +85,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (Array.isArray(err?.response?.data?.message)) {
           setErrorRegister(err.response.data.message[0]);
           setIsLoading(false);
-        } else if (err.response.data.message) {
+        } else if (err?.response?.data?.message) {
           setErrorRegister(err.response.data.message);
           setIsLoading(false);
-        } else {
+        } else if (err?.message) {
           setErrorRegister(err.message);
           setIsLoading(false);
         }
@@ -128,12 +128,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (Array.isArray(err?.response?.data?.message)) {
           setErrorLogin(err.response.data.message[0]);
           setIsLoading(false);
-        } 
-        if (err?.response?.data?.message) {
+        } else if (err?.response?.data?.message) {
           setErrorLogin(err.response.data.message);
           setIsLoading(false);
-        } 
-        if (err?.message) {
+        } else if (err?.message) {
           setErrorLogin(err.message);
           setIsLoading(false);
         }

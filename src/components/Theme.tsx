@@ -36,6 +36,8 @@ const theme: BaseTheme = createTheme({
     background: palette.white,
     background2: "#F4F0EF",
     greyButton: "rgba(12, 13, 52, 0.05)",
+    lightGrey: "rgba(12, 13, 52, 0.3)",
+    lightGrey2: "rgba(12, 13, 52, 0.5)",
     white: palette.white,
     home: palette.homeBlue,
     graph1: palette.orange,
@@ -107,6 +109,21 @@ const theme: BaseTheme = createTheme({
       fontSize: 16,
       fontFamily: "SFProDisplay-Medium",
       color: "text",
+    },
+    productName: {
+      fontSize: 16,
+      fontFamily: "SFProDisplay-Regular",
+      color: "text",
+    },
+    productStartsFrom: {
+      fontSize: 12,
+      fontFamily: "SFProDisplay-Regular",
+      color: "lightGrey",
+    },
+    productPrice: {
+      fontSize: 12,
+      fontFamily: "SFProDisplay-Regular",
+      color: "lightGrey2",
     }
   },
   borderRadii: {
