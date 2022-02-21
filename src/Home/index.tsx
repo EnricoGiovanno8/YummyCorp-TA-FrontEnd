@@ -21,6 +21,7 @@ export const HomeNavigator = ({
   navigation,
 }: StackScreenProps<AppRoutes, "Home">) => {
   const { user } = useContext(AuthContext);
+
   useEffect(() => {
     if (!user) {
       navigation.dispatch(

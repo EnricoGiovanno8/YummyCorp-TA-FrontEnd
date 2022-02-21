@@ -20,7 +20,8 @@ export const palette = {
   pink: "#FF87A2",
   violet: "#442CB9",
   lightBlue: "#BFEAF5",
-  homeBlue: "#6FA8DC"
+  homeBlue: "#6FA8DC",
+  lightPink: "#FFC0CB"
 };
 
 const theme: BaseTheme = createTheme({
@@ -47,6 +48,8 @@ const theme: BaseTheme = createTheme({
     drawer3: palette.pink,
     drawer4: palette.violet,
     lightBlue: palette.lightBlue,
+    men: palette.homeBlue,
+    women: palette.lightPink
   },
   spacing: {
     s: 8,

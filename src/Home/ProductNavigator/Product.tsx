@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -33,8 +33,10 @@ import { ProductNavigationProps } from "../../components/Navigation";
 import { Feather as Icon } from "@expo/vector-icons";
 import { clamp } from "react-native-redash";
 import ProductCard from "./ProductCard";
+import { ProductContext } from "../../../context";
 
 const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
+  const { products, getProducts } = useContext(ProductContext);
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const { width: sWidth, height: sHeight } = Dimensions.get("screen");
@@ -134,6 +136,21 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     },
   });
 
+  const prevPage = () => {
+    if (products.meta.page === 1) {
+      console.log("First Page");
+    } else {
+      getProducts(products.meta.page - 1);
+    }
+  };
+  const nextPage = () => {
+    if (products.meta.page === products.meta.lastPage) {
+      console.log("First Page");
+    } else {
+      getProducts(products.meta.page + 1);
+    }
+  };
+
   return (
     <Box
       flex={1}
@@ -186,48 +203,62 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
             <RoundedIconButton
               size={40}
               name="arrow-left"
-              onPress={() => console.log("prev")}
+              onPress={() => prevPage()}
               color="secondary"
               backgroundColor="background"
             />
             <Text variant="filter" marginHorizontal="s">
-              {`1 of 15`}
+              {products && products.meta.length !== 0
+                ? `${products.meta.page} of ${products.meta.lastPage}`
+                : "0 of 0"}
             </Text>
             <RoundedIconButton
               size={40}
               name="arrow-right"
-              onPress={() => console.log("Next")}
+              onPress={() => nextPage()}
               color="secondary"
               backgroundColor="background"
             />
           </Box>
         </Box>
-        <Box flex={1}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            decelerationRate="fast"
-          >
-            <Box flexDirection="row">
-              <Box flex={1} paddingRight="s">
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
+        {products && products.data ? (
+          <Box flex={1}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+            >
+              <Box flexDirection="row">
+                <Box flex={1} paddingRight="s">
+                  {products.data
+                    .filter((_: any, i: any) => i % 2 === 0)
+                    .map((product: any) => (
+                      <TouchableOpacity
+                        key={product.id}
+                        onPress={() => navigation.navigate("ProductDetail")}
+                      >
+                        <ProductCard product={product} />
+                      </TouchableOpacity>
+                    ))}
+                </Box>
+                <Box flex={1} paddingLeft="s">
+                  {products.data
+                    .filter((_: any, i: any) => i % 2 !== 0)
+                    .map((product: any) => (
+                      <TouchableOpacity
+                        key={product.id}
+                        onPress={() => navigation.navigate("ProductDetail")}
+                      >
+                        <ProductCard product={product} />
+                      </TouchableOpacity>
+                    ))}
+                </Box>
               </Box>
-              <Box flex={1} paddingLeft="s">
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
-              </Box>
-            </Box>
-          </ScrollView>
-        </Box>
+            </ScrollView>
+          </Box>
+        ) : (
+          <Box>
+            <Text>No Product Found</Text>
+          </Box>
+        )}
       </Box>
       <TapGestureHandler onGestureEvent={onTapEvent}>
         <Animated.View
