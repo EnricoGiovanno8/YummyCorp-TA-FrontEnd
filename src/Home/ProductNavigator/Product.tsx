@@ -37,7 +37,8 @@ import { ProductContext } from "../../../context";
 
 const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
   const { products, getProducts } = useContext(ProductContext);
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeywordDummy, setSearchKeywordDummy] = useState("");
+  const [searchKeywordReal, setSearchKeywordReal] = useState("");
 
   const { width: sWidth, height: sHeight } = Dimensions.get("screen");
   const theme = useTheme();
@@ -140,14 +141,14 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     if (products.meta.page === 1) {
       console.log("First Page");
     } else {
-      getProducts(searchKeyword, products.meta.page - 1);
+      getProducts(searchKeywordReal, products.meta.page - 1);
     }
   };
   const nextPage = () => {
     if (products.meta.page === products.meta.lastPage) {
-      console.log("First Page");
+      console.log("Last Page");
     } else {
-      getProducts(searchKeyword, products.meta.page + 1);
+      getProducts(searchKeywordReal, products.meta.page + 1);
     }
   };
 
@@ -165,9 +166,12 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
       <Box flex={1} paddingHorizontal="m" paddingTop="s">
         <Box>
           <Searchbar
-            value={searchKeyword}
-            onChangeText={(text) => setSearchKeyword(text)}
-            onSubmitEditing={() => getProducts(searchKeyword, 1)}
+            value={searchKeywordDummy}
+            onChangeText={(text) => setSearchKeywordDummy(text)}
+            onSubmitEditing={async () => {
+              setSearchKeywordReal(searchKeywordDummy)
+              getProducts(searchKeywordDummy, 1);
+            }}
             autoComplete={false}
           />
         </Box>
