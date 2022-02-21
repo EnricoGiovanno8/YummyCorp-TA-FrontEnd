@@ -28,6 +28,7 @@ import {
   RoundedIconButton,
   Text,
   useTheme,
+  Button,
 } from "../../components";
 import { ProductNavigationProps } from "../../components/Navigation";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -40,6 +41,22 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
   const [searchKeywordDummy, setSearchKeywordDummy] = useState("");
   const [searchKeywordReal, setSearchKeywordReal] = useState("");
 
+  const [selectedMen, setSelectedMen] = useState(false);
+  const [selectedWomen, setSelectedWomen] = useState(false);
+  const [selectedGender, setSelectedGender] = useState("");
+
+  const selectGender = () => {
+    if (selectedMen && selectedWomen) {
+      setSelectedGender("");
+    } else if (selectedMen) {
+      setSelectedGender("Men");
+    } else if (selectedWomen) {
+      setSelectedGender("Women");
+    } else {
+      setSelectedGender("");
+    }
+  };
+
   const { width: sWidth, height: sHeight } = Dimensions.get("screen");
   const theme = useTheme();
 
@@ -50,11 +67,13 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
       height: sHeight,
       width: sWidth,
       bottom: -sHeight,
+      // bottom: 0,
     },
     filterDrawer: {
       backgroundColor: palette.white,
       position: "absolute",
       bottom: -0.81 * sHeight,
+      // bottom: 0,
       width: sWidth,
       height: 0.81 * sHeight,
       // @ts-ignore
@@ -141,15 +160,36 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     if (products.meta.page === 1) {
       console.log("First Page");
     } else {
-      getProducts(searchKeywordReal, products.meta.page - 1);
+      getProducts(searchKeywordReal, products.meta.page - 1, selectedGender);
     }
   };
   const nextPage = () => {
     if (products.meta.page === products.meta.lastPage) {
       console.log("Last Page");
     } else {
-      getProducts(searchKeywordReal, products.meta.page + 1);
+      getProducts(searchKeywordReal, products.meta.page + 1, selectedGender);
     }
+  };
+
+  const applyFilter = async () => {
+    filterDrawerPosition.value = withTiming(0, {
+      duration: 500,
+    });
+    blackFilterDrawerPosition.value = withTiming(0, {
+      duration: 500,
+    });
+    let sGender;
+    if (selectedMen && selectedWomen) {
+      sGender = "";
+    } else if (selectedMen) {
+      sGender = "Men";
+    } else if (selectedWomen) {
+      sGender = "Women";
+    } else {
+      sGender = "";
+    }
+    await getProducts(searchKeywordDummy, 1, sGender);
+    selectGender();
   };
 
   return (
@@ -169,8 +209,8 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
             value={searchKeywordDummy}
             onChangeText={(text) => setSearchKeywordDummy(text)}
             onSubmitEditing={async () => {
-              setSearchKeywordReal(searchKeywordDummy)
-              getProducts(searchKeywordDummy, 1);
+              setSearchKeywordReal(searchKeywordDummy);
+              getProducts(searchKeywordDummy, 1, selectedGender);
             }}
             autoComplete={false}
           />
@@ -278,6 +318,40 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
             <View style={styles.filterDrawerCursor} />
           </Animated.View>
         </PanGestureHandler>
+        <Box padding="m">
+          <Box alignSelf="center" marginBottom="m">
+            <Button
+              variant="primary"
+              onPress={() => applyFilter()}
+              label={"Apply Filter"}
+            />
+          </Box>
+          <Text variant="body">What type of outfit are you looking for?</Text>
+          <Box flexDirection="row" flexWrap="wrap" marginVertical="s">
+            <Button
+              variant={selectedMen ? "primary" : "default"}
+              onPress={() => setSelectedMen(!selectedMen)}
+              label={"Men"}
+              style={{
+                width: "auto",
+                height: "auto",
+                padding: 16,
+                marginRight: 8,
+              }}
+            />
+            <Button
+              variant={selectedWomen ? "primary" : "default"}
+              onPress={() => setSelectedWomen(!selectedWomen)}
+              label={"Women"}
+              style={{
+                width: "auto",
+                height: "auto",
+                padding: 16,
+                marginRight: 8,
+              }}
+            />
+          </Box>
+        </Box>
       </Animated.View>
     </Box>
   );
