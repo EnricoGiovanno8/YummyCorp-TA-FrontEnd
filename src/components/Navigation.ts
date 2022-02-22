@@ -58,5 +58,5 @@ export type HomeRoutes = {
 
 export type ProductRoutes = {
   Product: undefined;
-  ProductDetail: undefined;
+  ProductDetail: { product: any };
 };

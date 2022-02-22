@@ -21,7 +21,8 @@ export const palette = {
   violet: "#442CB9",
   lightBlue: "#BFEAF5",
   homeBlue: "#6FA8DC",
-  lightPink: "#FFC0CB"
+  lightPink: "#FFC0CB",
+  greenFresh: "#18A558"
 };
 
 const theme: BaseTheme = createTheme({
@@ -49,7 +50,8 @@ const theme: BaseTheme = createTheme({
     drawer4: palette.violet,
     lightBlue: palette.lightBlue,
     men: palette.homeBlue,
-    women: palette.lightPink
+    women: palette.lightPink,
+    green: palette.greenFresh
   },
   spacing: {
     s: 8,
@@ -85,6 +87,11 @@ const theme: BaseTheme = createTheme({
       fontSize: 16,
       fontFamily: "SFProDisplay-Semibold",
       color: "secondary",
+    },
+    title4: {
+      fontSize: 20,
+      fontFamily: "SFProDisplay-Regular",
+      color: "text",
     },
     body: {
       fontSize: 14,
@@ -127,6 +134,16 @@ const theme: BaseTheme = createTheme({
       fontSize: 12,
       fontFamily: "SFProDisplay-Regular",
       color: "lightGrey2",
+    },
+    productPriceTitle: {
+      fontSize: 15,
+      fontFamily: "SFProDisplay-Regular",
+      color: "lightGrey2",
+    },
+    productPriceTitle2: {
+      fontSize: 16,
+      fontFamily: "SFProDisplay-Regular",
+      color: "text",
     }
   },
   borderRadii: {

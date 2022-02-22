@@ -274,7 +274,9 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
                     .map((product: any) => (
                       <TouchableOpacity
                         key={product.id}
-                        onPress={() => navigation.navigate("ProductDetail")}
+                        onPress={() =>
+                          navigation.navigate("ProductDetail", { product })
+                        }
                       >
                         <ProductCard product={product} />
                       </TouchableOpacity>
@@ -286,7 +288,9 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
                     .map((product: any) => (
                       <TouchableOpacity
                         key={product.id}
-                        onPress={() => navigation.navigate("ProductDetail")}
+                        onPress={() =>
+                          navigation.navigate("ProductDetail", { product })
+                        }
                       >
                         <ProductCard product={product} />
                       </TouchableOpacity>
