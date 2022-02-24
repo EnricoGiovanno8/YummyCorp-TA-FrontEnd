@@ -31,7 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     >
       <Box height={200} backgroundColor="background">
         <Image
-          source={{ uri: `${URL}/${product.image}` }}
+          source={{ uri: `${URL}/product-image/${product.image}` }}
           style={{
             resizeMode: "cover",
             height: "100%",

@@ -9,41 +9,88 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TapGestureHandler,
+  TapGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { URL } from "../../../context";
 import {
   Box,
   Button,
   Header,
+  palette,
+  RoundedIcon,
   RoundedIconButton,
   Text,
   useTheme,
 } from "../../components";
 import { ProductNavigationProps } from "../../components/Navigation";
-
 const { height: wHeight } = Dimensions.get("window");
+const { height: sHeight, width: sWidth } = Dimensions.get("screen");
 
 const ProductDetail = ({
   navigation,
   route,
 }: ProductNavigationProps<"ProductDetail">) => {
   const [sizes, setSizes] = useState<any[]>([]);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [selectedSize, setSelectedSize] = useState<any>(null);
+  const [selectedStock, setSelectedStock] = useState<any>(null);
+  const [selectedPrice, setSelectedPrice] = useState<string>("");
+  const [productStockId, setProductStockId] = useState<any>(null);
+  const [sizeId, setSizeId] = useState<any>(null);
   const [quantity, setQuantity] = useState(0);
 
   const theme = useTheme();
+  const styles = StyleSheet.create({
+    blackFilterDrawer: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      height: sHeight,
+      width: sWidth,
+      bottom: -sHeight,
+    },
+    model: {
+      position: "absolute",
+      backgroundColor: palette.white,
+      width: 380,
+      height: 250,
+      bottom: -0.5 * sHeight - 125,
+      left: 0.5 * sWidth - 190,
+      // @ts-ignore
+      borderRadius: theme.borderRadii.l,
+      borderWidth: 1,
+      borderColor: "rgba(0,0,0,0.1)",
+      overflow: "hidden",
+    },
+  });
+  const blackFilterDrawerPosition = useSharedValue(0);
+  const modelPosition = useSharedValue(0);
+  const animatedBlackFilterDrawer = useAnimatedStyle(() => ({
+    transform: [{ translateY: blackFilterDrawerPosition.value }],
+  }));
+  const animatedModel = useAnimatedStyle(() => ({
+    transform: [{ translateY: modelPosition.value }],
+  }));
+  const onTapEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+    onStart: () => {
+      blackFilterDrawerPosition.value = withTiming(0, {
+        duration: 500,
+      });
+      modelPosition.value = withTiming(0, {
+        duration: 500,
+      });
+    },
+  });
 
   const { product } = route.params;
-
-  useEffect(() => {
-    sortSizes();
-    if (!product) {
-      navigation.navigate("Product");
-    }
-  }, []);
 
   const sortSizes = () => {
     const sizesNan: any = [];
@@ -87,13 +134,22 @@ const ProductDetail = ({
     }
   };
 
+  useEffect(() => {
+    sortSizes();
+    if (!product) {
+      navigation.navigate("Product");
+    }
+  }, []);
+
   const onSelectSize = (size: any) => {
     const productStock = product.productStocks.filter(
       (pS: any) => pS.size.name === size
     );
     setSelectedSize(size);
-    setQuantity(0)
+    setQuantity(0);
     setSelectedStock(productStock[0].stock);
+    setProductStockId(productStock[0].id);
+    setSizeId(productStock[0].size.id);
     setSelectedPrice(
       productStock[0].price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     );
@@ -126,27 +182,35 @@ const ProductDetail = ({
   };
 
   const onAddToCart = () => {
-    if (quantity !== 0) {
-      const productStock = product.productStocks.filter((pS: any) => {
-        if (pS.size.name === selectedSize) {
-          return pS;
-        }
-      });
-      const { id, name, brand, gender, image } = product;
-
+    blackFilterDrawerPosition.value = withTiming(-sHeight, {
+      duration: 500,
+    });
+    modelPosition.value = withTiming(
+      -0.5 * sHeight - 125 - (0.5 * sHeight - 125),
+      {
+        duration: 500,
+      }
+    );
+    if (quantity !== 0 && selectedPrice) {
       const data = {
-        id,
-        name,
-        brand,
-        gender,
-        image,
-        productStock: productStock[0],
-        quantity
+        productId: product.id,
+        productStockId,
+        sizeId,
+        quantity,
       };
 
-      console.log(data)
+      console.log(data);
     }
   };
+
+  const onKeepShopping = () => {
+    blackFilterDrawerPosition.value = withTiming(0, {
+      duration: 500,
+    });
+    modelPosition.value = withTiming(0, {
+      duration: 500,
+    });
+  }
 
   return (
     <KeyboardAwareScrollView>
@@ -175,7 +239,7 @@ const ProductDetail = ({
             }}
           >
             <Image
-              source={{ uri: `${URL}/${product.image}` }}
+              source={{ uri: `${URL}/product-image/${product.image}` }}
               style={{
                 ...StyleSheet.absoluteFillObject,
                 resizeMode: "cover",
@@ -268,6 +332,7 @@ const ProductDetail = ({
                         onPress={() => onMinusQuantity()}
                         backgroundColor="danger"
                         color="white"
+                        disabled={quantity <= 0 ? true : false}
                       />
                       <TextInput
                         textAlign="center"
@@ -289,6 +354,7 @@ const ProductDetail = ({
                         onPress={() => onPlusQuantity()}
                         backgroundColor="green"
                         color="white"
+                        disabled={quantity >= selectedStock ? true : false}
                       />
                     </Box>
                   </Box>
@@ -303,6 +369,7 @@ const ProductDetail = ({
                     variant="primary"
                     onPress={() => onAddToCart()}
                     label={"Add to Cart"}
+                    disabled={quantity === 0 ? true : null}
                   />
                 </Box>
               </Box>
@@ -310,6 +377,50 @@ const ProductDetail = ({
           </Box>
         </Box>
       </Box>
+      <TapGestureHandler onGestureEvent={onTapEvent}>
+        <Animated.View
+          style={[styles.blackFilterDrawer, animatedBlackFilterDrawer]}
+        />
+      </TapGestureHandler>
+      <Animated.View style={[styles.model, animatedModel]}>
+        <Box
+          flex={1}
+          margin="l"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <RoundedIcon
+            name="check"
+            size={60}
+            backgroundColor="primaryLight"
+            color="primary"
+          />
+          <Text variant="title1" color="primary">
+            Added to Cart
+          </Text>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            style={{ width: "100%" }}
+          >
+            <Button
+              label="Keep Shopping"
+              onPress={() => onKeepShopping()}
+              style={{
+                width: "47.5%",
+                backgroundColor: theme.colors.primaryLight,
+              }}
+            />
+            <Button
+              label="Go to Cart"
+              variant="primary"
+              style={{ width: "47.5%" }}
+              onPress={() => navigation.navigate("Cart")}
+            />
+          </Box>
+        </Box>
+      </Animated.View>
     </KeyboardAwareScrollView>
   );
 };
