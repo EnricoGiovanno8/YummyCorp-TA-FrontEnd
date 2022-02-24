@@ -11,7 +11,7 @@ import TransactionHistory from "./TransactionHistory";
 import EditProfile from "./EditProfile";
 import NotificationsSettings from "./NotificationsSettings";
 import Cart from "./Cart";
-import AuthContext from "../../context";
+import AuthContext, { CartProvider } from "../../context";
 import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProductNavigator } from "./ProductNavigator";
@@ -34,24 +34,29 @@ export const HomeNavigator = ({
   }, []);
 
   return (
-    <Drawer.Navigator
-      drawerContent={DrawerContent}
-      screenOptions={{
-        headerShown: false,
-        drawerStyle: { width: DRAWER_WIDTH },
-      }}
-      initialRouteName="ProductNavigator"
-    >
-      <Drawer.Screen name="ProductNavigator" component={ProductNavigator} />
-      <Drawer.Screen name="OutfitIdeas" component={OutfitIdeas} />
-      <Drawer.Screen name="FavouriteOutfits" component={FavouriteOutfits} />
-      <Drawer.Screen name="TransactionHistory" component={TransactionHistory} />
-      <Drawer.Screen name="EditProfile" component={EditProfile} />
-      <Drawer.Screen
-        name="NotificationsSettings"
-        component={NotificationsSettings}
-      />
-      <Drawer.Screen name="Cart" component={Cart} />
-    </Drawer.Navigator>
+    <CartProvider>
+      <Drawer.Navigator
+        drawerContent={DrawerContent}
+        screenOptions={{
+          headerShown: false,
+          drawerStyle: { width: DRAWER_WIDTH },
+        }}
+        initialRouteName="ProductNavigator"
+      >
+        <Drawer.Screen name="ProductNavigator" component={ProductNavigator} />
+        <Drawer.Screen name="OutfitIdeas" component={OutfitIdeas} />
+        <Drawer.Screen name="FavouriteOutfits" component={FavouriteOutfits} />
+        <Drawer.Screen
+          name="TransactionHistory"
+          component={TransactionHistory}
+        />
+        <Drawer.Screen name="EditProfile" component={EditProfile} />
+        <Drawer.Screen
+          name="NotificationsSettings"
+          component={NotificationsSettings}
+        />
+        <Drawer.Screen name="Cart" component={Cart} />
+      </Drawer.Navigator>
+    </CartProvider>
   );
 };

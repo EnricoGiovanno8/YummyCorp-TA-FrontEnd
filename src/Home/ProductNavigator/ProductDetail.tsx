@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -21,7 +21,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { URL } from "../../../context";
+import { CartContext, URL } from "../../../context";
 import {
   Box,
   Button,
@@ -40,6 +40,7 @@ const ProductDetail = ({
   navigation,
   route,
 }: ProductNavigationProps<"ProductDetail">) => {
+  const { addToCart } = useContext(CartContext);
   const [sizes, setSizes] = useState<any[]>([]);
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [selectedStock, setSelectedStock] = useState<any>(null);
@@ -181,16 +182,7 @@ const ProductDetail = ({
     }
   };
 
-  const onAddToCart = () => {
-    blackFilterDrawerPosition.value = withTiming(-sHeight, {
-      duration: 500,
-    });
-    modelPosition.value = withTiming(
-      -0.5 * sHeight - 125 - (0.5 * sHeight - 125),
-      {
-        duration: 500,
-      }
-    );
+  const onAddToCart = async () => {
     if (quantity !== 0 && selectedPrice) {
       const data = {
         productId: product.id,
@@ -199,7 +191,18 @@ const ProductDetail = ({
         quantity,
       };
 
-      console.log(data);
+      const success = await addToCart(data);
+      if (success === "SUCCESS") {
+        blackFilterDrawerPosition.value = withTiming(-sHeight, {
+          duration: 500,
+        });
+        modelPosition.value = withTiming(
+          -0.5 * sHeight - 125 - (0.5 * sHeight - 125),
+          {
+            duration: 500,
+          }
+        );
+      }
     }
   };
 
@@ -210,7 +213,7 @@ const ProductDetail = ({
     modelPosition.value = withTiming(0, {
       duration: 500,
     });
-  }
+  };
 
   return (
     <KeyboardAwareScrollView>

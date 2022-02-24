@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -44,6 +44,15 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
   const [selectedMen, setSelectedMen] = useState(false);
   const [selectedWomen, setSelectedWomen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("");
+
+  useEffect(() => {
+    navigation.addListener("focus", async () => {
+      setSelectedMen(false)
+      setSelectedWomen(false)
+      setSelectedGender("")
+      await getProducts(searchKeywordDummy, 1, selectedGender);
+    });
+  }, []);
 
   const selectGender = () => {
     if (selectedMen && selectedWomen) {

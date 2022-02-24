@@ -12,7 +12,7 @@ const ProductContext = createContext<ProductContextProps>({
   products: null,
   isLoadingProduct: false,
   // @ts-ignore
-  getProducts: (keyword = "", page = 1, gender = "") => true,
+  getProducts: (keyword = "", page = 1, gender = "") => null,
 });
 
 interface ProductProviderProps {
