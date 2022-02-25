@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollView } from "react-native";
+import { CartContext } from "../../../context";
 import { Box, Button, Text } from "../../components";
 import AddCart from "./AddCart";
 import Card, { CardType, CardModel } from "./Card";
@@ -40,7 +41,8 @@ const LineItem = ({ label, value }: LineItemProps) => {
       </Box>
       <Box>
         <Text variant="title3" color="primary">
-          ${value.toFixed(2)}
+          Rp {value.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
         </Text>
       </Box>
     </Box>
@@ -48,6 +50,23 @@ const LineItem = ({ label, value }: LineItemProps) => {
 };
 
 const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
+  const { cart } = useContext(CartContext);
+
+  const getTotalItems = () => {
+    if (cart.length > 0) {
+      return cart.reduce((a, b) => a + b.quantity, 0);
+    } else {
+      return 0;
+    }
+  };
+
+  const getTotalPriceItem = () => {
+    if (cart.length > 0) {
+      return cart.reduce((a, b) => a + (b.quantity * b.productStock.price), 0);
+    } else {
+      return 0;
+    }
+  }
   // @ts-ignore
   const [selectedCard, setSelectedCard] = useState(cards[0].id);
   return (
@@ -82,23 +101,27 @@ const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
               </Text>
             </Box>
           </Box>
-          <LineItem label="Total Items (6)" value={189.94} />
-          <LineItem label="Standard Delivery" value={12.0} />
-          <LineItem label="Total Payment" value={201.84} />
+          <LineItem label={`Total Items (${getTotalItems()})`} value={getTotalPriceItem()} />
+          <LineItem label="Standard Delivery" value={10000} />
+          <LineItem label="Total Payment" value={getTotalPriceItem() + 10000} />
         </Box>
-        <Box
-          flex={1}
-          paddingVertical="m"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
-          <Button
-            label={onEnd ? "Click to Pay" : "Swipe to Pay $201.84"}
-            variant="primary"
-            disabled={onEnd ? false : true}
-            onPress={() => console.log('pay')}
-          />
-        </Box>
+        {cart.length === 0 ? null : (
+          <Box
+            flex={1}
+            paddingVertical="m"
+            alignItems="center"
+            justifyContent="flex-end"
+          >
+            <Button
+              label={onEnd ? `Click to Pay Rp ${(getTotalPriceItem() + 10000).toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}` : `Swipe to Pay Rp ${(getTotalPriceItem() + 10000).toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
+              variant="primary"
+              disabled={onEnd ? false : true}
+              onPress={() => console.log("pay")}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );

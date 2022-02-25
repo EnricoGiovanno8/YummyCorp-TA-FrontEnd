@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { Image, ScrollView, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Svg, { Path } from "react-native-svg";
 import { CartContext } from "../../../context";
@@ -40,17 +40,35 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
           </Box>
         </Box>
         <Box flex={1}>
-          <ScrollView
-            contentContainerStyle={{ paddingVertical: 50 * aspectRatio }}
-          >
-            {cart.map((cartItem, index) => (
-              <Item
-                key={index}
-                cartItem={cartItem}
-                onDelete={() => onDelete(cartItem.id)}
-              />
-            ))}
-          </ScrollView>
+          {cart.length === 0 ? (
+            <Box flex={1} justifyContent="center" alignItems="center">
+              <Box width={100} height={100} marginBottom="l">
+                <Image
+                  source={require("../../../assets/empty-cart.png")}
+                  style={{
+                    ...StyleSheet.absoluteFillObject,
+                    width: undefined,
+                    height: undefined,
+                  }}
+                />
+              </Box>
+              <Text variant="title3" color="primary">
+                YOUR CART IS EMPTY
+              </Text>
+            </Box>
+          ) : (
+            <ScrollView
+              contentContainerStyle={{ paddingVertical: 50 * aspectRatio }}
+            >
+              {cart.map((cartItem, index) => (
+                <Item
+                  key={index}
+                  cartItem={cartItem}
+                  onDelete={() => onDelete(cartItem.id)}
+                />
+              ))}
+            </ScrollView>
+          )}
           <Box
             style={{
               position: "absolute",
@@ -63,9 +81,11 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
             <Svg style={StyleSheet.absoluteFill} viewBox="0 0 375 100">
               <Path d={d} fill={theme.colors.primary} />
             </Svg>
-            <Text variant="title2" textAlign="center" color="background">
-              {cart.length} Items Added
-            </Text>
+            {cart.length === 0 ? null : (
+              <Text variant="title2" textAlign="center" color="background">
+                {cart.length} Items Added
+              </Text>
+            )}
           </Box>
         </Box>
       </CartContainer>

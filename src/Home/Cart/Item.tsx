@@ -12,13 +12,12 @@ interface ItemProps {
 
 const Item = ({ onDelete, cartItem }: ItemProps) => {
   const { updateQuantity } = useContext(CartContext);
-  const [selectedQuantity, setSelectedQuantity] = useState(cartItem.quantity);
   const theme = useTheme();
   // @ts-ignore
   const height = 120 + theme.spacing.m * 2;
 
   const onMinus = () => {
-    if (cartItem.quantity > 0) {
+    if (cartItem.quantity > 1) {
       const body = {
         id: cartItem.id,
         quantity: cartItem.quantity - 1,
@@ -38,10 +37,10 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
   };
 
   const onChange = (text: string) => {
-    if (+text <= 0) {
+    if (+text <= 1) {
       const body = {
         id: cartItem.id,
-        quantity: 0,
+        quantity: 1,
       };
       updateQuantity(body);
     } else if (+text >= cartItem.productStock.stock) {
@@ -103,7 +102,7 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               onPress={() => onMinus()}
               backgroundColor="danger"
               color="white"
-              disabled={selectedQuantity <= 0 ? true : false}
+              disabled={cartItem.quantity <= 1 ? true : false}
             />
             <TextInput
               textAlign="center"
@@ -126,7 +125,7 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               backgroundColor="green"
               color="white"
               disabled={
-                selectedQuantity >= cartItem.productStock.stock ? true : false
+                cartItem.quantity >= cartItem.productStock.stock ? true : false
               }
             />
           </Box>

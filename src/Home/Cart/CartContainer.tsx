@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useContext, useState } from "react";
 import { Dimensions, View } from "react-native";
 import {
   PanGestureHandler,
@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { clamp, snapPoint } from "react-native-redash";
+import { CartContext } from "../../../context";
 import { Box, useTheme } from "../../components";
 
 const { width } = Dimensions.get("window");
@@ -26,11 +27,12 @@ type ctxProps = {
 
 interface CartContainerProps {
   children: ReactNode;
-  CheckoutComponent: FC<{ minHeight: number, onEnd: boolean }>;
+  CheckoutComponent: FC<{ minHeight: number; onEnd: boolean }>;
 }
 
 const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
-  const [onEnd, setOnEnd] = useState(false)
+  const { cart } = useContext(CartContext);
+  const [onEnd, setOnEnd] = useState(false);
   const theme = useTheme();
   const translateY = useSharedValue(0);
   const onGestureEvent = useAnimatedGestureHandler<
@@ -52,9 +54,9 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
       const dest = snapPoint(translateY.value, velocityY, snapPoints);
       translateY.value = withSpring(dest, { overshootClamping: true });
       if (dest === 0) {
-        runOnJS(setOnEnd)(false)
+        runOnJS(setOnEnd)(false);
       } else {
-        runOnJS(setOnEnd)(true)
+        runOnJS(setOnEnd)(true);
       }
     },
   });
@@ -83,30 +85,32 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
         ]}
       >
         {children}
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
-          <Animated.View
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              // @ts-ignore
-              height: theme.borderRadii.xl,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <View
+        {cart.length === 0 ? null : (
+          <PanGestureHandler onGestureEvent={onGestureEvent}>
+            <Animated.View
               style={{
-                height: 5 * aspectRatio,
-                backgroundColor: theme.colors.background2,
-                width: 60 * aspectRatio,
-                borderRadius: 2.5 * aspectRatio,
-                marginBottom: theme.spacing.m,
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                // @ts-ignore
+                height: theme.borderRadii.l + 10,
+                justifyContent: "flex-end",
+                alignItems: "center",
               }}
-            />
-          </Animated.View>
-        </PanGestureHandler>
+            >
+              <View
+                style={{
+                  height: 5 * aspectRatio,
+                  backgroundColor: theme.colors.background2,
+                  width: 60 * aspectRatio,
+                  borderRadius: 2.5 * aspectRatio,
+                  marginBottom: theme.spacing.m,
+                }}
+              />
+            </Animated.View>
+          </PanGestureHandler>
+        )}
       </Animated.View>
     </Box>
   );
