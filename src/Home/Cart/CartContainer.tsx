@@ -1,10 +1,11 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { Dimensions, View } from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import Animated, {
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -25,10 +26,11 @@ type ctxProps = {
 
 interface CartContainerProps {
   children: ReactNode;
-  CheckoutComponent: FC<{ minHeight: number }>;
+  CheckoutComponent: FC<{ minHeight: number, onEnd: boolean }>;
 }
 
 const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
+  const [onEnd, setOnEnd] = useState(false)
   const theme = useTheme();
   const translateY = useSharedValue(0);
   const onGestureEvent = useAnimatedGestureHandler<
@@ -49,6 +51,11 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
     onEnd: ({ velocityY }) => {
       const dest = snapPoint(translateY.value, velocityY, snapPoints);
       translateY.value = withSpring(dest, { overshootClamping: true });
+      if (dest === 0) {
+        runOnJS(setOnEnd)(false)
+      } else {
+        runOnJS(setOnEnd)(true)
+      }
     },
   });
   const style = useAnimatedStyle(() => ({
@@ -56,7 +63,7 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   }));
   return (
     <Box flex={1}>
-      <CheckoutComponent minHeight={minHeight} />
+      <CheckoutComponent minHeight={minHeight} onEnd={onEnd} />
       <Animated.View
         style={[
           {

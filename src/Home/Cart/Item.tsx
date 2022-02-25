@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Image, StyleSheet, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { URL } from "../../../context";
+import { CartContext, URL } from "../../../context";
 import { Box, RoundedIconButton, Text, useTheme } from "../../components";
 import { Feather as Icon } from "@expo/vector-icons";
 
@@ -11,32 +11,53 @@ interface ItemProps {
 }
 
 const Item = ({ onDelete, cartItem }: ItemProps) => {
+  const { updateQuantity } = useContext(CartContext);
   const [selectedQuantity, setSelectedQuantity] = useState(cartItem.quantity);
   const theme = useTheme();
   // @ts-ignore
   const height = 120 + theme.spacing.m * 2;
 
   const onMinus = () => {
-    if (selectedQuantity > 0) {
-      setSelectedQuantity(selectedQuantity - 1)
+    if (cartItem.quantity > 0) {
+      const body = {
+        id: cartItem.id,
+        quantity: cartItem.quantity - 1,
+      };
+      updateQuantity(body);
     }
   };
 
   const onPlus = () => {
-    if (selectedQuantity < cartItem.productStock.stock) {
-      setSelectedQuantity(selectedQuantity + 1)
+    if (cartItem.quantity < cartItem.productStock.stock) {
+      const body = {
+        id: cartItem.id,
+        quantity: cartItem.quantity + 1,
+      };
+      updateQuantity(body);
     }
   };
 
   const onChange = (text: string) => {
     if (+text <= 0) {
-      setSelectedQuantity(0)
+      const body = {
+        id: cartItem.id,
+        quantity: 0,
+      };
+      updateQuantity(body);
     } else if (+text >= cartItem.productStock.stock) {
-      setSelectedQuantity(cartItem.productStock.stock)
-    } else (
-      setSelectedQuantity(+text)
-    )
-  }
+      const body = {
+        id: cartItem.id,
+        quantity: cartItem.productStock.stock,
+      };
+      updateQuantity(body);
+    } else {
+      const body = {
+        id: cartItem.id,
+        quantity: +text,
+      };
+      updateQuantity(body);
+    }
+  };
 
   return (
     <Box height={height}>
@@ -82,11 +103,11 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               onPress={() => onMinus()}
               backgroundColor="danger"
               color="white"
-              disabled={selectedQuantity <=0  ? true : false}
+              disabled={selectedQuantity <= 0 ? true : false}
             />
             <TextInput
               textAlign="center"
-              value={selectedQuantity.toString()}
+              value={cartItem.quantity.toString()}
               style={{
                 backgroundColor: theme.colors.greyButton,
                 // @ts-ignore
@@ -104,7 +125,9 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               onPress={() => onPlus()}
               backgroundColor="green"
               color="white"
-              disabled={selectedQuantity >= cartItem.productStock.stock ? true : false}
+              disabled={
+                selectedQuantity >= cartItem.productStock.stock ? true : false
+              }
             />
           </Box>
           <TouchableOpacity onPress={() => onDelete()}>

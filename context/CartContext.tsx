@@ -8,6 +8,7 @@ interface CartContextProps {
   addToCart: (data: any) => any;
   getUserCart: () => any;
   deleteCartItem: (id: any) => any;
+  updateQuantity: (body: any) => any;
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -15,6 +16,7 @@ const CartContext = createContext<CartContextProps>({
   addToCart: () => true,
   getUserCart: () => true,
   deleteCartItem: () => true,
+  updateQuantity: () => true,
 });
 
 interface CartProviderProps {
@@ -62,7 +64,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(async () => {
-          await getUserCart()
+          await getUserCart();
           return "SUCCESS";
         })
         .catch((err) => {
@@ -79,7 +81,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const deleteCartItem = async (body: any) => {
     const token = await AsyncStorage.getItem("token");
-
     if (token) {
       return await axios
         .delete(`${URL}/cart`, {
@@ -89,7 +90,35 @@ export const CartProvider = ({ children }: CartProviderProps) => {
           },
         })
         .then(async (res) => {
-          await getUserCart()
+          await getUserCart();
+          return res.data;
+        })
+        .catch((err) => {
+          if (Array.isArray(err?.response?.data?.message)) {
+            console.log(err.response.data.message[0]);
+          } else if (err?.response?.data?.message) {
+            console.log(err.response.data.message);
+          } else if (err?.message) {
+            console.log(err.message);
+          }
+        });
+    }
+  };
+
+  const updateQuantity = async (body: any) => {
+    const token = await AsyncStorage.getItem("token");
+    const { id, quantity } = body;
+    if (token) {
+      return await axios
+        .patch(
+          `${URL}/cart/${id}`,
+          { quantity },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then(async (res) => {
+          await getUserCart();
           return res.data;
         })
         .catch((err) => {
@@ -106,7 +135,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, getUserCart, deleteCartItem }}
+      value={{ cart, addToCart, getUserCart, deleteCartItem, updateQuantity }}
     >
       {children}
     </CartContext.Provider>

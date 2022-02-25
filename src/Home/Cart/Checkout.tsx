@@ -7,6 +7,7 @@ import { CARD_HEIGHT } from "./CardLayout";
 
 interface CheckoutProps {
   minHeight: number;
+  onEnd: boolean;
 }
 
 const cards: CardModel[] = [
@@ -46,7 +47,7 @@ const LineItem = ({ label, value }: LineItemProps) => {
   );
 };
 
-const Checkout = ({ minHeight }: CheckoutProps) => {
+const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
   // @ts-ignore
   const [selectedCard, setSelectedCard] = useState(cards[0].id);
   return (
@@ -85,11 +86,17 @@ const Checkout = ({ minHeight }: CheckoutProps) => {
           <LineItem label="Standard Delivery" value={12.0} />
           <LineItem label="Total Payment" value={201.84} />
         </Box>
-        <Box flex={1} paddingVertical="m" alignItems="center" justifyContent="flex-end">
+        <Box
+          flex={1}
+          paddingVertical="m"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
           <Button
-            label="Swipe to Pay $201.84"
+            label={onEnd ? "Click to Pay" : "Swipe to Pay $201.84"}
             variant="primary"
-            onPress={() => true}
+            disabled={onEnd ? false : true}
+            onPress={() => console.log('pay')}
           />
         </Box>
       </Box>
