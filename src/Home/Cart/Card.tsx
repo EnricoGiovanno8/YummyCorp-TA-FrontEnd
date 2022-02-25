@@ -4,8 +4,8 @@ import { Text } from "../../components";
 import CardLayout from "./CardLayout";
 
 export enum CardType {
-  VISA,
-  MASTERCARD,
+  VISA = "VISA",
+  MASTERCARD = "MASTERCARD",
 }
 
 export interface CardModel {

@@ -21,4 +21,5 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
+  "typeRoots": ["../node_modules/@types", "../@types"]
 }

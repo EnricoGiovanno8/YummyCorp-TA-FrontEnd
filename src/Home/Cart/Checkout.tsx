@@ -1,14 +1,15 @@
 import React, { useContext, useState } from "react";
-import { ScrollView } from "react-native";
-import { CartContext } from "../../../context";
-import { Box, Button, Text } from "../../components";
-import AddCart from "./AddCart";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native";
+import AuthContext, { CartContext } from "../../../context";
+import { Box, Button, palette, Text, useTheme } from "../../components";
+import AddCard from "./AddCart";
 import Card, { CardType, CardModel } from "./Card";
 import { CARD_HEIGHT } from "./CardLayout";
 
 interface CheckoutProps {
   minHeight: number;
   onEnd: boolean;
+  onAddCreditCard: () => void;
 }
 
 const cards: CardModel[] = [
@@ -41,16 +42,19 @@ const LineItem = ({ label, value }: LineItemProps) => {
       </Box>
       <Box>
         <Text variant="title3" color="primary">
-          Rp {value.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+          Rp {value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
         </Text>
       </Box>
     </Box>
   );
 };
 
-const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
+const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
   const { cart } = useContext(CartContext);
+  const { user, updateUser } = useContext(AuthContext);
+  const theme = useTheme();
+  const [onEditAddress, setOnEditAddress] = useState(false);
+  const [onChangeAddress, setOnChangeAddress] = useState("");
 
   const getTotalItems = () => {
     if (cart.length > 0) {
@@ -62,11 +66,23 @@ const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
 
   const getTotalPriceItem = () => {
     if (cart.length > 0) {
-      return cart.reduce((a, b) => a + (b.quantity * b.productStock.price), 0);
+      return cart.reduce((a, b) => a + b.quantity * b.productStock.price, 0);
     } else {
       return 0;
     }
-  }
+  };
+
+  const onSaveAddress = async () => {
+    if (onChangeAddress) {
+      const body = {
+        address: onChangeAddress,
+      };
+      await updateUser(body);
+    }
+    setOnChangeAddress("");
+    setOnEditAddress(false);
+  };
+
   // @ts-ignore
   const [selectedCard, setSelectedCard] = useState(cards[0].id);
   return (
@@ -74,7 +90,7 @@ const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
       <Box flex={1} padding="m">
         <Box height={CARD_HEIGHT}>
           <ScrollView horizontal>
-            <AddCart />
+            <AddCard onAddCreditCard={onAddCreditCard} />
             {cards.map((card) => (
               <Card
                 key={card.id}
@@ -85,23 +101,85 @@ const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
             ))}
           </ScrollView>
         </Box>
-        <Box marginTop="xl">
-          <Text color="background" variant="title3" marginBottom="m">
+        <Box marginTop="l">
+          <Text color="background" variant="title3" marginBottom="s">
             Delivery Address
           </Text>
-          <Box flexDirection="row" opacity={0.5} paddingVertical="m">
+          <Box flexDirection="row" paddingVertical="s">
             <Box flex={1}>
-              <Text color="background" style={{ fontSize: 14 }}>
-                Unit 15, York Farm Business Centre, Watling St, Towcester
-              </Text>
+              {onEditAddress ? (
+                <TextInput
+                  multiline={true}
+                  numberOfLines={3}
+                  defaultValue={user ? user.address : null}
+                  onChangeText={(text) => setOnChangeAddress(text)}
+                  style={{
+                    color: palette.navy,
+                    backgroundColor: "#f0f0f0",
+                    padding: theme.spacing.s,
+                    // @ts-ignore
+                    borderRadius: theme.borderRadii.m,
+                  }}
+                />
+              ) : (
+                <Text color="background" style={{ fontSize: 14, opacity: 0.5 }}>
+                  {user ? user.address : null}
+                </Text>
+              )}
             </Box>
-            <Box padding="m" justifyContent="center" alignItems="center">
-              <Text color="background" style={{ fontSize: 14 }}>
-                Change
-              </Text>
+            <Box paddingLeft="m" justifyContent="center" alignItems="center">
+              {onEditAddress ? (
+                <Box flex={1} justifyContent="space-around">
+                  <TouchableOpacity onPress={() => onSaveAddress()}>
+                    <Box
+                      backgroundColor="primary"
+                      style={{ paddingHorizontal: 5 }}
+                      // @ts-ignore
+                      borderRadius="m"
+                    >
+                      <Text
+                        color="background"
+                        style={{
+                          fontSize: 14,
+                          textAlign: "center",
+                        }}
+                      >
+                        Save
+                      </Text>
+                    </Box>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setOnEditAddress(false)}>
+                    <Box
+                      backgroundColor="danger"
+                      style={{ paddingHorizontal: 5 }}
+                      // @ts-ignore
+                      borderRadius="m"
+                    >
+                      <Text
+                        color="background"
+                        style={{
+                          fontSize: 14,
+                          textAlign: "center",
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                    </Box>
+                  </TouchableOpacity>
+                </Box>
+              ) : (
+                <TouchableOpacity onPress={() => setOnEditAddress(true)}>
+                  <Text color="background" style={{ fontSize: 14 }}>
+                    Change
+                  </Text>
+                </TouchableOpacity>
+              )}
             </Box>
           </Box>
-          <LineItem label={`Total Items (${getTotalItems()})`} value={getTotalPriceItem()} />
+          <LineItem
+            label={`Total Items (${getTotalItems()})`}
+            value={getTotalPriceItem()}
+          />
           <LineItem label="Standard Delivery" value={10000} />
           <LineItem label="Total Payment" value={getTotalPriceItem() + 10000} />
         </Box>
@@ -113,9 +191,15 @@ const Checkout = ({ minHeight, onEnd }: CheckoutProps) => {
             justifyContent="flex-end"
           >
             <Button
-              label={onEnd ? `Click to Pay Rp ${(getTotalPriceItem() + 10000).toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}` : `Swipe to Pay Rp ${(getTotalPriceItem() + 10000).toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
+              label={
+                onEnd
+                  ? `Click to Pay Rp ${(getTotalPriceItem() + 10000)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+                  : `Swipe to Pay Rp ${(getTotalPriceItem() + 10000)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+              }
               variant="primary"
               disabled={onEnd ? false : true}
               onPress={() => console.log("pay")}

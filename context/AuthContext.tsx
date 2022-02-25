@@ -33,6 +33,7 @@ interface AuthContextProps {
   register: (body: Register) => any;
   login: (body: Login) => any;
   logout: () => void;
+  updateUser: (body: any) => any;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -45,6 +46,7 @@ const AuthContext = createContext<AuthContextProps>({
   register: () => true,
   login: () => true,
   logout: () => true,
+  updateUser: () => true,
 });
 
 interface AuthProviderProps {
@@ -162,6 +164,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
   };
 
+  const updateUser = async (body: any) => {
+    const token = await AsyncStorage.getItem("token");
+
+    if (token) {
+      await axios
+        .patch(`${URL}/users`, body, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((err) => {
+          if (Array.isArray(err?.response?.data?.message)) {
+            setErrorLogin(err.response.data.message[0]);
+            setIsLoading(false);
+          } else if (err?.response?.data?.message) {
+            setErrorLogin(err.response.data.message);
+            setIsLoading(false);
+          } else if (err?.message) {
+            setErrorLogin(err.message);
+            setIsLoading(false);
+          }
+        });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -174,6 +202,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         register,
         login,
         logout,
+        updateUser,
       }}
     >
       {children}

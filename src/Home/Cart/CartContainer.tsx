@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useContext, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -10,12 +10,15 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { clamp, snapPoint } from "react-native-redash";
 import { CartContext } from "../../../context";
-import { Box, useTheme } from "../../components";
+import { Box, Button, useTheme } from "../../components";
+import { CreditCardInput } from "react-native-credit-card-input";
 
 const { width } = Dimensions.get("window");
+const { height: sHeight, width: sWidth } = Dimensions.get("screen");
 const aspectRatio = width / 375;
 const height = 682 * aspectRatio;
 const minHeight = 228 * aspectRatio;
@@ -27,12 +30,18 @@ type ctxProps = {
 
 interface CartContainerProps {
   children: ReactNode;
-  CheckoutComponent: FC<{ minHeight: number; onEnd: boolean }>;
+  CheckoutComponent: FC<{
+    minHeight: number;
+    onEnd: boolean;
+    onAddCreditCard: () => void;
+  }>;
 }
 
 const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   const { cart } = useContext(CartContext);
   const [onEnd, setOnEnd] = useState(false);
+  const [creditCardInputComplete, setCreditCardInputComplete] = useState(false);
+
   const theme = useTheme();
   const translateY = useSharedValue(0);
   const onGestureEvent = useAnimatedGestureHandler<
@@ -63,9 +72,48 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   const style = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
   }));
+
+  const styles = StyleSheet.create({
+    blackFilterDrawer: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      height: sHeight,
+      width: sWidth,
+      bottom: -sHeight,
+    },
+  });
+  const blackFilterDrawerPosition = useSharedValue(0);
+  const animatedBlackFilterDrawer = useAnimatedStyle(() => ({
+    transform: [{ translateY: blackFilterDrawerPosition.value }],
+  }));
+
+  const onAddCreditCard = () => {
+    blackFilterDrawerPosition.value = withTiming(-sHeight, {
+      duration: 500,
+    });
+  };
+
+  const onChangeCreditCardInput = (formData: any) => {
+    const isComplete = formData.valid === true;
+    if (isComplete) {
+      setCreditCardInputComplete(true)
+    } else {
+      setCreditCardInputComplete(false)
+    }
+  };
+
+  const onCancelCreditCardInput = () => {
+    blackFilterDrawerPosition.value = withTiming(0, {
+      duration: 500,
+    });
+  };
   return (
     <Box flex={1}>
-      <CheckoutComponent minHeight={minHeight} onEnd={onEnd} />
+      <CheckoutComponent
+        minHeight={minHeight}
+        onEnd={onEnd}
+        onAddCreditCard={onAddCreditCard}
+      />
       <Animated.View
         style={[
           {
@@ -111,6 +159,47 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
             </Animated.View>
           </PanGestureHandler>
         )}
+      </Animated.View>
+      <Animated.View
+        style={[styles.blackFilterDrawer, animatedBlackFilterDrawer]}
+      >
+        <Box flex={1} alignItems="center" justifyContent="center">
+          <Box
+            width={380}
+            height="auto"
+            backgroundColor="background"
+            // @ts-ignore
+            borderRadius="l"
+            padding="l"
+          >
+            <CreditCardInput
+              onChange={(formData: any) => onChangeCreditCardInput(formData)}
+              labels={{ number: "CARD NUMBER", expiry: "EXPIRY", cvc: "CVC" }}
+              allowScroll
+            />
+            <Box
+              flexDirection="row"
+              marginTop="m"
+              justifyContent="space-between"
+            >
+              <Button
+                label="Cancel"
+                onPress={() => onCancelCreditCardInput()}
+                style={{
+                  width: "47.5%",
+                  backgroundColor: theme.colors.primaryLight,
+                }}
+              />
+              <Button
+                label="Add Card"
+                variant="primary"
+                style={{ width: "47.5%" }}
+                onPress={() => console.log("add card")}
+                disabled={creditCardInputComplete ? false : true}
+              />
+            </Box>
+          </Box>
+        </Box>
       </Animated.View>
     </Box>
   );

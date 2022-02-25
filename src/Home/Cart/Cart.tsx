@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import { Image, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { CartContext } from "../../../context";
 import { Box, Header, aspectRatio, useTheme, Text } from "../../components";
@@ -11,6 +12,8 @@ import Item from "./Item";
 
 const height = 100 * aspectRatio;
 const d = "M 0 0 A 50 50 0 0 0 50 50 H 325 A 50 50 0 0 1 375 100 V 0 Z";
+
+const { height: wHeight } = Dimensions.get("window");
 
 const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
   const { cart, getUserCart, deleteCartItem } = useContext(CartContext);
@@ -27,8 +30,12 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
   };
 
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ height: wHeight + insets.top }}
+    >
       <CartContainer CheckoutComponent={Checkout}>
         <Box>
           <Box backgroundColor="primary">
@@ -58,7 +65,10 @@ const Cart = ({ navigation }: HomeNavigationProps<"Cart">) => {
             </Box>
           ) : (
             <ScrollView
-              contentContainerStyle={{ paddingVertical: 50 * aspectRatio }}
+              contentContainerStyle={{
+                paddingTop: 50 * aspectRatio,
+                paddingBottom: theme.spacing.l,
+              }}
             >
               {cart.map((cartItem, index) => (
                 <Item

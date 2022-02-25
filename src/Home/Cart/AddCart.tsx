@@ -3,9 +3,13 @@ import { Box } from "../../components";
 import CardLayout from "./CardLayout";
 import { Feather as Icon } from "@expo/vector-icons";
 
-const AddCart = () => {
+interface AddCardProps {
+  onAddCreditCard: () => void;
+}
+
+const AddCard = ({ onAddCreditCard }: AddCardProps) => {
   return (
-    <CardLayout onPress={() => true} backgroundColor="secondary">
+    <CardLayout onPress={() => onAddCreditCard()} backgroundColor="secondary">
       <Box
         flex={1}
         justifyContent="center"
@@ -20,4 +24,4 @@ const AddCart = () => {
   );
 };
 
-export default AddCart;
+export default AddCard;

@@ -14,6 +14,7 @@ export const aspectRatio = width / 375;
 
 export const palette = {
   green: "#2CB9B0",
+  navy: "#0C0D34",
   white: "white",
   orange: "#FE5E33",
   yellow: "#FFc641",
@@ -22,7 +23,7 @@ export const palette = {
   lightBlue: "#BFEAF5",
   homeBlue: "#6FA8DC",
   lightPink: "#FFC0CB",
-  greenFresh: "#18A558"
+  greenFresh: "#18A558",
 };
 
 const theme: BaseTheme = createTheme({
@@ -51,7 +52,7 @@ const theme: BaseTheme = createTheme({
     lightBlue: palette.lightBlue,
     men: palette.homeBlue,
     women: palette.lightPink,
-    green: palette.greenFresh
+    green: palette.greenFresh,
   },
   spacing: {
     s: 8,
@@ -144,7 +145,7 @@ const theme: BaseTheme = createTheme({
       fontSize: 16,
       fontFamily: "SFProDisplay-Regular",
       color: "text",
-    }
+    },
   },
   borderRadii: {
     s: 4,
