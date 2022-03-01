@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useContext, useState } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
