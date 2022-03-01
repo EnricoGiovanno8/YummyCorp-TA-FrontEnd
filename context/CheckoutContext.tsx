@@ -2,25 +2,35 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { URL } from "./AuthContext";
+import createStripe from "stripe-client";
 
-interface CardContextType {
+const stripe = createStripe(
+  "pk_test_51KKDpVKuasnJKlhE4grMDh8rDlvGqxZaIiPiAx90HrxOvHgTahlirUbPrAyGy4DTBmr3mdrESEgXLXqDltuNwysJ00mooIakDc"
+);
+
+interface CheckoutContextType {
   cards: any[];
+  isLoading: boolean;
   createNewCard: (body: any) => any;
   deleteCard: (id: number) => any;
+  onPayRequest: (body: any) => any;
 }
 
-const CardContext = createContext<CardContextType>({
+const CheckoutContext = createContext<CheckoutContextType>({
   cards: [],
+  isLoading: false,
   createNewCard: () => true,
-  deleteCard: () => true
+  deleteCard: () => true,
+  onPayRequest: () => true,
 });
 
-interface CardProviderProps {
+interface CheckoutProviderProps {
   children: ReactNode;
 }
 
-export const CardProvider = ({ children }: CardProviderProps) => {
+export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const [cards, setCards] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -96,11 +106,55 @@ export const CardProvider = ({ children }: CardProviderProps) => {
     }
   };
 
+  const onPayRequest = async (body: any) => {
+    setIsLoading(true);
+    const token = await AsyncStorage.getItem("token");
+    const card = {
+      name: body.cardToken.user.name,
+      number: body.cardToken.number,
+      exp_month: body.cardToken.expMonth,
+      exp_year: body.cardToken.expYear,
+      cvc: body.cardToken.cvc,
+    };
+    const info = await stripe.createToken({ card });
+    if (token) {
+      const data = {
+        token: info.id,
+        amount: body.totalPrice,
+        name: body.cardToken.user.name,
+      };
+      return await axios
+        .post(`${URL}/order/pay`, data, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setIsLoading(false);
+          return res.data;
+        })
+        .catch((err) => {
+          if (Array.isArray(err?.response?.data?.message)) {
+            console.log(err.response.data.message[0]);
+            setIsLoading(false);
+          } else if (err?.response?.data?.message) {
+            console.log(err.response.data.message);
+            setIsLoading(false);
+          } else if (err?.message) {
+            console.log(err.message);
+            setIsLoading(false);
+          }
+        });
+    } else {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <CardContext.Provider value={{ cards, createNewCard, deleteCard }}>
+    <CheckoutContext.Provider
+      value={{ cards, isLoading, createNewCard, deleteCard, onPayRequest }}
+    >
       {children}
-    </CardContext.Provider>
+    </CheckoutContext.Provider>
   );
 };
 
-export default CardContext;
+export default CheckoutContext;

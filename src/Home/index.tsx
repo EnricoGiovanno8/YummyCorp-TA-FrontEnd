@@ -11,7 +11,7 @@ import TransactionHistory from "./TransactionHistory";
 import EditProfile from "./EditProfile";
 import NotificationsSettings from "./NotificationsSettings";
 import Cart from "./Cart";
-import AuthContext, { CardProvider, CartProvider } from "../../context";
+import AuthContext, { CheckoutProvider, CartProvider } from "../../context";
 import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProductNavigator } from "./ProductNavigator";
@@ -35,7 +35,7 @@ export const HomeNavigator = ({
 
   return (
     <CartProvider>
-      <CardProvider>
+      <CheckoutProvider>
         <Drawer.Navigator
           drawerContent={DrawerContent}
           screenOptions={{
@@ -58,7 +58,7 @@ export const HomeNavigator = ({
           />
           <Drawer.Screen name="Cart" component={Cart} />
         </Drawer.Navigator>
-      </CardProvider>
+      </CheckoutProvider>
     </CartProvider>
   );
 };

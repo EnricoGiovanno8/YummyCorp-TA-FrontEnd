@@ -3,7 +3,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 import { Box, Text } from "../../components";
 import CardLayout from "./CardLayout";
 import { Feather as Icon } from "@expo/vector-icons";
-import { CardContext } from "../../../context";
+import { CheckoutContext } from "../../../context";
 
 export enum CardType {
   VISA = "VISA",
@@ -26,7 +26,7 @@ interface CardProps {
 }
 
 const Card = ({ card, selected, onSelect }: CardProps) => {
-  const { deleteCard } = useContext(CardContext)
+  const { deleteCard } = useContext(CheckoutContext)
   return (
     <CardLayout
       onPress={onSelect}

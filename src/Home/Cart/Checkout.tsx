@@ -1,6 +1,11 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, TextInput, TouchableOpacity } from "react-native";
-import AuthContext, { CardContext, CartContext } from "../../../context";
+import {
+  ActivityIndicator,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import AuthContext, { CheckoutContext, CartContext } from "../../../context";
 import { Box, Button, palette, Text, useTheme } from "../../components";
 import AddCard from "./AddCard";
 import Card from "./Card";
@@ -10,6 +15,7 @@ interface CheckoutProps {
   minHeight: number;
   onEnd: boolean;
   onAddCreditCard: () => void;
+  onSuccessfulPayment: () => void;
 }
 
 interface LineItemProps {
@@ -34,9 +40,14 @@ const LineItem = ({ label, value }: LineItemProps) => {
   );
 };
 
-const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
-  const { cart } = useContext(CartContext);
-  const { cards } = useContext(CardContext);
+const Checkout = ({
+  minHeight,
+  onEnd,
+  onAddCreditCard,
+  onSuccessfulPayment,
+}: CheckoutProps) => {
+  const { cart, getUserCart } = useContext(CartContext);
+  const { cards, isLoading, onPayRequest } = useContext(CheckoutContext);
   const { user, updateUser } = useContext(AuthContext);
   const theme = useTheme();
   const [onEditAddress, setOnEditAddress] = useState(false);
@@ -70,10 +81,17 @@ const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
     setOnEditAddress(false);
   };
 
-  const onPay = () => {
-    console.log("cart", cart);
-    console.log("user address", user.address);
-    console.log("selected Card", selectedCard);
+  const onPay = async () => {
+    if (cart.length > 0 && user.address && selectedCard) {
+      const success = await onPayRequest({
+        cardToken: selectedCard,
+        totalPrice: getTotalPriceItem() + 10000,
+      });
+      if (success === "PAYMENT SUCCESS") {
+        onSuccessfulPayment();
+        await getUserCart();
+      }
+    }
   };
 
   return (
@@ -181,21 +199,37 @@ const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
             alignItems="center"
             justifyContent="flex-end"
           >
-            <Button
-              label={
-                onEnd
-                  ? `Click to Pay Rp ${(getTotalPriceItem() + 10000)
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
-                  : `Swipe to Pay Rp ${(getTotalPriceItem() + 10000)
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
-              }
-              variant="primary"
-              disabled={onEnd ? (cart.length > 0 && user.address && selectedCard) ? false: true : true}
-              opacity={onEnd ? (cart.length > 0 && user.address && selectedCard) ? 1 : 0.5 : 0.5}
-              onPress={onPay}
-            />
+            {isLoading ? (
+              <ActivityIndicator size={50} color={palette.green} />
+            ) : (
+              <Button
+                label={
+                  onEnd
+                    ? `Click to Pay Rp ${(getTotalPriceItem() + 10000)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+                    : `Swipe to Pay Rp ${(getTotalPriceItem() + 10000)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+                }
+                variant="primary"
+                disabled={
+                  onEnd
+                    ? cart.length > 0 && user.address && selectedCard
+                      ? false
+                      : true
+                    : true
+                }
+                opacity={
+                  onEnd
+                    ? cart.length > 0 && user.address && selectedCard
+                      ? 1
+                      : 0.5
+                    : 0.5
+                }
+                onPress={onPay}
+              />
+            )}
           </Box>
         )}
       </Box>

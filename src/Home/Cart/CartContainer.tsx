@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useContext, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -13,10 +13,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { clamp, snapPoint } from "react-native-redash";
-import { CardContext, CartContext } from "../../../context";
-import { Box, Button, useTheme } from "../../components";
+import { CheckoutContext, CartContext } from "../../../context";
+import { Box, Button, RoundedIcon, Text, useTheme } from "../../components";
 import { CreditCardInput } from "react-native-credit-card-input";
-// import createStripe from "stripe-client";
 
 const { width } = Dimensions.get("window");
 const { height: sHeight, width: sWidth } = Dimensions.get("screen");
@@ -35,16 +34,13 @@ interface CartContainerProps {
     minHeight: number;
     onEnd: boolean;
     onAddCreditCard: () => void;
+    onSuccessfulPayment: () => void;
   }>;
 }
 
-// const stripe = createStripe(
-//   "pk_test_51KKDpVKuasnJKlhE4grMDh8rDlvGqxZaIiPiAx90HrxOvHgTahlirUbPrAyGy4DTBmr3mdrESEgXLXqDltuNwysJ00mooIakDc"
-// );
-
 const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   const { cart } = useContext(CartContext);
-  const { createNewCard } = useContext(CardContext);
+  const { createNewCard } = useContext(CheckoutContext);
   const [onEnd, setOnEnd] = useState<boolean>(false);
   const [creditCardInputData, setCreditCardInputData] = useState<any>(null);
   const [creditCardInputComplete, setCreditCardInputComplete] =
@@ -89,11 +85,30 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
       width: sWidth,
       bottom: -sHeight,
     },
+    successPayment: {
+      backgroundColor: "white",
+      position: "absolute",
+      height: sHeight,
+      width: sWidth,
+      bottom: -sHeight,
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });
   const blackFilterDrawerPosition = useSharedValue(0);
+  const paymentSuccessfulPosition = useSharedValue(0);
   const animatedBlackFilterDrawer = useAnimatedStyle(() => ({
     transform: [{ translateY: blackFilterDrawerPosition.value }],
   }));
+  const animatedpaymentSuccessfulPosition = useAnimatedStyle(() => ({
+    transform: [{ translateY: paymentSuccessfulPosition.value }],
+  }));
+
+  const onSuccessfulPayment = () => {
+    paymentSuccessfulPosition.value = withTiming(-sHeight, {
+      duration: 500,
+    });
+  };
 
   const onAddCreditCard = () => {
     blackFilterDrawerPosition.value = withTiming(-sHeight, {
@@ -118,7 +133,7 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   };
 
   const onAddCard = async () => {
-    console.log(creditCardInputData)
+    console.log(creditCardInputData);
     if (creditCardInputData) {
       const { cvc, expiry, number, type } = creditCardInputData.values;
       const data = {
@@ -134,12 +149,23 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
       });
     }
   };
+
+  const onClose = () => {
+    paymentSuccessfulPosition.value = withTiming(0, {
+      duration: 500,
+    });
+    translateY.value = withSpring(0, {
+      overshootClamping: true,
+    });
+  };
+
   return (
     <Box flex={1}>
       <CheckoutComponent
         minHeight={minHeight}
         onEnd={onEnd}
         onAddCreditCard={onAddCreditCard}
+        onSuccessfulPayment={onSuccessfulPayment}
       />
       <Animated.View
         style={[
@@ -228,6 +254,27 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
             </Box>
           </Box>
         </Box>
+      </Animated.View>
+      <Animated.View
+        style={[styles.successPayment, animatedpaymentSuccessfulPosition]}
+      >
+        <RoundedIcon
+          name="check"
+          size={100}
+          backgroundColor="primaryLight"
+          color="primary"
+        />
+        <Text variant="title2" color="primary" marginVertical="m">
+          Payment Successful
+        </Text>
+        <Button
+          label="Close"
+          onPress={onClose}
+          style={{
+            width: "47.5%",
+            backgroundColor: theme.colors.primaryLight,
+          }}
+        />
       </Animated.View>
     </Box>
   );
