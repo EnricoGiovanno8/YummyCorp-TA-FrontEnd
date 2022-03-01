@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native";
-import AuthContext, { CartContext } from "../../../context";
+import AuthContext, { CardContext, CartContext } from "../../../context";
 import { Box, Button, palette, Text, useTheme } from "../../components";
-import AddCard from "./AddCart";
-import Card, { CardType, CardModel } from "./Card";
+import AddCard from "./AddCard";
+import Card from "./Card";
 import { CARD_HEIGHT } from "./CardLayout";
 
 interface CheckoutProps {
@@ -11,21 +11,6 @@ interface CheckoutProps {
   onEnd: boolean;
   onAddCreditCard: () => void;
 }
-
-const cards: CardModel[] = [
-  {
-    id: 0,
-    type: CardType.VISA,
-    last4Digits: 5467,
-    expiration: "05/24",
-  },
-  {
-    id: 1,
-    type: CardType.MASTERCARD,
-    last4Digits: 2620,
-    expiration: "05/24",
-  },
-];
 
 interface LineItemProps {
   label: string;
@@ -51,10 +36,12 @@ const LineItem = ({ label, value }: LineItemProps) => {
 
 const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
   const { cart } = useContext(CartContext);
+  const { cards } = useContext(CardContext);
   const { user, updateUser } = useContext(AuthContext);
   const theme = useTheme();
   const [onEditAddress, setOnEditAddress] = useState(false);
   const [onChangeAddress, setOnChangeAddress] = useState("");
+  const [selectedCard, setSelectedCard] = useState<any>(null);
 
   const getTotalItems = () => {
     if (cart.length > 0) {
@@ -83,8 +70,12 @@ const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
     setOnEditAddress(false);
   };
 
-  // @ts-ignore
-  const [selectedCard, setSelectedCard] = useState(cards[0].id);
+  const onPay = () => {
+    console.log("cart", cart);
+    console.log("user address", user.address);
+    console.log("selected Card", selectedCard);
+  };
+
   return (
     <Box flex={1} backgroundColor="secondary" style={{ paddingTop: minHeight }}>
       <Box flex={1} padding="m">
@@ -95,8 +86,8 @@ const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
               <Card
                 key={card.id}
                 card={card}
-                selected={selectedCard === card.id}
-                onSelect={() => setSelectedCard(card.id)}
+                selected={selectedCard === card}
+                onSelect={() => setSelectedCard(card)}
               />
             ))}
           </ScrollView>
@@ -201,8 +192,9 @@ const Checkout = ({ minHeight, onEnd, onAddCreditCard }: CheckoutProps) => {
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
               }
               variant="primary"
-              disabled={onEnd ? false : true}
-              onPress={() => console.log("pay")}
+              disabled={onEnd ? (cart.length > 0 && user.address && selectedCard) ? false: true : true}
+              opacity={onEnd ? (cart.length > 0 && user.address && selectedCard) ? 1 : 0.5 : 0.5}
+              onPress={onPay}
             />
           </Box>
         )}

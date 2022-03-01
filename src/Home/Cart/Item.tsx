@@ -103,6 +103,7 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               backgroundColor="danger"
               color="white"
               disabled={cartItem.quantity <= 1 ? true : false}
+              opacity={cartItem.quantity <= 1 ? 0.3 : 1}
             />
             <TextInput
               textAlign="center"
@@ -127,6 +128,7 @@ const Item = ({ onDelete, cartItem }: ItemProps) => {
               disabled={
                 cartItem.quantity >= cartItem.productStock.stock ? true : false
               }
+              opacity={cartItem.quantity >= cartItem.productStock.stock ? 0.3 : 1}
             />
           </Box>
           <TouchableOpacity onPress={() => onDelete()}>

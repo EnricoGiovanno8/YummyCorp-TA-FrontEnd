@@ -13,9 +13,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { clamp, snapPoint } from "react-native-redash";
-import { CartContext } from "../../../context";
+import { CardContext, CartContext } from "../../../context";
 import { Box, Button, useTheme } from "../../components";
 import { CreditCardInput } from "react-native-credit-card-input";
+// import createStripe from "stripe-client";
 
 const { width } = Dimensions.get("window");
 const { height: sHeight, width: sWidth } = Dimensions.get("screen");
@@ -37,10 +38,17 @@ interface CartContainerProps {
   }>;
 }
 
+// const stripe = createStripe(
+//   "pk_test_51KKDpVKuasnJKlhE4grMDh8rDlvGqxZaIiPiAx90HrxOvHgTahlirUbPrAyGy4DTBmr3mdrESEgXLXqDltuNwysJ00mooIakDc"
+// );
+
 const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   const { cart } = useContext(CartContext);
-  const [onEnd, setOnEnd] = useState(false);
-  const [creditCardInputComplete, setCreditCardInputComplete] = useState(false);
+  const { createNewCard } = useContext(CardContext);
+  const [onEnd, setOnEnd] = useState<boolean>(false);
+  const [creditCardInputData, setCreditCardInputData] = useState<any>(null);
+  const [creditCardInputComplete, setCreditCardInputComplete] =
+    useState<boolean>(false);
 
   const theme = useTheme();
   const translateY = useSharedValue(0);
@@ -96,9 +104,10 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   const onChangeCreditCardInput = (formData: any) => {
     const isComplete = formData.valid === true;
     if (isComplete) {
-      setCreditCardInputComplete(true)
+      setCreditCardInputComplete(true);
+      setCreditCardInputData(formData);
     } else {
-      setCreditCardInputComplete(false)
+      setCreditCardInputComplete(false);
     }
   };
 
@@ -106,6 +115,24 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
     blackFilterDrawerPosition.value = withTiming(0, {
       duration: 500,
     });
+  };
+
+  const onAddCard = async () => {
+    console.log(creditCardInputData)
+    if (creditCardInputData) {
+      const { cvc, expiry, number, type } = creditCardInputData.values;
+      const data = {
+        number: number.replace(/ /g, ""),
+        expMonth: expiry.slice(0, 2),
+        expYear: expiry.slice(3),
+        cvc,
+        type: type.replace("-", "").toUpperCase(),
+      };
+      await createNewCard(data);
+      blackFilterDrawerPosition.value = withTiming(0, {
+        duration: 500,
+      });
+    }
   };
   return (
     <Box flex={1}>
@@ -194,8 +221,9 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
                 label="Add Card"
                 variant="primary"
                 style={{ width: "47.5%" }}
-                onPress={() => console.log("add card")}
+                onPress={onAddCard}
                 disabled={creditCardInputComplete ? false : true}
+                opacity={creditCardInputComplete ? 1 : 0.5}
               />
             </Box>
           </Box>

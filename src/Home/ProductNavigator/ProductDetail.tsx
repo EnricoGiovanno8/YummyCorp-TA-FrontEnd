@@ -336,6 +336,7 @@ const ProductDetail = ({
                         backgroundColor="danger"
                         color="white"
                         disabled={quantity <= 0 ? true : false}
+                        opacity={quantity <= 0 ? 0.3 : 1}
                       />
                       <TextInput
                         textAlign="center"
@@ -358,6 +359,7 @@ const ProductDetail = ({
                         backgroundColor="green"
                         color="white"
                         disabled={quantity >= selectedStock ? true : false}
+                        opacity={quantity >= selectedStock ? 0.3 : 1}
                       />
                     </Box>
                   </Box>
@@ -373,6 +375,7 @@ const ProductDetail = ({
                     onPress={() => onAddToCart()}
                     label={"Add to Cart"}
                     disabled={quantity === 0 ? true : null}
+                    opacity={quantity === 0 ? 0.3 : 1}
                   />
                 </Box>
               </Box>

@@ -16,7 +16,8 @@ const CardLayout = ({ onPress, children, backgroundColor }: CardProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Box
-        padding="m"
+        paddingHorizontal="m"
+        justifyContent="space-evenly"
         marginLeft="m"
         // @ts-ignore
         borderRadius="m"

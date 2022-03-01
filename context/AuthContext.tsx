@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useEffect, useState } from "react";
-export const URL = "http://192.168.100.13:8000/api";
+export const URL = "http://192.168.1.5:8000/api";
 
 // interface User {
 //   id: number;

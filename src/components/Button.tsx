@@ -23,9 +23,10 @@ interface ButtonProps {
   onPress: () => void;
   style?: TouchableOpacityProps["style"];
   disabled?: TouchableOpacityProps["disabled"]
+  opacity?: number
 }
 
-const Button = ({ label, variant, onPress, style, disabled }: ButtonProps) => {
+const Button = ({ label, variant, onPress, style, disabled, opacity }: ButtonProps) => {
   const theme = useTheme<Theme>();
   const backgroundColor =
     variant === "primary" ? theme.colors.primary : theme.colors.background2;
@@ -34,7 +35,7 @@ const Button = ({ label, variant, onPress, style, disabled }: ButtonProps) => {
   return (
     <TouchableOpacity
       {...{ onPress, disabled }}
-      style={[styles.container, style, { backgroundColor }]}
+      style={[styles.container, style, { backgroundColor, opacity }]}
     >
       <Text variant="button" style={{ color }}>
         {label}
