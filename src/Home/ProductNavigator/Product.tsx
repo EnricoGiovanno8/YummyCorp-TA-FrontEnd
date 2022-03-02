@@ -25,7 +25,6 @@ import {
   Box,
   Header,
   palette,
-  RoundedIconButton,
   Text,
   useTheme,
   Button,
@@ -37,7 +36,7 @@ import ProductCard from "./ProductCard";
 import { ProductContext } from "../../../context";
 
 const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
-  const { products, getProducts } = useContext(ProductContext);
+  const { products, getProducts, getNextProducts } = useContext(ProductContext);
   const [searchKeywordDummy, setSearchKeywordDummy] = useState("");
   const [searchKeywordReal, setSearchKeywordReal] = useState("");
 
@@ -47,9 +46,9 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
 
   useEffect(() => {
     navigation.addListener("focus", async () => {
-      setSelectedMen(false)
-      setSelectedWomen(false)
-      setSelectedGender("")
+      setSelectedMen(false);
+      setSelectedWomen(false);
+      setSelectedGender("");
       await getProducts(searchKeywordDummy, 1, selectedGender);
     });
   }, []);
@@ -165,18 +164,14 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     },
   });
 
-  const prevPage = () => {
-    if (products.meta.page === 1) {
-      console.log("First Page");
-    } else {
-      getProducts(searchKeywordReal, products.meta.page - 1, selectedGender);
-    }
-  };
   const nextPage = () => {
     if (products.meta.page === products.meta.lastPage) {
-      console.log("Last Page");
     } else {
-      getProducts(searchKeywordReal, products.meta.page + 1, selectedGender);
+      getNextProducts(
+        searchKeywordReal,
+        products.meta.page + 1,
+        selectedGender
+      );
     }
   };
 
@@ -247,35 +242,13 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
               </Box>
             </TouchableOpacity>
           </Box>
-          <Box
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <RoundedIconButton
-              size={40}
-              name="arrow-left"
-              onPress={() => prevPage()}
-              color="secondary"
-              backgroundColor="background"
-            />
-            <Text variant="filter" marginHorizontal="s">
-              {products && products.meta.lastPage !== 0
-                ? `${products.meta.page} of ${products.meta.lastPage}`
-                : "0 of 0"}
-            </Text>
-            <RoundedIconButton
-              size={40}
-              name="arrow-right"
-              onPress={() => nextPage()}
-              color="secondary"
-              backgroundColor="background"
-            />
-          </Box>
         </Box>
         {products && products.data.length !== 0 ? (
           <Box flex={1}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onMomentumScrollEnd={() => nextPage()}
+            >
               <Box flexDirection="row">
                 <Box flex={1} paddingRight="s">
                   {products.data
