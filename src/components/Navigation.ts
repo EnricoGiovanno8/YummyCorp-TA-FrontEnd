@@ -1,5 +1,9 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams,
+  RouteProp,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export interface AppNavigationProps<RouteName extends keyof AppRoutes> {
@@ -46,7 +50,7 @@ export type AuthenticationRoutes = {
 };
 
 export type HomeRoutes = {
-  ProductNavigator: undefined;
+  ProductNavigator: NavigatorScreenParams<ProductRoutes>;
   OutfitIdeas: undefined;
   FavouriteOutfits: undefined;
   EditProfile: undefined;

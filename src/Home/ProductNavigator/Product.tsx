@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  NativeScrollEvent,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -196,6 +197,14 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
     selectGender();
   };
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 1;
+  };
+
   return (
     <Box
       flex={1}
@@ -247,7 +256,11 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
           <Box flex={1}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              onMomentumScrollEnd={() => nextPage()}
+              onScroll={({ nativeEvent }) => {
+                if (isCloseToBottom(nativeEvent)) {
+                  nextPage();
+                }
+              }}
             >
               <Box flexDirection="row">
                 <Box flex={1} paddingRight="s">

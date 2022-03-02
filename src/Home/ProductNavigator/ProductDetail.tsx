@@ -21,7 +21,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { CartContext, URL } from "../../../context";
+import { CartContext, FavouriteContext, URL } from "../../../context";
 import {
   Box,
   Button,
@@ -33,6 +33,8 @@ import {
   useTheme,
 } from "../../components";
 import { ProductNavigationProps } from "../../components/Navigation";
+import { AntDesign } from "@expo/vector-icons";
+
 const { height: wHeight } = Dimensions.get("window");
 const { height: sHeight, width: sWidth } = Dimensions.get("screen");
 
@@ -41,6 +43,9 @@ const ProductDetail = ({
   route,
 }: ProductNavigationProps<"ProductDetail">) => {
   const { addToCart } = useContext(CartContext);
+  const { favourites, addToFavourite, removeFromFavourite } =
+    useContext(FavouriteContext);
+
   const [sizes, setSizes] = useState<any[]>([]);
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [selectedStock, setSelectedStock] = useState<any>(null);
@@ -215,6 +220,18 @@ const ProductDetail = ({
     });
   };
 
+  const isFavourite = favourites
+    ? favourites.data.find((f: any) => f.product.id === product.id)
+    : false;
+
+  const onAddFav = async () => {
+    await addToFavourite(product.id);
+  };
+
+  const onRemoveFav = async () => {
+    await removeFromFavourite(isFavourite.id);
+  };
+
   return (
     <KeyboardAwareScrollView>
       <Box
@@ -248,6 +265,17 @@ const ProductDetail = ({
                 resizeMode: "cover",
               }}
             />
+            <Box position="absolute" top={10} right={10}>
+              <TouchableOpacity
+                onPress={() => (isFavourite ? onRemoveFav() : onAddFav())}
+              >
+                <AntDesign
+                  name={isFavourite ? "heart" : "hearto"}
+                  size={40}
+                  color={isFavourite ? "#FF4500" : "black"}
+                />
+              </TouchableOpacity>
+            </Box>
           </Box>
           <Box marginTop="m">
             <Text variant="title4">{product.name}</Text>

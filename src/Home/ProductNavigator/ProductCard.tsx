@@ -1,13 +1,17 @@
-import React from "react";
-import { Image } from "react-native";
-import { URL } from "../../../context";
+import React, { useContext } from "react";
+import { Image, TouchableOpacity } from "react-native";
+import { FavouriteContext, URL } from "../../../context";
 import { Box, Text } from "../../components";
+import { AntDesign } from "@expo/vector-icons";
 
 interface ProductCardProps {
   product: any;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { favourites, addToFavourite, removeFromFavourite } =
+    useContext(FavouriteContext);
+
   const getProductPrice = () => {
     const arrayOfPrice = product.productStocks.map(
       ({ price }: { price: number }) => price
@@ -18,6 +22,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
     price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return price;
   };
+
+  const isFavourite = favourites
+    ? favourites.data.find((f: any) => f.product.id === product.id)
+    : false;
+    
+  const onAddFav = async () => {
+    await addToFavourite(product.id);
+  };
+
+  const onRemoveFav = async () => {
+    await removeFromFavourite(isFavourite.id);
+  };
+
   return (
     <Box
       backgroundColor="background"
@@ -37,6 +54,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
             height: "100%",
           }}
         />
+        <Box position="absolute" top={10} right={10}>
+          <TouchableOpacity
+            onPress={() => (isFavourite ? onRemoveFav() : onAddFav())}
+          >
+            <AntDesign
+              name={isFavourite ? "heart" : "hearto"}
+              size={24}
+              color={isFavourite ? "#FF4500" : "black"}
+            />
+          </TouchableOpacity>
+        </Box>
       </Box>
       <Box padding="s">
         <Text variant="productName">{product.name}</Text>

@@ -1,109 +1,35 @@
-import React, { useRef, useState } from "react";
-import { Dimensions, ScrollView } from "react-native";
+import React, { useContext } from "react";
 import {
-  Transition,
-  Transitioning,
-  TransitioningView,
-} from "react-native-reanimated";
+  Dimensions,
+  NativeScrollEvent,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { FavouriteContext } from "../../../context";
 
-import { Box, Header, useTheme } from "../../components";
+import { Box, Header, Text, useTheme } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
-
-import Footer from "./Footer";
-import Outfit from "./Outfit";
-import TopCurve from "./TopCurve";
+import ProductCard from "../ProductNavigator/ProductCard";
 
 const { width: wWidth } = Dimensions.get("window");
-
-const defaultOutfits = [
-  {
-    id: 1,
-    color: "#BFEAF5",
-    aspectRatio: 1,
-  },
-  {
-    id: 2,
-    color: "#BEECC4",
-    aspectRatio: 200 / 145,
-  },
-  {
-    id: 3,
-    color: "#FFE4D9",
-    aspectRatio: 180 / 145,
-  },
-  {
-    id: 4,
-    color: "#FFDDDD",
-    aspectRatio: 180 / 145,
-  },
-  {
-    id: 5,
-    color: "#BFEAF5",
-    aspectRatio: 1,
-  },
-  {
-    id: 6,
-    color: "#F3F0Ef",
-    aspectRatio: 120 / 145,
-  },
-  {
-    id: 7,
-    color: "#D5C3BB",
-    aspectRatio: 210 / 145,
-  },
-  {
-    id: 8,
-    color: "#DEEFC4",
-    aspectRatio: 160 / 145,
-  },
-];
 
 const FavouriteOutfits = ({
   navigation,
 }: HomeNavigationProps<"FavouriteOutfits">) => {
-  const transition = (
-    <Transition.Together>
-      <Transition.Out type="fade"/>
-      <Transition.In type="fade"/>
-    </Transition.Together>
-  );
-  const list = useRef<TransitioningView>(null);
-
-  const [outfits, setOutfits] = useState(defaultOutfits);
-  const [selectedOutfits, setSelectedOutfits] = useState<typeof defaultOutfits>(
-    []
-  );
+  const { favourites, getNextFavourites } = useContext(FavouriteContext);
 
   const theme = useTheme();
   // @ts-ignore: Object is possibly 'undefined'.
   const width = (wWidth - theme.spacing.m * 3) / 2;
-  const [footerHeight, setFooterHeight] = useState(0);
 
-  const onSelectOutfit = (outfit: {
-    id: number;
-    color: string;
-    aspectRatio: number;
-  }) => {
-    const exist = selectedOutfits.filter((sO) => sO.id === outfit.id);
-
-    if (exist.length > 0) {
-      const newArray = selectedOutfits.filter((o) => o.id !== outfit.id);
-      setSelectedOutfits(newArray);
-    } else {
-      setSelectedOutfits([...selectedOutfits, outfit]);
-    }
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 1;
   };
-
-  const addMoreToFavorite = () => {
-    list.current?.animateNextTransition();
-    const newOutfits = outfits.filter((outfit) => {
-      return !selectedOutfits.find((selectedOutfit) => {
-        return outfit.id === selectedOutfit.id;
-      });
-    });
-
-    setOutfits(newOutfits);
-  };
+  // 1841.4285888671875
   return (
     <Box flex={1} backgroundColor="background">
       <Header
@@ -111,64 +37,60 @@ const FavouriteOutfits = ({
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
         right={{ icon: "heart", onPress: () => navigation.navigate("Cart") }}
       />
-      <Box flex={1}>
-        <ScrollView
-          contentContainerStyle={{
-            paddingHorizontal: theme.spacing.m,
-            paddingBottom: footerHeight,
-          }}
-        >
-          <Transitioning.View ref={list} transition={transition}>
-            <Box flexDirection="row">
-              <Box marginRight="m">
-                {outfits
-                  .filter((_, i) => i % 2 !== 0)
-                  .map((outfit) => (
-                    <Outfit
-                      key={outfit.id}
-                      outfit={outfit}
-                      width={width}
-                      onSelectOutfit={(outfit: {
-                        id: number;
-                        color: string;
-                        aspectRatio: number;
-                      }) => onSelectOutfit(outfit)}
-                    />
-                  ))}
+      <Box flex={1} padding="m">
+        {favourites && favourites.data.length !== 0 ? (
+          <Box flex={1}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onScroll={async ({ nativeEvent }) => {
+                if (isCloseToBottom(nativeEvent)) {
+                  await getNextFavourites(favourites.meta.page + 1);
+                }
+              }}
+            >
+              <Box flexDirection="row">
+                <Box flex={1} paddingRight="s">
+                  {favourites.data
+                    .filter((_: any, i: any) => i % 2 === 0)
+                    .map((favourite: any) => (
+                      <TouchableOpacity
+                        key={favourite.id}
+                        // onPress={() =>
+                        //   navigation.navigate("ProductNavigator", {
+                        //     screen: 'ProductDetail',
+                        //     params: { product: favourite.product, from: "FavouriteOutfits" },
+                        //   })
+                        // }
+                      >
+                        <ProductCard product={favourite.product} />
+                      </TouchableOpacity>
+                    ))}
+                </Box>
+                <Box flex={1} paddingLeft="s">
+                  {favourites.data
+                    .filter((_: any, i: any) => i % 2 !== 0)
+                    .map((favourite: any) => (
+                      <TouchableOpacity
+                        key={favourite.id}
+                        // onPress={() =>
+                        //   navigation.navigate("ProductNavigator", {
+                        //     screen: "ProductDetail",
+                        //     params: { product: favourite.product, from: "FavouriteOutfits"},
+                        //   })
+                        // }
+                      >
+                        <ProductCard product={favourite.product} />
+                      </TouchableOpacity>
+                    ))}
+                </Box>
               </Box>
-              <Box>
-                {outfits
-                  .filter((_, i) => i % 2 === 0)
-                  .map((outfit) => (
-                    <Outfit
-                      key={outfit.id}
-                      outfit={outfit}
-                      width={width}
-                      onSelectOutfit={(outfit: {
-                        id: number;
-                        color: string;
-                        aspectRatio: number;
-                      }) => onSelectOutfit(outfit)}
-                    />
-                  ))}
-              </Box>
-            </Box>
-          </Transitioning.View>
-        </ScrollView>
-        <TopCurve footerHeight={footerHeight} />
-        <Box
-          position="absolute"
-          bottom={0}
-          left={0}
-          right={0}
-          onLayout={({
-            nativeEvent: {
-              layout: { height },
-            },
-          }) => setFooterHeight(height)}
-        >
-          <Footer label="Add more to favourite" onPress={addMoreToFavorite} />
-        </Box>
+            </ScrollView>
+          </Box>
+        ) : (
+          <Box>
+            <Text>No Product Found</Text>
+          </Box>
+        )}
       </Box>
     </Box>
   );
