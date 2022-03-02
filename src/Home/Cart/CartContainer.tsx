@@ -133,7 +133,6 @@ const CartContainer = ({ children, CheckoutComponent }: CartContainerProps) => {
   };
 
   const onAddCard = async () => {
-    console.log(creditCardInputData);
     if (creditCardInputData) {
       const { cvc, expiry, number, type } = creditCardInputData.values;
       const data = {
