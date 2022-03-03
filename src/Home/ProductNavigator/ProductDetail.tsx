@@ -34,6 +34,7 @@ import {
 } from "../../components";
 import { ProductNavigationProps } from "../../components/Navigation";
 import { AntDesign } from "@expo/vector-icons";
+import { CommonActions } from "@react-navigation/native";
 
 const { height: wHeight } = Dimensions.get("window");
 const { height: sHeight, width: sWidth } = Dimensions.get("screen");
@@ -96,7 +97,7 @@ const ProductDetail = ({
     },
   });
 
-  const { product } = route.params;
+  const { product, from } = route.params;
 
   const sortSizes = () => {
     const sizesNan: any = [];
@@ -242,7 +243,12 @@ const ProductDetail = ({
       >
         <Header
           title=""
-          left={{ icon: "arrow-left", onPress: () => navigation.goBack() }}
+          left={{ icon: "arrow-left", onPress: () => navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: from }],
+            })
+          )}}
         />
         <Box flex={1} marginHorizontal="l">
           <Box

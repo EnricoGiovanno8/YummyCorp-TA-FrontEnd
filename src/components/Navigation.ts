@@ -62,5 +62,5 @@ export type HomeRoutes = {
 
 export type ProductRoutes = {
   Product: undefined;
-  ProductDetail: { product: any };
+  ProductDetail: { product: any, from: "Product" | "FavouriteOutfits" };
 };

@@ -55,12 +55,12 @@ const FavouriteOutfits = ({
                     .map((favourite: any) => (
                       <TouchableOpacity
                         key={favourite.id}
-                        // onPress={() =>
-                        //   navigation.navigate("ProductNavigator", {
-                        //     screen: 'ProductDetail',
-                        //     params: { product: favourite.product, from: "FavouriteOutfits" },
-                        //   })
-                        // }
+                        onPress={() =>
+                          navigation.navigate("ProductNavigator", {
+                            screen: 'ProductDetail',
+                            params: { product: favourite.product, from: "FavouriteOutfits" },
+                          })
+                        }
                       >
                         <ProductCard product={favourite.product} />
                       </TouchableOpacity>
@@ -72,12 +72,12 @@ const FavouriteOutfits = ({
                     .map((favourite: any) => (
                       <TouchableOpacity
                         key={favourite.id}
-                        // onPress={() =>
-                        //   navigation.navigate("ProductNavigator", {
-                        //     screen: "ProductDetail",
-                        //     params: { product: favourite.product, from: "FavouriteOutfits"},
-                        //   })
-                        // }
+                        onPress={() =>
+                          navigation.navigate("ProductNavigator", {
+                            screen: "ProductDetail",
+                            params: { product: favourite.product, from: "FavouriteOutfits" },
+                          })
+                        }
                       >
                         <ProductCard product={favourite.product} />
                       </TouchableOpacity>

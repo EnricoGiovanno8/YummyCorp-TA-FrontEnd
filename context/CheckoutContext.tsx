@@ -122,6 +122,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
         token: info.id,
         amount: body.totalPrice,
         name: body.cardToken.user.name,
+        totalItems: body.totalItems
       };
       return await axios
         .post(`${URL}/order/pay`, data, {

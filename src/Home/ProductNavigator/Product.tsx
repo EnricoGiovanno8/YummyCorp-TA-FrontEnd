@@ -270,7 +270,10 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
                       <TouchableOpacity
                         key={product.id}
                         onPress={() =>
-                          navigation.navigate("ProductDetail", { product })
+                          navigation.navigate("ProductDetail", {
+                            product,
+                            from: "Product",
+                          })
                         }
                       >
                         <ProductCard product={product} />
@@ -284,7 +287,10 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
                       <TouchableOpacity
                         key={product.id}
                         onPress={() =>
-                          navigation.navigate("ProductDetail", { product })
+                          navigation.navigate("ProductDetail", {
+                            product,
+                            from: "Product",
+                          })
                         }
                       >
                         <ProductCard product={product} />
