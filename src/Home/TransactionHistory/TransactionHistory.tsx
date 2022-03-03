@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Dimensions, ScrollView, StyleSheet } from "react-native";
-import { Box, ScrollableContent, Header, makeStyles, Text } from "../../components";
-import { HomeNavigationProps } from "../../components/Navigation";
+import TransactionHistoryContext from "../../../context/TransactionHistoryContext";
+import { Box, Header, makeStyles, Text } from "../../components";
+import { TransactionHistoryNavigationProps } from "../../components/Navigation";
 import { Theme } from "../../components/Theme";
 
 import Graph, { DataPoint } from "./Graph";
@@ -66,10 +67,14 @@ const data: DataPoint[] = [
 
 const TransactionHistory = ({
   navigation,
-}: HomeNavigationProps<"TransactionHistory">) => {
+}: TransactionHistoryNavigationProps<"TransactionHistory">) => {
+  const { histories } = useContext(TransactionHistoryContext)
+  console.log(histories)
+
   const styles = useStyles();
+
   return (
-    <ScrollableContent>
+    <Box flex={1}>
       <Box flex={1} backgroundColor="background">
         <Header
           title="Transaction History"
@@ -107,12 +112,12 @@ const TransactionHistory = ({
             contentContainerStyle={styles.scrollView}
           >
             {data.map((transaction) => (
-              <Transaction key={transaction.id} transaction={transaction} />
+              <Transaction key={transaction.id} transaction={transaction} navigation={navigation} />
             ))}
           </ScrollView>
         </Box>
       </Box>
-    </ScrollableContent>
+    </Box>
   );
 };
 

@@ -39,7 +39,7 @@ const items: DrawerItemProps[] = [
   {
     icon: "clock",
     label: "Transaction History",
-    screen: "TransactionHistory",
+    screen: "TransactionHistoryNavigator",
     color: "drawer3",
   },
   {

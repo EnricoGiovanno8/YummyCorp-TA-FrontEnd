@@ -34,6 +34,14 @@ export interface ProductNavigationProps<RouteName extends keyof ProductRoutes> {
   route: RouteProp<ProductRoutes, RouteName>;
 }
 
+export interface TransactionHistoryNavigationProps<RouteName extends keyof TransactionHistoryRoutes> {
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<TransactionHistoryRoutes, RouteName>,
+    DrawerNavigationProp<HomeRoutes>
+  >;
+  route: RouteProp<TransactionHistoryRoutes, RouteName>;
+}
+
 export type AppRoutes = {
   Authentication: undefined;
   Home: undefined;
@@ -54,7 +62,7 @@ export type HomeRoutes = {
   OutfitIdeas: undefined;
   FavouriteOutfits: undefined;
   EditProfile: undefined;
-  TransactionHistory: undefined;
+  TransactionHistoryNavigator: NavigatorScreenParams<TransactionHistoryRoutes>;
   NotificationsSettings: undefined;
   Logout: undefined;
   Cart: undefined;
@@ -63,4 +71,9 @@ export type HomeRoutes = {
 export type ProductRoutes = {
   Product: undefined;
   ProductDetail: { product: any, from: "Product" | "FavouriteOutfits" };
+};
+
+export type TransactionHistoryRoutes = {
+  TransactionHistory: undefined;
+  TransactionHistoryDetail: undefined;
 };

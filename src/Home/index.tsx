@@ -7,7 +7,7 @@ export { assets } from "./Drawer";
 
 import OutfitIdeas from "./OutfitIdeas";
 import FavouriteOutfits from "./FavouriteOutfits";
-import TransactionHistory from "./TransactionHistory";
+import { TransactionHistoryNavigator } from "./TransactionHistory";
 import EditProfile from "./EditProfile";
 import NotificationsSettings from "./NotificationsSettings";
 import Cart from "./Cart";
@@ -20,6 +20,7 @@ import AuthContext, {
 import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProductNavigator } from "./ProductNavigator";
+import { TransactionHistoryProvider } from "../../context/TransactionHistoryContext";
 
 const Drawer = createDrawerNavigator<HomeRoutes>();
 export const HomeNavigator = ({
@@ -41,38 +42,40 @@ export const HomeNavigator = ({
   return (
     <ProductProvider>
       <FavouriteProvider>
-        <CartProvider>
-          <CheckoutProvider>
-            <Drawer.Navigator
-              drawerContent={DrawerContent}
-              screenOptions={{
-                headerShown: false,
-                drawerStyle: { width: DRAWER_WIDTH },
-              }}
-              initialRouteName="ProductNavigator"
-            >
-              <Drawer.Screen
-                name="ProductNavigator"
-                component={ProductNavigator}
-              />
-              <Drawer.Screen name="OutfitIdeas" component={OutfitIdeas} />
-              <Drawer.Screen
-                name="FavouriteOutfits"
-                component={FavouriteOutfits}
-              />
-              <Drawer.Screen
-                name="TransactionHistory"
-                component={TransactionHistory}
-              />
-              <Drawer.Screen name="EditProfile" component={EditProfile} />
-              <Drawer.Screen
-                name="NotificationsSettings"
-                component={NotificationsSettings}
-              />
-              <Drawer.Screen name="Cart" component={Cart} />
-            </Drawer.Navigator>
-          </CheckoutProvider>
-        </CartProvider>
+        <TransactionHistoryProvider>
+          <CartProvider>
+            <CheckoutProvider>
+              <Drawer.Navigator
+                drawerContent={DrawerContent}
+                screenOptions={{
+                  headerShown: false,
+                  drawerStyle: { width: DRAWER_WIDTH },
+                }}
+                initialRouteName="ProductNavigator"
+              >
+                <Drawer.Screen
+                  name="ProductNavigator"
+                  component={ProductNavigator}
+                />
+                <Drawer.Screen name="OutfitIdeas" component={OutfitIdeas} />
+                <Drawer.Screen
+                  name="FavouriteOutfits"
+                  component={FavouriteOutfits}
+                />
+                <Drawer.Screen
+                  name="TransactionHistoryNavigator"
+                  component={TransactionHistoryNavigator}
+                />
+                <Drawer.Screen name="EditProfile" component={EditProfile} />
+                <Drawer.Screen
+                  name="NotificationsSettings"
+                  component={NotificationsSettings}
+                />
+                <Drawer.Screen name="Cart" component={Cart} />
+              </Drawer.Navigator>
+            </CheckoutProvider>
+          </CartProvider>
+        </TransactionHistoryProvider>
       </FavouriteProvider>
     </ProductProvider>
   );
