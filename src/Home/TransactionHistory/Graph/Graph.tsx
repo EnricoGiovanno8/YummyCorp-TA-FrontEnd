@@ -42,8 +42,6 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
 
   const step = width / numberOfMonths;
   const values = data.map((p) => p.value);
-  // const dates = data.map((p) => p.date);
-  const minY = Math.min(...values);
   const maxY = Math.max(...values);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -55,10 +53,7 @@ const Graph = ({ data, startDate, numberOfMonths }: GraphProps) => {
   return (
     <Box marginTop="xl" paddingLeft={MARGIN} paddingBottom={MARGIN}>
       <Underlay
-        minY={minY}
         maxY={maxY}
-        startDate={startDate}
-        numberOfMonths={numberOfMonths}
         step={step}
       />
       <View style={{ width, height }}>

@@ -11,22 +11,30 @@ const ROW_HEIGHT = 25;
 // const formatter = Intl.DateTimeFormat("en", { month: "short" });
 
 interface UnderlayProps {
-  minY: number;
   maxY: number;
-  startDate: number;
-  numberOfMonths: number;
   step: number;
 }
 
+const Month = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
+]
+
 const Underlay = ({
-  minY,
   maxY,
-  startDate,
-  numberOfMonths,
   step,
 }: UnderlayProps) => {
   const theme = useTheme();
-  const minDate = moment(startDate);
   return (
     <Box style={StyleSheet.absoluteFill}>
       <Box flex={1} justifyContent="space-between">
@@ -43,7 +51,7 @@ const Underlay = ({
             >
               <Box width={theme.spacing[MARGIN]} paddingRight="s">
                 <Text color="info" textAlign="right">
-                  {Math.round(lerp(minY, maxY, t))}
+                  {Math.round(maxY * t)}
                 </Text>
               </Box>
               <Box flex={1} height={1} backgroundColor="background2" />
@@ -57,13 +65,10 @@ const Underlay = ({
         flexDirection="row"
         alignItems="center"
       >
-        {new Array(numberOfMonths)
-          .fill(0)
-          .map((_, i) => minDate.clone().add(i, "month"))
-          .map((date, index) => (
+        {Month.map((m, index) => (
             <Box key={index} width={step}>
               <Text color="info" textAlign="center">
-                {date.format("MMM")}
+                {m}
               </Text>
             </Box>
           ))}

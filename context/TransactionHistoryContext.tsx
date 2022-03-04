@@ -5,17 +5,16 @@ import { URL } from "./AuthContext";
 
 interface TransactionHistoryContextType {
   histories: any;
-  getHistories: (page: number) => any;
-  getNextHistories: (page: number) => any;
+  totalAmountOneYear: any
+  getHistories: (month: string) => any;
+  getHistoryOneYear: () => any;
 }
 
 const TransactionHistoryContext = createContext<TransactionHistoryContextType>({
-  histories: {
-    data: [],
-    meta: {},
-  },
+  histories: [],
+  totalAmountOneYear: [],
   getHistories: () => true,
-  getNextHistories: () => true,
+  getHistoryOneYear: () => true,
 });
 
 interface TransactionHistoryProviderProps {
@@ -25,23 +24,26 @@ interface TransactionHistoryProviderProps {
 export const TransactionHistoryProvider = ({
   children,
 }: TransactionHistoryProviderProps) => {
-  const [histories, setHistories] = useState<any>({
-    data: [],
-    meta: {},
-  });
+  const [histories, setHistories] = useState<any[]>([]);
+  const [totalAmountOneYear, setTotalAmountOneYear] = useState<any[]>([])
 
   useEffect(() => {
     (async () => {
-      await getHistories(1);
+      let month = (new Date().getMonth() + 1).toString();
+      if (month.length === 1) {
+        month = "0" + month;
+      }
+      await getHistories(month);
+      await getHistoryOneYear();
     })();
   }, []);
 
-  const getHistories = async (page: number) => {
+  const getHistories = async (month: string) => {
     const token = await AsyncStorage.getItem("token");
 
     if (token) {
       await axios
-        .get(`${URL}/order?page=${page}`, {
+        .get(`${URL}/order?month=${month}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -59,35 +61,43 @@ export const TransactionHistoryProvider = ({
     }
   };
 
-  const getNextHistories = async (page: number) => {
-    const token = await AsyncStorage.getItem("token");
+  const getHistoryOneYear = async () => {
+    let tempArr: any = [];
+    for (let i = 0; i < 12; i++) {
+      let month = (i + 1).toString();
+      if (month.length === 1) {
+        month = "0" + month;
+      }
+      const token = await AsyncStorage.getItem("token");
 
-    if (token) {
-      await axios
-        .get(`${URL}/order?page=${page}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          const newHistories = {
-            data: histories.data.concat(res.data.data),
-            meta: res.data.meta,
-          };
-          setHistories(newHistories);
-        })
-        .catch((err) => {
-          if (Array.isArray(err?.response?.data?.message)) {
-            console.log(err.response.data.message[0]);
-          } else if (err?.response?.data?.message) {
-            console.log(err.response.data.message);
-          } else if (err?.message) {
-            console.log(err.message);
-          }
-        });
+      if (token) {
+        await axios
+          .get(`${URL}/order?month=${month}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            tempArr.push(
+              res.data.reduce((a: number, b: any) => a + b.totalAmount, 0) / 1000000
+            );
+          })
+          .catch((err) => {
+            if (Array.isArray(err?.response?.data?.message)) {
+              console.log(err.response.data.message[0]);
+            } else if (err?.response?.data?.message) {
+              console.log(err.response.data.message);
+            } else if (err?.message) {
+              console.log(err.message);
+            }
+          });
+      }
     }
+    setTotalAmountOneYear(tempArr)
   };
 
   return (
-    <TransactionHistoryContext.Provider value={{ histories, getHistories, getNextHistories }}>
+    <TransactionHistoryContext.Provider
+      value={{ histories, totalAmountOneYear, getHistories, getHistoryOneYear }}
+    >
       {children}
     </TransactionHistoryContext.Provider>
   );

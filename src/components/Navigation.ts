@@ -75,5 +75,5 @@ export type ProductRoutes = {
 
 export type TransactionHistoryRoutes = {
   TransactionHistory: undefined;
-  TransactionHistoryDetail: undefined;
+  TransactionHistoryDetail: { order: any };
 };

@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\genri\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/stripe-client
+  C:\Program Files\nodejs\node.exe C:\Users\genri\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/react-native-chart-kit
 
 PATH: 
   C:\Python310\Scripts\;C:\Python310\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\genri\AppData\Local\Microsoft\WindowsApps;C:\Users\genri\AppData\Local\atom\bin;C:\Users\genri\AppData\Local\Android\Sdk\platform-tools;C:\Users\genri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\genri\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\heroku\bin;C:\Users\genri\AppData\Roaming\npm
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.npmjs.org/@types%2fstripe-client: Not found
+  Error: https://registry.npmjs.org/@types%2freact-native-chart-kit: Not found
       at Request.params.callback [as _callback] (C:\Users\genri\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67029:18)
       at Request.self.callback (C:\Users\genri\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140883:22)
       at Request.emit (node:events:390:28)
@@ -44,6 +44,7 @@ npm manifest:
     "dependencies": {
       "@hookform/resolvers": "^2.8.8",
       "@react-native-async-storage/async-storage": "^1.15.16",
+      "@react-native-picker/picker": "^2.3.1",
       "@react-navigation/drawer": "^6.2.0",
       "@react-navigation/native": "^6.0.6",
       "@react-navigation/stack": "^6.0.11",
@@ -63,6 +64,7 @@ npm manifest:
       "react-dom": "17.0.1",
       "react-hook-form": "^7.25.1",
       "react-native": "0.64.3",
+      "react-native-chart-kit": "^6.12.0",
       "react-native-credit-card-input": "^0.4.1",
       "react-native-gesture-handler": "^2.2.0",
       "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -1601,6 +1603,11 @@ Lockfile:
     version "1.1.0"
     resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz"
     integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
+  
+  "@react-native-picker/picker@^2.3.1":
+    version "2.3.1"
+    resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.3.1.tgz#e77e14c351605afdf4bd5fe93fa1fe381cc6ad27"
+    integrity sha512-DAw1o3bHNRnQPImsK53xCYkgC8bH+t9uTM+0JjNIlmMwvVLFnmDxi9v5iBTIWFMWG/pUHQaw66E29wW6oJG9Tw==
   
   "@react-native/assets@1.0.0":
     version "1.0.0"
@@ -4732,7 +4739,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
     integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
   
-  lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21:
+  lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21:
     version "4.17.21"
     resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
     integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5645,6 +5652,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/path-type/-/path-type-4.0.0.tgz"
     integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
   
+  paths-js@^0.4.10:
+    version "0.4.11"
+    resolved "https://registry.yarnpkg.com/paths-js/-/paths-js-0.4.11.tgz#b2a9d5f94ee9949aa8fee945f78a12abff44599e"
+    integrity sha512-3mqcLomDBXOo7Fo+UlaenG6f71bk1ZezPQy2JCmYHy2W2k5VKpP+Jbin9H0bjXynelTbglCqdFhSEkeIkKTYUA==
+  
   picocolors@^1.0.0:
     version "1.0.0"
     resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.0.0.tgz"
@@ -5708,6 +5720,11 @@ Lockfile:
     version "5.0.0"
     resolved "https://registry.npmjs.org/pngjs/-/pngjs-5.0.0.tgz"
     integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
+  
+  point-in-polygon@^1.0.1:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.1.0.tgz#b0af2616c01bdee341cbf2894df643387ca03357"
+    integrity sha512-3ojrFwjnnw8Q9242TzgXuTD+eKiutbzyslcq1ydfu82Db2y+Ogbmyrkpv0Hgj31qwT3lbS9+QAAO/pIQM35XRw==
   
   posix-character-classes@^0.1.0:
     version "0.1.1"
@@ -5856,6 +5873,15 @@ Lockfile:
     version "17.0.2"
     resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
     integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+  
+  react-native-chart-kit@^6.12.0:
+    version "6.12.0"
+    resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.12.0.tgz#187a4987a668a85b7e93588c248ed2c33b3a06f6"
+    integrity sha512-nZLGyCFzZ7zmX0KjYeeSV1HKuPhl1wOMlTAqa0JhlyW62qV/1ZPXHgT8o9s8mkFaGxdqbspOeuaa6I9jUQDgnA==
+    dependencies:
+      lodash "^4.17.13"
+      paths-js "^0.4.10"
+      point-in-polygon "^1.0.1"
   
   react-native-codegen@^0.0.6:
     version "0.0.6"

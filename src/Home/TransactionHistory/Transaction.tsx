@@ -4,20 +4,19 @@ import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Box, Text } from "../../components";
 import { TransactionHistoryRoutes } from "../../components/Navigation";
-import { DataPoint } from "./Graph";
 
 interface TransactionProps {
-  transaction: DataPoint;
+  order: any;
   navigation: StackNavigationProp<
     TransactionHistoryRoutes,
     "TransactionHistory"
   >;
 }
 
-const Transaction = ({ transaction, navigation }: TransactionProps) => {
+const Transaction = ({ order, navigation }: TransactionProps) => {
   return (
     <Box
-      marginTop="l"
+      marginBottom="l"
       flexDirection="row"
       justifyContent="space-between"
       alignItems="center"
@@ -25,19 +24,29 @@ const Transaction = ({ transaction, navigation }: TransactionProps) => {
       <Box>
         <Box flexDirection="row" alignItems="center" marginBottom="s">
           <Box
-            backgroundColor={transaction.color}
+            backgroundColor="primary"
             marginRight="s"
             style={{ width: 10, height: 10, borderRadius: 5 }}
           />
-          <Text variant="title3">{`#${transaction.id}`}</Text>
+          <Text variant="title3">{`#${order.orderNumber}`}</Text>
         </Box>
-        <Text color="info">{`${transaction.value} - ${moment(
-          transaction.date
+        <Text color="info">{`Rp ${order.totalAmount.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - ${moment(
+          order.createdAt
         ).format("DD MMMM, YYYY")}`}</Text>
       </Box>
-      <TouchableOpacity onPress={() => navigation.navigate("TransactionHistoryDetail")}>
-        <Box backgroundColor="primary">
-          <Text color="secondary" variant="button">
+      <TouchableOpacity
+        onPress={() => navigation.navigate("TransactionHistoryDetail", { order: order })}
+      >
+        <Box
+          backgroundColor="background"
+          padding="s"
+          // @ts-ignore
+          borderRadius="m"
+          borderWidth={1}
+          borderColor="primary"
+        >
+          <Text color="primary" variant="button">
             See more
           </Text>
         </Box>
