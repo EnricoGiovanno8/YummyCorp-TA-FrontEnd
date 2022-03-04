@@ -32,25 +32,19 @@ const startDate = new Date("2019-09-01").getTime();
 const maxDate = new Date("2020-03-01").getTime();
 const numberOfMonths = new Date(maxDate - startDate).getMonth();
 
-const data: DataPoint[] = [
-  {
-    date: new Date("2019-10-02").getTime(),
-    value: 139.42,
-    color: "primary",
-    id: 245672,
-  },
-  {
-    date: new Date("2019-12-01").getTime(),
-    value: 281.23,
-    color: "graph1",
-    id: 245673,
-  },
-  {
-    date: new Date("2020-02-01").getTime(),
-    value: 198.54,
-    color: "graph2",
-    id: 245674,
-  },
+const barColor = [
+  "primary",
+  "graph1",
+  "graph2",
+  "primary",
+  "graph1",
+  "graph2",
+  "primary",
+  "graph1",
+  "graph2",
+  "primary",
+  "graph1",
+  "graph2",
 ];
 
 const TransactionHistory = ({
@@ -62,6 +56,14 @@ const TransactionHistory = ({
   const [selectedMonth, setSelectedMonth] = useState(month);
   console.log(totalAmountOneYear);
 
+  const data: DataPoint[] = totalAmountOneYear.map(
+    (amount: number, index: number) => ({
+      value: amount,
+      color: barColor[index],
+      id: index,
+    })
+  );
+
   useEffect(() => {
     (async () =>
       navigation.addListener("focus", async () => {
@@ -70,9 +72,9 @@ const TransactionHistory = ({
   }, []);
 
   const getTotalAmountThisMonth = () => {
-    if (histories.length > 0) {
-      return histories
-        .reduce((a: number, b: any) => a + b.totalAmount, 0)
+    if (totalAmountOneYear.length > 0) {
+      return totalAmountOneYear
+        .reduce((a: number, b: number) => a + b * 1000000, 0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } else {
@@ -106,31 +108,27 @@ const TransactionHistory = ({
               borderRadius="xl"
               padding="sm"
             >
-              <Text color="primary">This Month</Text>
+              <Text color="primary">All Time</Text>
             </Box>
           </Box>
-          <Graph
-            data={data}
-            startDate={startDate}
-            numberOfMonths={numberOfMonths}
-          />
-          <Picker
-            style={{
-              borderWidth: 1,
-              color: palette.green,
-              width: 180,
-              alignSelf: "flex-end",
-            }}
-            selectedValue={selectedMonth}
-            onValueChange={async (value) => {
-              setSelectedMonth(value);
-              await getHistories(value);
-            }}
-          >
-            {pickerMonth.map((pM: any, index: number) => (
-              <Picker.Item key={index} label={pM.label} value={pM.value} />
-            ))}
-          </Picker>
+          <Graph data={data} numberOfMonths={numberOfMonths} />
+          <Box width={180} alignSelf="flex-end">
+            <Picker
+              style={{
+                borderWidth: 1,
+                color: palette.green,
+              }}
+              selectedValue={selectedMonth}
+              onValueChange={async (value) => {
+                setSelectedMonth(value);
+                await getHistories(value);
+              }}
+            >
+              {pickerMonth.map((pM: any, index: number) => (
+                <Picker.Item key={index} label={pM.label} value={pM.value} />
+              ))}
+            </Picker>
+          </Box>
           <ScrollView showsVerticalScrollIndicator={false}>
             {histories.length > 0 ? (
               histories.map((order: any) => (

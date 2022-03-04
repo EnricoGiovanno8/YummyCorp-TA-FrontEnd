@@ -1,39 +1,16 @@
-// import "intl";
-// import "intl/locale-data/jsonp/en";
-import moment from "moment";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Box, Text, useTheme } from "../../../components";
-import { lerp } from "./Scale";
 
 export const MARGIN = "xl";
 const ROW_HEIGHT = 25;
-// const formatter = Intl.DateTimeFormat("en", { month: "short" });
 
 interface UnderlayProps {
   maxY: number;
   step: number;
 }
 
-const Month = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-]
-
-const Underlay = ({
-  maxY,
-  step,
-}: UnderlayProps) => {
+const Underlay = ({ maxY, step }: UnderlayProps) => {
   const theme = useTheme();
   return (
     <Box style={StyleSheet.absoluteFill}>
@@ -60,18 +37,18 @@ const Underlay = ({
         })}
       </Box>
       <Box
-        marginLeft={MARGIN}
+        // marginLeft={MARGIN}
         height={theme.spacing[MARGIN]}
-        flexDirection="row"
-        alignItems="center"
+        // flexDirection="row"
+        // alignItems="center"
       >
-        {Month.map((m, index) => (
-            <Box key={index} width={step}>
-              <Text color="info" textAlign="center">
-                {m}
-              </Text>
-            </Box>
-          ))}
+        {/* {Month.map((m, index) => (
+          <Box key={index} width={step}>
+            <Text color="info" textAlign="center">
+              {m}
+            </Text>
+          </Box>
+        ))} */}
       </Box>
     </Box>
   );
