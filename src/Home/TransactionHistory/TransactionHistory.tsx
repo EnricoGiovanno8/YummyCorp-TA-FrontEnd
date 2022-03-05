@@ -4,8 +4,8 @@ import { ScrollView } from "react-native";
 import TransactionHistoryContext from "../../../context/TransactionHistoryContext";
 import { Box, Header, palette, Text } from "../../components";
 import { TransactionHistoryNavigationProps } from "../../components/Navigation";
+import Barchart from "./Barchart";
 
-import Graph, { DataPoint } from "./Graph";
 import Transaction from "./Transaction";
 
 let month = (new Date().getMonth() + 1).toString();
@@ -28,25 +28,6 @@ const pickerMonth = [
   { label: "December", value: "12" },
 ];
 
-const startDate = new Date("2019-09-01").getTime();
-const maxDate = new Date("2020-03-01").getTime();
-const numberOfMonths = new Date(maxDate - startDate).getMonth();
-
-const barColor = [
-  "primary",
-  "graph1",
-  "graph2",
-  "primary",
-  "graph1",
-  "graph2",
-  "primary",
-  "graph1",
-  "graph2",
-  "primary",
-  "graph1",
-  "graph2",
-];
-
 const TransactionHistory = ({
   navigation,
 }: TransactionHistoryNavigationProps<"TransactionHistory">) => {
@@ -54,15 +35,6 @@ const TransactionHistory = ({
     TransactionHistoryContext
   );
   const [selectedMonth, setSelectedMonth] = useState(month);
-  console.log(totalAmountOneYear);
-
-  const data: DataPoint[] = totalAmountOneYear.map(
-    (amount: number, index: number) => ({
-      value: amount,
-      color: barColor[index],
-      id: index,
-    })
-  );
 
   useEffect(() => {
     (async () =>
@@ -111,7 +83,7 @@ const TransactionHistory = ({
               <Text color="primary">All Time</Text>
             </Box>
           </Box>
-          <Graph data={data} numberOfMonths={numberOfMonths} />
+          <Barchart totalAmountOneYear={totalAmountOneYear} />
           <Box width={180} alignSelf="flex-end">
             <Picker
               style={{

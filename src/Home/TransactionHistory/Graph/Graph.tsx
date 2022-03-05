@@ -1,10 +1,9 @@
 import { useIsFocused } from "@react-navigation/native";
-import moment from "moment";
 import React from "react";
 import { Dimensions, ScrollView, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useTiming } from "react-native-redash";
-import { Box, useTheme, Text } from "../../../components";
+import { Box, useTheme } from "../../../components";
 import { Theme } from "../../../components/Theme";
 import { lerp } from "./Scale";
 import Underlay, { MARGIN } from "./Underlay";
@@ -46,21 +45,6 @@ const Graph = ({ data, numberOfMonths }: GraphProps) => {
       transform: [{ scaleY: transition.value }],
     };
   });
-
-  const Month = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
 
   return (
     <Box marginTop="xl" paddingLeft={MARGIN} paddingBottom={MARGIN}>
@@ -106,20 +90,6 @@ const Graph = ({ data, numberOfMonths }: GraphProps) => {
               )
           )}
         </View>
-        {Month.map((m, index) => (
-          <Box
-            key={index}
-            width={step}
-            position="absolute"
-            left={index * step}
-            bottom={7}
-            style={{ transform: [{ rotate: '-90deg' }] }}
-          >
-            <Text color="info" textAlign="center">
-              {m}
-            </Text>
-          </Box>
-        ))}
       </ScrollView>
     </Box>
   );

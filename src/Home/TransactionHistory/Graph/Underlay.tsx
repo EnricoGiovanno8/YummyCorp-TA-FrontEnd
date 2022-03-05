@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import {  StyleSheet } from "react-native";
 import { Box, Text, useTheme } from "../../../components";
 
 export const MARGIN = "xl";
@@ -9,6 +9,21 @@ interface UnderlayProps {
   maxY: number;
   step: number;
 }
+
+const Month = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const Underlay = ({ maxY, step }: UnderlayProps) => {
   const theme = useTheme();
@@ -37,18 +52,18 @@ const Underlay = ({ maxY, step }: UnderlayProps) => {
         })}
       </Box>
       <Box
-        // marginLeft={MARGIN}
+        marginLeft={MARGIN}
         height={theme.spacing[MARGIN]}
-        // flexDirection="row"
-        // alignItems="center"
+        flexDirection="row"
+        alignItems="center"
       >
-        {/* {Month.map((m, index) => (
+        {Month.map((m, index) => (
           <Box key={index} width={step}>
             <Text color="info" textAlign="center">
               {m}
             </Text>
           </Box>
-        ))} */}
+        ))}
       </Box>
     </Box>
   );
