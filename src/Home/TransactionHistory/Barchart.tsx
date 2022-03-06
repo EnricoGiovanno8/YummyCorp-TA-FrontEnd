@@ -1,13 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Dimensions,
+  Animated,
+  Easing,
+  Alert,
+  ScrollView,
+  View,
+  StyleSheet,
+} from "react-native";
 import Svg, { Circle, G, Line, Rect, Text as SvgText } from "react-native-svg";
 import { Box, useTheme } from "../../components";
 
 const { width: wWidth } = Dimensions.get("window");
 const aspectRatio = 195 / 305;
 
+const AnimatedLine = Animated.createAnimatedComponent(Line);
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedRect = Animated.createAnimatedComponent(Rect);
+const AnimatedSvg = Animated.createAnimatedComponent(Svg);
+const AnimatedSvgText = Animated.createAnimatedComponent(SvgText);
+
 interface BarchartProps {
   totalAmountOneYear: number[];
+  showTooltip?: boolean;
 }
 
 const Month = [
@@ -25,7 +40,7 @@ const Month = [
   "Dec",
 ];
 
-const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
+const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
   const theme = useTheme();
 
   const barchartData = totalAmountOneYear?.map((value, index) => {
@@ -48,17 +63,26 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
   const axisFontSize = 12;
   const barWidth = 20;
 
+  const [yAxisData, setYAxisData] = useState<string[]>([]);
+
+  const gapBetweenXAxisTicks = 40;
+  const yAxisHeight = canvasHeight - paddingFromScreen - marginBottomForXAxis;
+  const gapBetweenYAxisTicks = yAxisHeight / (yAxisData?.length - 1);
+
   const xAxisX1Point = marginLeftForYAxis;
   const xAxisY1Point = canvasHeight - marginBottomForXAxis;
-  const xAxisX2Point = canvasWidth - paddingFromScreen;
+  const xAxisX2Point =
+    gapBetweenXAxisTicks +
+    xAxisX1Point +
+    gapBetweenXAxisTicks * barchartData?.length;
   const xAxisY2Point = xAxisY1Point;
+
+  const xAxisWidth = xAxisX2Point + circleRadius;
 
   const yAxisX1Point = marginLeftForYAxis;
   const yAxisY1Point = paddingFromScreen;
   const yAxisX2Point = marginLeftForYAxis;
   const yAxisY2Point = canvasHeight - marginBottomForXAxis;
-
-  const [yAxisData, setYAxisData] = useState<string[]>([]);
 
   const minValue = 0;
 
@@ -68,44 +92,60 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
     setMaxValue(
       Math.max.apply(
         Math,
-        barchartData?.map((item) => item.value)
+        barchartData?.map((item) => item?.value)
       )
     );
   }, [barchartData]);
 
   const gapBetweenYAxisValues = (maxValue - minValue) / 4;
 
+  const animatedAxisTickCircleOpacity = useRef(new Animated.Value(0)).current;
+  const animatedXAxisWidth = useRef(new Animated.Value(xAxisX1Point)).current;
+  const animatedYAxisHeight = useRef(new Animated.Value(yAxisY2Point)).current;
+
   useEffect(() => {
     const newLabels = Array.from({ length: 6 }).map((_, index) =>
-      (minValue + gapBetweenYAxisValues * index).toFixed(2)
+      (minValue + gapBetweenYAxisValues * index).toFixed()
     );
     setYAxisData(newLabels);
+    animationXAxis();
   }, [gapBetweenYAxisValues]);
 
-  const xAxisWidth = canvasWidth - paddingFromScreen - marginLeftForYAxis;
-  const gapBetweenXAxisTicks = xAxisWidth / (barchartData.length + 1);
-  const yAxisHeight = canvasHeight - paddingFromScreen - marginBottomForXAxis;
-  const gapBetweenYAxisTicks = yAxisHeight / (yAxisData?.length - 1);
+  const animationXAxis = () => {
+    Animated.timing(animatedAxisTickCircleOpacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+    Animated.timing(animatedXAxisWidth, {
+      toValue: xAxisX2Point,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+    Animated.timing(animatedYAxisHeight, {
+      toValue: yAxisY1Point,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+  };
 
   const renderXAxis = () => {
     return (
       <G key={"xAxis"}>
-        <Circle
-          cx={xAxisX1Point}
-          cy={xAxisY1Point}
-          fill={axisColor}
-          r={circleRadius}
-        />
-        <Circle
+        <AnimatedCircle
           cx={xAxisX2Point}
           cy={xAxisY2Point}
           fill={axisColor}
           r={circleRadius}
+          opacity={animatedAxisTickCircleOpacity}
         />
-        <Line
+        <AnimatedLine
           x1={xAxisX1Point}
           y1={xAxisY1Point}
-          x2={xAxisX2Point}
+          x2={animatedXAxisWidth}
           y2={xAxisY2Point}
           strokeWidth={axisWidth}
           stroke={axisColor}
@@ -117,15 +157,23 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
   const renderYAxis = () => {
     return (
       <G key={"yAxis"}>
-        <Circle
+        <AnimatedCircle
           cx={yAxisX1Point}
           cy={yAxisY1Point}
           fill={axisColor}
           r={circleRadius}
+          opacity={animatedAxisTickCircleOpacity}
         />
-        <Line
+        <AnimatedCircle
+          cx={yAxisX2Point}
+          cy={yAxisY2Point}
+          fill={axisColor}
+          r={circleRadius}
+          opacity={animatedAxisTickCircleOpacity}
+        />
+        <AnimatedLine
           x1={yAxisX1Point}
-          y1={yAxisY1Point}
+          y1={animatedYAxisHeight}
           x2={yAxisX2Point}
           y2={yAxisY2Point}
           stroke={axisColor}
@@ -141,23 +189,25 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
         gapBetweenXAxisTicks + xAxisX1Point + gapBetweenXAxisTicks * index;
       return (
         <G key={`xAxis Ticks and Labels ${index}`}>
-          <Line
+          <AnimatedLine
             x1={xPointXAxisTick}
             y1={xAxisY1Point}
             x2={xPointXAxisTick}
             y2={xAxisY1Point + 10}
             strokeWidth={axisWidth}
             stroke={axisColor}
+            opacity={animatedAxisTickCircleOpacity}
           />
-          <SvgText
+          <AnimatedSvgText
             x={xPointXAxisTick}
             y={xAxisY1Point + 10 + axisFontSize}
             fill={theme.colors.info}
             textAnchor="middle"
             fontSize={axisFontSize}
+            opacity={animatedAxisTickCircleOpacity}
           >
             {item?.month}
-          </SvgText>
+          </AnimatedSvgText>
         </G>
       );
     });
@@ -168,23 +218,25 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
       const yPointYAxisTicks = yAxisY2Point - gapBetweenYAxisTicks * index;
       return (
         <G key={`yAxis Ticks and Labels ${index}`}>
-          <Line
+          <AnimatedLine
             x1={yAxisX2Point}
             y1={yPointYAxisTicks}
             x2={yAxisX2Point - 10}
             y2={yPointYAxisTicks}
             stroke={axisColor}
             strokeWidth={axisWidth}
+            opacity={animatedAxisTickCircleOpacity}
           />
-          <SvgText
+          <AnimatedSvgText
             x={yAxisX2Point - 11}
             y={yPointYAxisTicks + axisFontSize / 3}
             fill={theme.colors.info}
             textAnchor="end"
             fontSize={axisFontSize}
+            opacity={animatedAxisTickCircleOpacity}
           >
-            {item}
-          </SvgText>
+            {`${item} M`}
+          </AnimatedSvgText>
         </G>
       );
     });
@@ -192,37 +244,118 @@ const Barchart = ({ totalAmountOneYear }: BarchartProps) => {
 
   const renderBarchart = () => {
     const gapBetweenYAxisTicks = yAxisHeight / (yAxisData?.length - 1);
+
     return barchartData.map((item, index) => {
       const xPointXAxisTick =
         gapBetweenXAxisTicks + xAxisX1Point + gapBetweenXAxisTicks * index;
-      let height = (item?.value * gapBetweenYAxisTicks) / gapBetweenYAxisValues;
-      return (
-        <G key={`barchart ${index}`}>
-          <Rect
-            x={xPointXAxisTick - barWidth / 2}
-            y={xAxisY1Point}
-            height={-height}
-            width={barWidth}
-            fill={theme.colors.primary}
-          />
-        </G>
-      );
+
+      if (item?.value !== 0) {
+        let height =
+          (item?.value * gapBetweenYAxisTicks) / gapBetweenYAxisValues;
+
+        let animatedHeight = new Animated.Value(0);
+        Animated.timing(animatedHeight, {
+          toValue: -height,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }).start();
+
+        return (
+          <G key={`barchart ${index}`}>
+            <AnimatedRect
+              x={xPointXAxisTick - barWidth / 2}
+              y={xAxisY1Point}
+              height={animatedHeight}
+              width={barWidth}
+              fill={theme.colors.primaryLight}
+              stroke={theme.colors.primary}
+              onPress={() =>
+                Alert.alert(
+                  `${item?.month}: Rp ${(item?.value * 1000000)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+                )
+              }
+            />
+          </G>
+        );
+      } else {
+        return;
+      }
+    });
+  };
+
+  const renderTooltips = () => {
+    const gapBetweenYAxisTicks = yAxisHeight / (yAxisData?.length - 1);
+
+    return barchartData?.map((item, index) => {
+      const xPointXAxisTick =
+        gapBetweenXAxisTicks + xAxisX1Point + gapBetweenXAxisTicks * index;
+
+      if (item?.value !== 0) {
+        let height =
+          (item?.value * gapBetweenYAxisTicks) / gapBetweenYAxisValues;
+        return (
+          <G key={`Tooptip ${index}`}>
+            <AnimatedLine
+              x1={xPointXAxisTick}
+              y1={yAxisY2Point - height}
+              x2={xPointXAxisTick}
+              y2={yAxisY2Point - height - 10}
+              strokeWidth={axisWidth}
+              stroke={theme.colors.primary}
+              opacity={animatedAxisTickCircleOpacity}
+            />
+            <AnimatedSvgText
+              x={xPointXAxisTick}
+              y={yAxisY2Point - height - 10 - 5}
+              fontSize={axisFontSize}
+              fill={theme.colors.primary}
+              textAnchor="middle"
+              opacity={animatedAxisTickCircleOpacity}
+            >
+              {`${item?.value.toFixed(2)} M`}
+            </AnimatedSvgText>
+          </G>
+        );
+      } else {
+        return;
+      }
     });
   };
 
   return (
     <Box width={canvasWidth} height={canvasHeight}>
-      <Svg
-        height="100%"
-        width="100%"
-        style={{ backgroundColor: theme.colors.background }}
+      <View
+        style={[
+          StyleSheet.absoluteFillObject,
+          { width: marginLeftForYAxis + circleRadius, zIndex: 1 },
+        ]}
       >
-        {renderXAxis()}
-        {renderXAxisTickLabels()}
-        {renderYAxis()}
-        {renderYAxisTickLabels()}
-        {yAxisData?.length > 0 && renderBarchart()}
-      </Svg>
+        <AnimatedSvg
+          height="100%"
+          width="100%"
+          style={{ backgroundColor: theme.colors.background }}
+        >
+          {renderYAxis()}
+          {renderYAxisTickLabels()}
+        </AnimatedSvg>
+      </View>
+      <ScrollView horizontal contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={{ height: canvasHeight, width: xAxisWidth }}>
+          <AnimatedSvg
+            height="100%"
+            width="100%"
+            style={{ backgroundColor: "transparent" }}
+          >
+            {renderXAxis()}
+            {renderXAxisTickLabels()}
+            {yAxisData?.length > 0 && renderBarchart()}
+            {showTooltip && yAxisData?.length > 0 && renderTooltips()}
+          </AnimatedSvg>
+        </View>
+      </ScrollView>
     </Box>
   );
 };

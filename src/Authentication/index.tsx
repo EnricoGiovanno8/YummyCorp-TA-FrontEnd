@@ -31,7 +31,7 @@ export const AuthenticationNavigator = ({
         })
       );
     }
-  }, []);
+  }, [user]);
   
   return (
     <AuthenticationStack.Navigator screenOptions={{ headerShown: false }}>

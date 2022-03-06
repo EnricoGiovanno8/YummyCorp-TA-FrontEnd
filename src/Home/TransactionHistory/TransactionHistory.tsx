@@ -83,7 +83,9 @@ const TransactionHistory = ({
               <Text color="primary">All Time</Text>
             </Box>
           </Box>
-          <Barchart totalAmountOneYear={totalAmountOneYear} />
+          {totalAmountOneYear.length > 0 && (
+            <Barchart totalAmountOneYear={totalAmountOneYear} showTooltip />
+          )}
           <Box width={180} alignSelf="flex-end">
             <Picker
               style={{
