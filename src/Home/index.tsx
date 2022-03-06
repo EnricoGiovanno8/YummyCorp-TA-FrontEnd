@@ -37,7 +37,7 @@ export const HomeNavigator = ({
         })
       );
     }
-  }, [user]);
+  }, []);
 
   return (
     <ProductProvider>

@@ -31,22 +31,22 @@ const pickerMonth = [
 const TransactionHistory = ({
   navigation,
 }: TransactionHistoryNavigationProps<"TransactionHistory">) => {
-  const { histories, totalAmountOneYear, getHistories } = useContext(
-    TransactionHistoryContext
-  );
+  const { histories, totalAmountOneYear, getHistories, getHistoryOneYear } =
+    useContext(TransactionHistoryContext);
   const [selectedMonth, setSelectedMonth] = useState(month);
 
   useEffect(() => {
     (async () =>
       navigation.addListener("focus", async () => {
         await getHistories(month);
+        await getHistoryOneYear();
       }))();
   }, []);
 
-  const getTotalAmountThisMonth = () => {
+  const getTotalAmountAllTime = () => {
     if (totalAmountOneYear.length > 0) {
       return totalAmountOneYear
-        .reduce((a: number, b: number) => a + b * 1000000, 0)
+        .reduce((a: number, b: number) => a + b, 0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } else {
@@ -72,7 +72,7 @@ const TransactionHistory = ({
               <Text variant="header" color="secondary" opacity={0.3}>
                 TOTAL SPENT
               </Text>
-              <Text variant="title1">Rp {getTotalAmountThisMonth()}</Text>
+              <Text variant="title1">Rp {getTotalAmountAllTime()}</Text>
             </Box>
             <Box
               backgroundColor="primaryLight"

@@ -5,7 +5,7 @@ import { URL } from "./AuthContext";
 
 interface TransactionHistoryContextType {
   histories: any;
-  totalAmountOneYear: any
+  totalAmountOneYear: any;
   getHistories: (month: string) => any;
   getHistoryOneYear: () => any;
 }
@@ -25,7 +25,7 @@ export const TransactionHistoryProvider = ({
   children,
 }: TransactionHistoryProviderProps) => {
   const [histories, setHistories] = useState<any[]>([]);
-  const [totalAmountOneYear, setTotalAmountOneYear] = useState<any[]>([])
+  const [totalAmountOneYear, setTotalAmountOneYear] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -77,7 +77,7 @@ export const TransactionHistoryProvider = ({
           })
           .then((res) => {
             tempArr.push(
-              res.data.reduce((a: number, b: any) => a + b.totalAmount, 0) / 1000000
+              res.data.reduce((a: number, b: any) => a + b.totalAmount, 0)
             );
           })
           .catch((err) => {
@@ -91,7 +91,7 @@ export const TransactionHistoryProvider = ({
           });
       }
     }
-    setTotalAmountOneYear(tempArr)
+    setTotalAmountOneYear(tempArr);
   };
 
   return (

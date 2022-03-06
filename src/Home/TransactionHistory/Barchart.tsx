@@ -43,6 +43,8 @@ const Month = [
 const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
   const theme = useTheme();
 
+  const [yAxisData, setYAxisData] = useState<string[]>([]);
+  const [maxValue, setMaxValue] = useState<number>(0);
   const barchartData = totalAmountOneYear?.map((value, index) => {
     return {
       month: Month[index],
@@ -63,18 +65,19 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
   const axisFontSize = 12;
   const barWidth = 20;
 
-  const [yAxisData, setYAxisData] = useState<string[]>([]);
-
   const gapBetweenXAxisTicks = 40;
   const yAxisHeight = canvasHeight - paddingFromScreen - marginBottomForXAxis;
-  const gapBetweenYAxisTicks = yAxisHeight / (yAxisData?.length - 1);
+  const gapBetweenYAxisTicks =
+    yAxisData?.length > 0 ? yAxisHeight / (yAxisData?.length - 1) : 0;
 
   const xAxisX1Point = marginLeftForYAxis;
   const xAxisY1Point = canvasHeight - marginBottomForXAxis;
   const xAxisX2Point =
-    gapBetweenXAxisTicks +
-    xAxisX1Point +
-    gapBetweenXAxisTicks * barchartData?.length;
+    barchartData?.length > 0
+      ? gapBetweenXAxisTicks +
+        xAxisX1Point +
+        gapBetweenXAxisTicks * barchartData?.length
+      : 0;
   const xAxisY2Point = xAxisY1Point;
 
   const xAxisWidth = xAxisX2Point + circleRadius;
@@ -86,7 +89,7 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
 
   const minValue = 0;
 
-  const [maxValue, setMaxValue] = useState<number>(0);
+  const gapBetweenYAxisValues = (maxValue - minValue) / 4;
 
   useEffect(() => {
     setMaxValue(
@@ -97,15 +100,13 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
     );
   }, [barchartData]);
 
-  const gapBetweenYAxisValues = (maxValue - minValue) / 4;
-
   const animatedAxisTickCircleOpacity = useRef(new Animated.Value(0)).current;
   const animatedXAxisWidth = useRef(new Animated.Value(xAxisX1Point)).current;
   const animatedYAxisHeight = useRef(new Animated.Value(yAxisY2Point)).current;
 
   useEffect(() => {
     const newLabels = Array.from({ length: 6 }).map((_, index) =>
-      (minValue + gapBetweenYAxisValues * index).toFixed()
+      ((minValue + gapBetweenYAxisValues * index)/1000000).toFixed()
     );
     setYAxisData(newLabels);
     animationXAxis();
@@ -249,7 +250,7 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
       const xPointXAxisTick =
         gapBetweenXAxisTicks + xAxisX1Point + gapBetweenXAxisTicks * index;
 
-      if (item?.value !== 0) {
+      if (item?.value !== 0 && gapBetweenYAxisValues !== 0) {
         let height =
           (item?.value * gapBetweenYAxisTicks) / gapBetweenYAxisValues;
 
@@ -293,7 +294,7 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
       const xPointXAxisTick =
         gapBetweenXAxisTicks + xAxisX1Point + gapBetweenXAxisTicks * index;
 
-      if (item?.value !== 0) {
+      if (item?.value !== 0 && gapBetweenYAxisValues !== 0) {
         let height =
           (item?.value * gapBetweenYAxisTicks) / gapBetweenYAxisValues;
         return (
@@ -315,7 +316,7 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
               textAnchor="middle"
               opacity={animatedAxisTickCircleOpacity}
             >
-              {`${item?.value.toFixed(2)} M`}
+              {`${(item?.value / 1000000).toFixed(2)} M`}
             </AnimatedSvgText>
           </G>
         );
@@ -338,8 +339,8 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
           width="100%"
           style={{ backgroundColor: theme.colors.background }}
         >
-          {renderYAxis()}
-          {renderYAxisTickLabels()}
+          {yAxisData?.length > 0 && renderYAxis()}
+          {yAxisData?.length > 0 && renderYAxisTickLabels()}
         </AnimatedSvg>
       </View>
       <ScrollView horizontal contentContainerStyle={{ flexGrow: 1 }}>
@@ -349,8 +350,8 @@ const Barchart = ({ totalAmountOneYear, showTooltip }: BarchartProps) => {
             width="100%"
             style={{ backgroundColor: "transparent" }}
           >
-            {renderXAxis()}
-            {renderXAxisTickLabels()}
+            {yAxisData?.length > 0 && renderXAxis()}
+            {yAxisData?.length > 0 && renderXAxisTickLabels()}
             {yAxisData?.length > 0 && renderBarchart()}
             {showTooltip && yAxisData?.length > 0 && renderTooltips()}
           </AnimatedSvg>

@@ -1,9 +1,10 @@
 import { DrawerActions } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import { Dimensions } from "react-native";
 import { Box, Header, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import Tabs from "./Tabs";
+import AuthContext from "../../../context/AuthContext";
 
 const { width } = Dimensions.get("window");
 
@@ -19,6 +20,7 @@ const tabs = [
 ];
 
 const EditProfile = ({ navigation }: HomeNavigationProps<"EditProfile">) => {
+  const { user } = useContext(AuthContext)
   return (
     <Box flex={1} backgroundColor="background">
       <Box flex={0.25} backgroundColor="background">
@@ -52,10 +54,10 @@ const EditProfile = ({ navigation }: HomeNavigationProps<"EditProfile">) => {
         />
         <Box marginBottom="m" style={{ marginTop: -30 }}>
           <Text variant="title1" textAlign="center">
-            Mike Peter
+            {user?.name}
           </Text>
           <Text variant="body" textAlign="center">
-            mike@flexinstudio.com
+            {user?.email}
           </Text>
         </Box>
       </Box>

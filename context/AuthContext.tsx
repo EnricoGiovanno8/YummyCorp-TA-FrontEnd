@@ -157,6 +157,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const updateUser = async (body: any) => {
+    setIsLoading(true)
     const token = await AsyncStorage.getItem("token");
 
     if (token) {
@@ -166,6 +167,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
         .then((res) => {
           setUser(res.data);
+          setIsLoading(false)
         })
         .catch((err) => {
           if (Array.isArray(err?.response?.data?.message)) {

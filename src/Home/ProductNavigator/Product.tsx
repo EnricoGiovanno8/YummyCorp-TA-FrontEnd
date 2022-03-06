@@ -214,7 +214,7 @@ const Product = ({ navigation }: ProductNavigationProps<"Product">) => {
       <Header
         title="Home"
         left={{ icon: "menu", onPress: () => navigation.openDrawer() }}
-        right={{ icon: "heart", onPress: () => navigation.navigate("Cart") }}
+        right={{ icon: "heart", onPress: () => navigation.navigate("FavouriteOutfits") }}
       />
       <Box flex={1} paddingHorizontal="m" paddingTop="s">
         <Box>

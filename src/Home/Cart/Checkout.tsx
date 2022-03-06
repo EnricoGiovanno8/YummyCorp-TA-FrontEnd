@@ -86,7 +86,7 @@ const Checkout = ({
       const success = await onPayRequest({
         cardToken: selectedCard,
         totalPrice: getTotalPriceItem() + 10000,
-        totalItems: getTotalItems()
+        totalItems: getTotalItems(),
       });
       if (success === "PAYMENT SUCCESS") {
         onSuccessfulPayment();
@@ -129,6 +129,7 @@ const Checkout = ({
                     padding: theme.spacing.s,
                     // @ts-ignore
                     borderRadius: theme.borderRadii.m,
+                    textAlign: "justify",
                   }}
                 />
               ) : (
