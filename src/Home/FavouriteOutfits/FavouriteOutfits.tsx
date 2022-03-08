@@ -29,7 +29,7 @@ const FavouriteOutfits = ({
   }: NativeScrollEvent) => {
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - 1;
   };
-  // 1841.4285888671875
+  
   return (
     <Box flex={1} backgroundColor="background">
       <Header

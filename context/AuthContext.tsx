@@ -18,7 +18,7 @@ interface Login {
 interface AuthContextProps {
   isLoading: boolean;
   uploadSuccess: boolean;
-  errorUpload: boolean;
+  errorUpload: string;
   user: any;
   errorRegister: string;
   errorLogin: string;
@@ -35,7 +35,7 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps>({
   isLoading: false,
   uploadSuccess: false,
-  errorUpload: false,
+  errorUpload: "",
   user: null,
   errorRegister: "",
   errorLogin: "",
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [errorRegister, setErrorRegister] = useState("");
   const [errorLogin, setErrorLogin] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [errorUpload, setErrorUpload] = useState(false);
+  const [errorUpload, setErrorUpload] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -192,6 +192,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const uploadProfilePicture = async (body: any) => {
+    setIsLoading(true)
     const token = await AsyncStorage.getItem("token");
 
     if (token) {
@@ -203,12 +204,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           },
         })
         .then(async () => {
+          setIsLoading(false)
           setUploadSuccess(true);
           await checkUserLoggedIn();
         })
         .catch((err) => {
-          if (err) {
-            setErrorUpload(true);
+          setIsLoading(false)
+          if (Array.isArray(err?.response?.data?.message)) {
+            setErrorUpload(err.response.data.message[0]);
+          } else if (err?.response?.data?.message) {
+            setErrorUpload(err.response.data.message);
+          } else if (err?.message) {
+            setErrorUpload(err.message);
           }
         });
     }
@@ -216,7 +223,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const resetUpload = () => {
     setUploadSuccess(false);
-    setErrorUpload(false);
+    setErrorUpload("");
   };
 
   return (

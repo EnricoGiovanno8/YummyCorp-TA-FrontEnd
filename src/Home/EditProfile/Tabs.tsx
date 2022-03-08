@@ -5,8 +5,6 @@ import { Box, Text, useTheme } from "../../components";
 import Configuration from "./Configuration";
 import PersonalInfo from "./PersonalInfo";
 
-// const { width } = Dimensions.get("window");
-
 interface Tab {
   id: string;
   title: string;

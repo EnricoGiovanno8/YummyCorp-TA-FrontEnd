@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Box, Header, Text } from "../../components";
+import { Box, Header, palette, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
-import { Image, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import AuthContext from "../../../context/AuthContext";
 import { URL } from "../../../context";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
+
 export const assets = [
   require("./assets/camera.png"),
   require("./assets/gallery.png"),
@@ -31,13 +32,14 @@ const Camera = ({ navigation }: HomeNavigationProps<"Camera">) => {
     user,
     uploadSuccess,
     errorUpload,
+    isLoading,
     uploadProfilePicture,
     resetUpload,
   } = useContext(AuthContext);
   const [image, setImage] = useState<any>(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    await resetUpload();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -51,7 +53,7 @@ const Camera = ({ navigation }: HomeNavigationProps<"Camera">) => {
   };
 
   const takePicture = async () => {
-    // No permissions request is necessary for launching the image library
+    await resetUpload();
     let result = await ImagePicker.launchCameraAsync({
       aspect: [3, 3],
       quality: 1,
@@ -179,44 +181,57 @@ const Camera = ({ navigation }: HomeNavigationProps<"Camera">) => {
               </Text>
             </TouchableOpacity>
           </Box>
-          <Box
-            width={300}
-            height={50}
-            // @ts-ignore
-            borderRadius="m"
-            overflow="hidden"
-            style={{
-              elevation: 5,
-              shadowColor: "black",
-            }}
-            backgroundColor="home"
-            justifyContent="center"
-            marginTop="m"
-            opacity={image ? 1 : 0.5}
-          >
-            <TouchableOpacity
-              onPress={upload}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              disabled={image ? false : true}
+          {isLoading ? (
+            <Box
+              marginTop="m"
+              width={300}
+              height={50}
+              justifyContent="center"
+              alignItems="center"
             >
-              <Icon name="upload-cloud" size={30} color="white" />
-              <Text marginLeft="m" variant="button" color="white">
-                Upload Picture
-              </Text>
-            </TouchableOpacity>
-          </Box>
+              <ActivityIndicator size={30} color={palette.green} />
+            </Box>
+          ) : (
+            <Box
+              width={300}
+              height={50}
+              // @ts-ignore
+              borderRadius="m"
+              overflow="hidden"
+              style={{
+                elevation: 5,
+                shadowColor: "black",
+              }}
+              backgroundColor="home"
+              justifyContent="center"
+              marginTop="m"
+              opacity={image ? 1 : 0.5}
+            >
+              <TouchableOpacity
+                onPress={upload}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                disabled={image ? false : true}
+              >
+                <Icon name="upload-cloud" size={30} color="white" />
+                <Text marginLeft="m" variant="button" color="white">
+                  Upload Picture
+                </Text>
+              </TouchableOpacity>
+            </Box>
+          )}
+
           {uploadSuccess && (
             <Box alignItems="center" marginTop="m">
               <Text variant="success">Upload Success</Text>
             </Box>
           )}
-          {errorUpload && (
+          {errorUpload.length > 0 && (
             <Box alignItems="center" marginTop="m">
-              <Text variant="error">Upload Fail</Text>
+              <Text variant="error">{errorUpload}</Text>
             </Box>
           )}
         </Box>

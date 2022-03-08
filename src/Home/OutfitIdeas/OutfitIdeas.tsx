@@ -39,16 +39,6 @@ const OutfitIdeas = ({ navigation }: HomeNavigationProps<"OutfitIdeas">) => {
       <Categories />
       <Box flex={1}>
         <Background />
-        {/* {cards.map(
-          ({ index, source }) =>
-            index >= currentIndex && (
-              <Card
-                key={index}
-                onSwipe={() => setCurrentIndex((prev) => prev + 1)}
-                {...{ source }}
-              />
-            )
-        )} */}
         {cards.map(
           ({ index, source }) =>
             currentIndex < index * step + step && (

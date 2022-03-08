@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-// import { Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Box, RoundedIcon } from "../../components";
-
-// const { width: wWidth } = Dimensions.get("window");
 
 interface OutfitProps {
   outfit: { id: number; color: string; aspectRatio: number };

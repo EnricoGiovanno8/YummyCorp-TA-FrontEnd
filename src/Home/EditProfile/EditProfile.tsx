@@ -59,7 +59,7 @@ const EditProfile = ({ navigation }: HomeNavigationProps<"EditProfile">) => {
           overflow="hidden"
           borderWidth={1}
         >
-          {user?.image && (
+          {user && user.image && (
             <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
               <Image
                 source={{ uri: `${URL}/profile-picture/${user.image}` }}
