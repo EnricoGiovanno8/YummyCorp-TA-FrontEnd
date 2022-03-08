@@ -24,6 +24,8 @@ export const palette = {
   homeBlue: "#6FA8DC",
   lightPink: "#FFC0CB",
   greenFresh: "#18A558",
+  grey: '#808080',
+  lightGreen: "#A3DA8D"
 };
 
 const theme: BaseTheme = createTheme({
@@ -53,6 +55,8 @@ const theme: BaseTheme = createTheme({
     men: palette.homeBlue,
     women: palette.lightPink,
     green: palette.greenFresh,
+    camera: "rgba(192,192,192,0.7)",
+    pictureButton: palette.lightGreen
   },
   spacing: {
     s: 8,
@@ -115,6 +119,11 @@ const theme: BaseTheme = createTheme({
       fontSize: 12,
       fontFamily: "SFProDisplay-Semibold",
       color: "danger",
+    },
+    success: {
+      fontSize: 12,
+      fontFamily: "SFProDisplay-Semibold",
+      color: "primary",
     },
     filter: {
       fontSize: 16,

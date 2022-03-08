@@ -21,6 +21,8 @@ import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProductNavigator } from "./ProductNavigator";
 import { TransactionHistoryProvider } from "../../context/TransactionHistoryContext";
+import Camera from "./Camera/Camera";
+export { assets as cameraAssets } from "./Camera"
 
 const Drawer = createDrawerNavigator<HomeRoutes>();
 export const HomeNavigator = ({
@@ -72,6 +74,7 @@ export const HomeNavigator = ({
                   component={NotificationsSettings}
                 />
                 <Drawer.Screen name="Cart" component={Cart} />
+                <Drawer.Screen name="Camera" component={Camera} />
               </Drawer.Navigator>
             </CheckoutProvider>
           </CartProvider>

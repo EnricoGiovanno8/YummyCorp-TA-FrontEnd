@@ -17,6 +17,8 @@ interface Login {
 
 interface AuthContextProps {
   isLoading: boolean;
+  uploadSuccess: boolean;
+  errorUpload: boolean;
   user: any;
   errorRegister: string;
   errorLogin: string;
@@ -26,10 +28,14 @@ interface AuthContextProps {
   login: (body: Login) => any;
   logout: () => void;
   updateUser: (body: any) => any;
+  uploadProfilePicture: (body: any) => any;
+  resetUpload: () => any;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   isLoading: false,
+  uploadSuccess: false,
+  errorUpload: false,
   user: null,
   errorRegister: "",
   errorLogin: "",
@@ -39,6 +45,8 @@ const AuthContext = createContext<AuthContextProps>({
   login: () => true,
   logout: () => true,
   updateUser: () => true,
+  uploadProfilePicture: () => true,
+  resetUpload: () => true,
 });
 
 interface AuthProviderProps {
@@ -50,6 +58,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(null);
   const [errorRegister, setErrorRegister] = useState("");
   const [errorLogin, setErrorLogin] = useState("");
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [errorUpload, setErrorUpload] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -157,7 +167,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const updateUser = async (body: any) => {
-    setIsLoading(true)
+    setIsLoading(true);
     const token = await AsyncStorage.getItem("token");
 
     if (token) {
@@ -167,21 +177,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
         .then((res) => {
           setUser(res.data);
-          setIsLoading(false)
+          setIsLoading(false);
         })
         .catch((err) => {
           if (Array.isArray(err?.response?.data?.message)) {
-            setErrorLogin(err.response.data.message[0]);
-            setIsLoading(false);
+            console.log(err.response.data.message[0]);
           } else if (err?.response?.data?.message) {
-            setErrorLogin(err.response.data.message);
-            setIsLoading(false);
+            console.log(err.response.data.message);
           } else if (err?.message) {
-            setErrorLogin(err.message);
-            setIsLoading(false);
+            console.log(err.message);
           }
         });
     }
+  };
+
+  const uploadProfilePicture = async (body: any) => {
+    const token = await AsyncStorage.getItem("token");
+
+    if (token) {
+      await axios
+        .post(`${URL}/profile-picture`, body, {
+          headers: {
+            "Content-Type": `multipart/form-data`,
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(async () => {
+          setUploadSuccess(true);
+          await checkUserLoggedIn();
+        })
+        .catch((err) => {
+          if (err) {
+            setErrorUpload(true);
+          }
+        });
+    }
+  };
+
+  const resetUpload = () => {
+    setUploadSuccess(false);
+    setErrorUpload(false);
   };
 
   return (
@@ -191,12 +226,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         errorRegister,
         errorLogin,
+        uploadSuccess,
+        errorUpload,
         clearErrorLogin,
         clearErrorRegister,
         register,
         login,
         logout,
         updateUser,
+        uploadProfilePicture,
+        resetUpload,
       }}
     >
       {children}

@@ -1,10 +1,11 @@
 import { DrawerActions } from "@react-navigation/native";
 import React, { useContext } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Image, TouchableOpacity } from "react-native";
 import { Box, Header, Text } from "../../components";
 import { HomeNavigationProps } from "../../components/Navigation";
 import Tabs from "./Tabs";
 import AuthContext from "../../../context/AuthContext";
+import { URL } from "../../../context";
 
 const { width } = Dimensions.get("window");
 
@@ -20,7 +21,7 @@ const tabs = [
 ];
 
 const EditProfile = ({ navigation }: HomeNavigationProps<"EditProfile">) => {
-  const { user } = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   return (
     <Box flex={1} backgroundColor="background">
       <Box flex={0.25} backgroundColor="background">
@@ -50,8 +51,26 @@ const EditProfile = ({ navigation }: HomeNavigationProps<"EditProfile">) => {
           backgroundColor="primary"
           width={100}
           height={100}
-          style={{ borderRadius: 50, top: -50 }}
-        />
+          style={{
+            borderRadius: 50,
+            top: -50,
+            borderColor: "rgba(12, 13, 52, 0.1)",
+          }}
+          overflow="hidden"
+          borderWidth={1}
+        >
+          {user?.image && (
+            <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
+              <Image
+                source={{ uri: `${URL}/profile-picture/${user.image}` }}
+                style={{
+                  resizeMode: "cover",
+                  height: "100%",
+                }}
+              />
+            </TouchableOpacity>
+          )}
+        </Box>
         <Box marginBottom="m" style={{ marginTop: -30 }}>
           <Text variant="title1" textAlign="center">
             {user?.name}

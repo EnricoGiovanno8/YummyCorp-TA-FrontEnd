@@ -1,10 +1,18 @@
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { CommonActions } from "@react-navigation/native";
-import React from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import {
+  DrawerContentComponentProps,
+  DrawerNavigationProp,
+} from "@react-navigation/drawer";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import React, { useContext } from "react";
+import { Dimensions, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Box, Header } from "../../components";
 import DrawerItem, { DrawerItemProps } from "./DrawerItem";
 import TextContext from "./TextContext";
+import AuthContext from "../../../context/AuthContext";
+import { URL } from "../../../context";
+import {
+  HomeRoutes,
+} from "../../components/Navigation";
 
 const { width } = Dimensions.get("window");
 export const DRAWER_WIDTH = width * 0.8;
@@ -66,6 +74,40 @@ const items: DrawerItemProps[] = [
 
 export const assets = [require("./assets/drawer.jpg")];
 
+const ProfilePicture = () => {
+  const { user } = useContext(AuthContext);
+
+  const navigation = useNavigation<DrawerNavigationProp<HomeRoutes>>();
+
+  return (
+    <Box
+      alignSelf="center"
+      backgroundColor="primary"
+      width={100}
+      height={100}
+      style={{
+        borderRadius: 50,
+        top: -75,
+        borderColor: "rgba(12, 13, 52, 0.1)",
+      }}
+      overflow="hidden"
+      borderWidth={1}
+    >
+      {user?.image && (
+        <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
+          <Image
+            source={{ uri: `${URL}/profile-picture/${user.image}` }}
+            style={{
+              resizeMode: "cover",
+              height: "100%",
+            }}
+          />
+        </TouchableOpacity>
+      )}
+    </Box>
+  );
+};
+
 const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   return (
     <Box flex={1}>
@@ -105,6 +147,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             height: height,
           }}
         />
+
         <Box
           position="absolute"
           top={0}
@@ -119,13 +162,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           justifyContent="center"
           paddingHorizontal="xl"
         >
-          <Box
-            alignSelf="center"
-            backgroundColor="primary"
-            width={100}
-            height={100}
-            style={{ borderRadius: 50, top: -75 }}
-          />
+          <ProfilePicture />
           <TextContext />
           {items.map((item) => (
             <DrawerItem key={item.label} {...item} />

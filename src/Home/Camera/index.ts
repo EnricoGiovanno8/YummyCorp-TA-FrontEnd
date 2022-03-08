@@ -1,0 +1,1 @@
+export { default as Camera, assets } from './Camera'

@@ -66,6 +66,7 @@ export type HomeRoutes = {
   NotificationsSettings: undefined;
   Logout: undefined;
   Cart: undefined;
+  Camera: undefined;
 };
 
 export type ProductRoutes = {

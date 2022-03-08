@@ -4,7 +4,7 @@ import {
   assets as authenticationAssets,
   AuthenticationNavigator,
 } from "./src/Authentication";
-import { HomeNavigator, assets as homeAssets } from "./src/Home";
+import { HomeNavigator, assets as homeAssets, cameraAssets } from "./src/Home";
 import { LoadAssets } from "./src/components";
 import { ThemeProvider } from "./src/components/Theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -16,7 +16,7 @@ LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
 ]);
 
-const assets = [...authenticationAssets, ...homeAssets];
+const assets = [...authenticationAssets, ...homeAssets, ...cameraAssets];
 const fonts = {
   "SFProDisplay-Bold": require("./assets/fonts/SF-Pro-Display-Bold.otf"),
   "SFProDisplay-Semibold": require("./assets/fonts/SF-Pro-Display-Semibold.otf"),
