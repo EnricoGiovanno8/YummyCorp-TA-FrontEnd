@@ -55,6 +55,7 @@ const Camera = ({ navigation }: HomeNavigationProps<"Camera">) => {
   const takePicture = async () => {
     await resetUpload();
     let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
       aspect: [3, 3],
       quality: 1,
     });

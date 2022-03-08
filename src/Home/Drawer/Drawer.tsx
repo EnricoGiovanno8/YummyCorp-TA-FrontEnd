@@ -80,7 +80,7 @@ const ProfilePicture = () => {
   return (
     <Box
       alignSelf="center"
-      backgroundColor="primary"
+      backgroundColor="background"
       width={100}
       height={100}
       style={{
