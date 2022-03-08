@@ -10,9 +10,7 @@ import DrawerItem, { DrawerItemProps } from "./DrawerItem";
 import TextContext from "./TextContext";
 import AuthContext from "../../../context/AuthContext";
 import { URL } from "../../../context";
-import {
-  HomeRoutes,
-} from "../../components/Navigation";
+import { HomeRoutes } from "../../components/Navigation";
 
 const { width } = Dimensions.get("window");
 export const DRAWER_WIDTH = width * 0.8;
@@ -93,7 +91,7 @@ const ProfilePicture = () => {
       overflow="hidden"
       borderWidth={1}
     >
-      {user?.image && (
+      {user ? (
         <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
           <Image
             source={{ uri: `${URL}/profile-picture/${user.image}` }}
@@ -103,7 +101,7 @@ const ProfilePicture = () => {
             }}
           />
         </TouchableOpacity>
-      )}
+      ) : null}
     </Box>
   );
 };
@@ -126,7 +124,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             title="My Profile"
             left={{ icon: "x", onPress: () => navigation.closeDrawer() }}
             right={{
-              icon: "shopping-bag",
+              icon: "shopping-cart",
               onPress: () => navigation.navigate("Cart"),
             }}
             dark
@@ -147,7 +145,6 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             height: height,
           }}
         />
-
         <Box
           position="absolute"
           top={0}
